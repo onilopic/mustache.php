@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 /**
  * Whitespace test for tag names.
  *
@@ -17,9 +8,9 @@
  *
  * `{{> tag }}` and `{{> tag}}` and `{{>tag}}` should all be equivalent.
  */
-class Whitespace
+final class Whitespace
 {
-    public $foo = 'alpha';
+    public string $foo = 'alpha';
 
     public $bar = 'beta';
 

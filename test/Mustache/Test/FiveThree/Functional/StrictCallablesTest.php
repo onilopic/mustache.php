@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 /**
  * @group lambdas
  * @group functional
@@ -30,105 +21,103 @@ class Mustache_Test_FiveThree_Functional_StrictCallablesTest extends PHPUnit\Fra
         $this->assertEquals($expected, $tpl->render($data));
     }
 
-    public static function callables()
+    public static function callables(): array
     {
-        $lambda = function ($tpl, $mustache) {
-            return strtoupper($mustache->render($tpl));
-        };
+        $lambda = fn($tpl, $mustache): string => strtoupper($mustache->render($tpl));
 
-        return array(
+        return [
             // Interpolation lambdas
-            array(
+            [
                 false,
-                array(__CLASS__, 'instanceName'),
+                [__CLASS__, 'instanceName'],
                 $lambda,
                 'YOSHI',
-            ),
-            array(
+            ],
+            [
                 false,
-                array(__CLASS__, 'staticName'),
+                [__CLASS__, 'staticName'],
                 $lambda,
                 'YOSHI',
-            ),
-            array(
+            ],
+            [
                 false,
                 function () {
                     return 'Yoshi';
                 },
                 $lambda,
                 'YOSHI',
-            ),
+            ],
 
             // Section lambdas
-            array(
+            [
                 false,
                 'Yoshi',
-                array(__CLASS__, 'instanceCallable'),
+                [__CLASS__, 'instanceCallable'],
                 'YOSHI',
-            ),
-            array(
+            ],
+            [
                 false,
                 'Yoshi',
-                array(__CLASS__, 'staticCallable'),
+                [__CLASS__, 'staticCallable'],
                 'YOSHI',
-            ),
-            array(
+            ],
+            [
                 false,
                 'Yoshi',
                 $lambda,
                 'YOSHI',
-            ),
+            ],
 
             // Strict interpolation lambdas
-            array(
+            [
                 true,
                 function () {
                     return 'Yoshi';
                 },
                 $lambda,
                 'YOSHI',
-            ),
+            ],
 
             // Strict section lambdas
-            array(
+            [
                 true,
                 'Yoshi',
-                array(__CLASS__, 'instanceCallable'),
+                [__CLASS__, 'instanceCallable'],
                 'YoshiYoshi',
-            ),
-            array(
+            ],
+            [
                 true,
                 'Yoshi',
-                array(__CLASS__, 'staticCallable'),
+                [__CLASS__, 'staticCallable'],
                 'YoshiYoshi',
-            ),
-            array(
+            ],
+            [
                 true,
                 'Yoshi',
                 function ($tpl, $mustache) {
                     return strtoupper($mustache->render($tpl));
                 },
                 'YOSHI',
-            ),
-        );
+            ],
+        ];
     }
 
-    public function instanceCallable($tpl, $mustache)
+    public static function instanceCallable($tpl, $mustache): string
     {
         return strtoupper($mustache->render($tpl));
     }
 
-    public static function staticCallable($tpl, $mustache)
+    public static function staticCallable($tpl, $mustache): string
     {
         return strtoupper($mustache->render($tpl));
     }
 
-    public function instanceName()
+    public static function instanceName(): string
     {
         return 'Yoshi';
     }
 
-    public static function staticName()
+    public static function staticName(): string
     {
         return 'Yoshi';
     }

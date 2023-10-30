@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 /**
  * A PHPUnit test case wrapping the Mustache Spec.
  *
@@ -32,6 +23,8 @@ class Mustache_Test_Functional_MustacheDynamicNamesSpecTest extends Mustache_Tes
     {
         if (!file_exists(dirname(__FILE__) . '/../../../../vendor/spec/specs/')) {
             $this->markTestSkipped('Mustache spec submodule not initialized: run "git submodule update --init"');
+        }  else {
+            $this->assertEquals(true, file_exists(dirname(__FILE__) . '/../../../../vendor/spec/specs/'));
         }
     }
 
