@@ -62,7 +62,7 @@ SymfonyClassCollectionLoader::load(array(
     'Mustache_Logger_StreamLogger',
     'Mustache_Parser',
     'Mustache_Template',
-    'Mustache_Tokenizer',
+    'Tokenizer',
 ), dirname($file), basename($file, '.php'));
 
 /**
