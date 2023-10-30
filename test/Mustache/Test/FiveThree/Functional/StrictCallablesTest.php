@@ -20,7 +20,7 @@ class Mustache_Test_FiveThree_Functional_StrictCallablesTest extends PHPUnit\Fra
      */
     public function testStrictCallables($strict, $name, $section, $expected)
     {
-        $mustache = new Mustache_Engine(array('strict_callables' => $strict));
+        $mustache = new Mustache_Engine(['strict_callables' => $strict]);
         $tpl      = $mustache->loadTemplate('{{# section }}{{ name }}{{/ section }}');
 
         $data = new StdClass();
@@ -30,7 +30,7 @@ class Mustache_Test_FiveThree_Functional_StrictCallablesTest extends PHPUnit\Fra
         $this->assertEquals($expected, $tpl->render($data));
     }
 
-    public function callables()
+    public static function callables()
     {
         $lambda = function ($tpl, $mustache) {
             return strtoupper($mustache->render($tpl));
@@ -40,7 +40,7 @@ class Mustache_Test_FiveThree_Functional_StrictCallablesTest extends PHPUnit\Fra
             // Interpolation lambdas
             array(
                 false,
-                array($this, 'instanceName'),
+                array(__CLASS__, 'instanceName'),
                 $lambda,
                 'YOSHI',
             ),
@@ -63,7 +63,7 @@ class Mustache_Test_FiveThree_Functional_StrictCallablesTest extends PHPUnit\Fra
             array(
                 false,
                 'Yoshi',
-                array($this, 'instanceCallable'),
+                array(__CLASS__, 'instanceCallable'),
                 'YOSHI',
             ),
             array(
@@ -93,7 +93,7 @@ class Mustache_Test_FiveThree_Functional_StrictCallablesTest extends PHPUnit\Fra
             array(
                 true,
                 'Yoshi',
-                array($this, 'instanceCallable'),
+                array(__CLASS__, 'instanceCallable'),
                 'YoshiYoshi',
             ),
             array(

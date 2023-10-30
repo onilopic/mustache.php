@@ -44,7 +44,7 @@ class Mustache_Test_Functional_ExamplesTest extends PHPUnit\Framework\TestCase
      *
      * @return array
      */
-    public function getExamples()
+    public static function getExamples()
     {
         $path     = realpath(dirname(__FILE__) . '/../../../fixtures/examples');
         $examples = array();
@@ -57,7 +57,7 @@ class Mustache_Test_Functional_ExamplesTest extends PHPUnit\Framework\TestCase
 
             $fullpath = $path . '/' . $file;
             if (is_dir($fullpath)) {
-                $examples[$file] = $this->loadExample($fullpath);
+                $examples[$file] = self::loadExample($fullpath);
             }
         }
         closedir($handle);
@@ -72,7 +72,7 @@ class Mustache_Test_Functional_ExamplesTest extends PHPUnit\Framework\TestCase
      *
      * @return array arguments for testExamples
      */
-    private function loadExample($path)
+    private static function loadExample($path): array
     {
         $context  = null;
         $source   = null;
@@ -86,7 +86,7 @@ class Mustache_Test_Functional_ExamplesTest extends PHPUnit\Framework\TestCase
 
             if (is_dir($fullpath) && $info['basename'] === 'partials') {
                 // load partials
-                $partials = $this->loadPartials($fullpath);
+                $partials = self::loadPartials($fullpath);
             } elseif (is_file($fullpath)) {
                 // load other files
                 switch ($info['extension']) {
@@ -118,7 +118,7 @@ class Mustache_Test_Functional_ExamplesTest extends PHPUnit\Framework\TestCase
      *
      * @return array $partials
      */
-    private function loadPartials($path)
+    private static function loadPartials($path): array
     {
         $partials = array();
 

@@ -45,11 +45,11 @@ class Mustache_Test_Functional_MustacheInheritanceSpecTest extends Mustache_Test
         $this->assertEquals($expected, $template->render($data), $desc);
     }
 
-    public function loadInheritanceSpec()
+    public static function loadInheritanceSpec()
     {
         // return $this->loadSpec('sections');
         // return [];
         // die;
-        return $this->loadSpec('~inheritance');
+        return self::loadSpec('~inheritance');
     }
 }

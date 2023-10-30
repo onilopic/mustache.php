@@ -24,85 +24,85 @@ class Mustache_Test_Functional_InheritanceTest extends PHPUnit\Framework\TestCas
         ));
     }
 
-    public function getIllegalInheritanceExamples()
+    public static function getIllegalInheritanceExamples(): array
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'foo' => '{{$baz}}default content{{/baz}}',
-                ),
-                array(
+                ],
+                [
                     'bar' => 'set by user',
-                ),
+                ],
                 '{{< foo }}{{# bar }}{{$ baz }}{{/ baz }}{{/ bar }}{{/ foo }}',
-            ),
-            array(
-                array(
+            ],
+            [
+                [
                     'foo' => '{{$baz}}default content{{/baz}}',
-                ),
-                array(
-                ),
+                ],
+                [
+                ],
                 '{{<foo}}{{^bar}}{{$baz}}set by template{{/baz}}{{/bar}}{{/foo}}',
-            ),
-            array(
-                array(
+            ],
+            [
+                [
                     'foo' => '{{$baz}}default content{{/baz}}',
                     'qux' => 'I am a partial',
-                ),
-                array(
-                ),
+                ],
+                [
+                ],
                 '{{<foo}}{{>qux}}{{$baz}}set by template{{/baz}}{{/foo}}',
-            ),
-            array(
-                array(
+            ],
+            [
+                [
                     'foo' => '{{$baz}}default content{{/baz}}',
-                ),
-                array(),
+                ],
+                [],
                 '{{<foo}}{{=<% %>=}}<%={{ }}=%>{{/foo}}',
-            ),
-        );
+            ],
+        ];
     }
 
-    public function getLegalInheritanceExamples()
+    public static function getLegalInheritanceExamples(): array
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'foo' => '{{$baz}}default content{{/baz}}',
-                ),
-                array(
+                ],
+                [
                     'bar' => 'set by user',
-                ),
+                ],
                 '{{<foo}}{{bar}}{{$baz}}override{{/baz}}{{/foo}}',
                 'override',
-            ),
-            array(
-                array(
+            ],
+            [
+                [
                     'foo' => '{{$baz}}default content{{/baz}}',
-                ),
-                array(
-                ),
+                ],
+                [
+                ],
                 '{{<foo}}{{! ignore me }}{{$baz}}set by template{{/baz}}{{/foo}}',
                 'set by template',
-            ),
-            array(
-                array(
+            ],
+            [
+                [
                     'foo' => '{{$baz}}defualt content{{/baz}}',
-                ),
-                array(),
+                ],
+                [],
                 '{{<foo}}set by template{{$baz}}also set by template{{/baz}}{{/foo}}',
                 'also set by template',
-            ),
-            array(
-                array(
+            ],
+            [
+                [
                     'foo' => '{{$a}}FAIL!{{/a}}',
                     'bar' => 'WIN!!',
-                ),
-                array(),
+                ],
+                [],
                 '{{<foo}}{{$a}}{{<bar}}FAIL{{/bar}}{{/a}}{{/foo}}',
                 'WIN!!',
-            ),
-        );
+            ],
+        ];
     }
 
     public function testDefaultContent()
@@ -521,11 +521,13 @@ class Mustache_Test_Functional_InheritanceTest extends PHPUnit\Framework\TestCas
 
     /**
      * @dataProvider getIllegalInheritanceExamples
-     * @expectedException Mustache_Exception_SyntaxException
-     * @expectedExceptionMessage Illegal content in < parent tag
+     *
+     *
      */
     public function testIllegalInheritanceExamples($partials, $data, $template)
     {
+        $this->expectExceptionMessage("Illegal content in < parent tag");
+        $this->expectException(Mustache_Exception_SyntaxException::class);
         $this->mustache->setPartials($partials);
         $tpl = $this->mustache->loadTemplate($template);
         $tpl->render($data);

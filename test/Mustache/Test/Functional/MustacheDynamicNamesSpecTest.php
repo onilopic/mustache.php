@@ -45,8 +45,8 @@ class Mustache_Test_Functional_MustacheDynamicNamesSpecTest extends Mustache_Tes
         $this->assertEquals($expected, $template->render($data), $desc);
     }
 
-    public function loadDynamicNamesSpec()
+    public static function loadDynamicNamesSpec(): array
     {
-        return $this->loadSpec('~dynamic-names');
+        return self::loadSpec('~dynamic-names');
     }
 }

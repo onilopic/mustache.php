@@ -30,7 +30,7 @@ class Mustache_Test_Functional_HigherOrderSectionsTest extends Mustache_Test_Fun
         $this->assertEquals($expect, $this->mustache->render($tpl, $data));
     }
 
-    public function sectionCallbackData()
+    public static function sectionCallbackData(): array
     {
         $foo = new Mustache_Test_Functional_Foo();
         $foo->doublewrap = array($foo, 'wrapWithBoth');
@@ -75,7 +75,9 @@ class Mustache_Test_Functional_HigherOrderSectionsTest extends Mustache_Test_Fun
 
     public function testPassthroughOptimization()
     {
-        $mustache = $this->getMock('Mustache_Engine', array('loadLambda'));
+        $mustache = $this->getMockBuilder('Mustache_Engine')
+            ->onlyMethods(['loadLambda'])
+            ->getMock();
         $mustache->expects($this->never())
             ->method('loadLambda');
 
@@ -89,7 +91,9 @@ class Mustache_Test_Functional_HigherOrderSectionsTest extends Mustache_Test_Fun
 
     public function testWithoutPassthroughOptimization()
     {
-        $mustache = $this->getMock('Mustache_Engine', array('loadLambda'));
+        $mustache = $this->getMockBuilder('Mustache_Engine')
+            ->onlyMethods(['loadLambda'])
+            ->getMock();
         $mustache->expects($this->once())
             ->method('loadLambda')
             ->will($this->returnValue($mustache->loadTemplate('<em>{{ name }}</em>')));
@@ -121,7 +125,7 @@ class Mustache_Test_Functional_HigherOrderSectionsTest extends Mustache_Test_Fun
         $this->assertCount($expect, glob($cacheDir . '/*.php'));
     }
 
-    public function cacheLambdaTemplatesData()
+    public static function cacheLambdaTemplatesData(): array
     {
         return array(
             array('test_enabling_lambda_cache',  '_TestEnablingLambdaCache_',  true,  2),

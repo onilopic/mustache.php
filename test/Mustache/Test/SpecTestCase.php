@@ -34,7 +34,7 @@ abstract class Mustache_Test_SpecTestCase extends PHPUnit\Framework\TestCase
      *
      * @return array
      */
-    protected function loadSpec($name)
+    protected static function loadSpec($name)
     {
         $filename = dirname(__FILE__) . '/../../../vendor/spec/specs/' . $name . '.json';
         if (!file_exists($filename)) {

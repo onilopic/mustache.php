@@ -171,11 +171,9 @@ class Mustache_Test_ContextTest extends PHPUnit\Framework\TestCase
         $this->assertEquals('', $context->findAnchoredDot('.child.name'));
     }
 
-    /**
-     * @expectedException Mustache_Exception_InvalidArgumentException
-     */
     public function testAnchoredDotNotationThrowsExceptions()
     {
+        $this->expectException(Mustache_Exception_InvalidArgumentException::class);
         $context = new Mustache_Context();
         $context->push(array('a' => 1));
         $context->findAnchoredDot('a');

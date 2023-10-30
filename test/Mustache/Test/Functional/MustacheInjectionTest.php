@@ -31,27 +31,27 @@ class Mustache_Test_Functional_MustacheInjectionTest extends PHPUnit\Framework\T
         $this->assertEquals($expect, $this->mustache->render($tpl, $data));
     }
 
-    public function injectionData()
+    public static function injectionData(): array
     {
-        $interpolationData = array(
+        $interpolationData = [
             'a' => '{{ b }}',
             'b' => 'FAIL',
-        );
+        ];
 
-        $sectionData = array(
+        $sectionData = [
             'a' => true,
             'b' => '{{ c }}',
             'c' => 'FAIL',
-        );
+        ];
 
-        $lambdaInterpolationData = array(
-            'a' => array($this, 'lambdaInterpolationCallback'),
+        $lambdaInterpolationData = [
+            'a' => [__CLASS__, 'lambdaInterpolationCallback'],
             'b' => '{{ c }}',
             'c' => 'FAIL',
-        );
+        ];
 
         $lambdaSectionData = array(
-            'a' => array($this, 'lambdaSectionCallback'),
+            'a' => array(__CLASS__, 'lambdaSectionCallback'),
             'b' => '{{ c }}',
             'c' => 'FAIL',
         );

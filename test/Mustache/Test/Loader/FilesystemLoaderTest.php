@@ -59,19 +59,15 @@ class Mustache_Test_Loader_FilesystemLoaderTest extends PHPUnit\Framework\TestCa
         $this->assertEquals('beta contents', $loader->load('beta.ms'));
     }
 
-    /**
-     * @expectedException Mustache_Exception_RuntimeException
-     */
     public function testMissingBaseDirThrowsException()
     {
+        $this->expectException(Mustache_Exception_RuntimeException::class);
         new Mustache_Loader_FilesystemLoader(dirname(__FILE__) . '/not_a_directory');
     }
 
-    /**
-     * @expectedException Mustache_Exception_UnknownTemplateException
-     */
     public function testMissingTemplateThrowsException()
     {
+        $this->expectException(Mustache_Exception_UnknownTemplateException::class);
         $baseDir = realpath(dirname(__FILE__) . '/../../../fixtures/templates');
         $loader = new Mustache_Loader_FilesystemLoader($baseDir);
 

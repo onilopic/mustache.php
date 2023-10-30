@@ -38,9 +38,9 @@ class Mustache_Test_FiveThree_Functional_MustacheSpecTest extends Mustache_Test_
         $this->assertEquals($expected, $template($this->prepareLambdasSpec($data)), $desc);
     }
 
-    public function loadLambdasSpec()
+    public static function loadLambdasSpec()
     {
-        return $this->loadSpec('~lambdas');
+        return self::loadSpec('~lambdas');
     }
 
     /**

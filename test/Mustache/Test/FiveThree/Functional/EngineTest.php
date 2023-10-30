@@ -28,23 +28,23 @@ class Mustache_Test_FiveThree_Functional_EngineTest extends PHPUnit\Framework\Te
         $this->assertEquals($expect, $mustache->render($tpl, $data));
     }
 
-    public function pragmaData()
+    public static function pragmaData()
     {
-        $helpers = array(
+        $helpers = [
             'longdate' => function (\DateTime $value) {
                 return $value->format('Y-m-d h:m:s');
             },
-        );
+        ];
 
-        $data = array(
+        $data = [
             'date' => new DateTime('1/1/2000', new DateTimeZone('UTC')),
-        );
+        ];
 
         $tpl = '{{ date | longdate }}';
 
-        return array(
-            array(array(Mustache_Engine::PRAGMA_FILTERS), $helpers, $data, $tpl, '2000-01-01 12:01:00'),
-            array(array(),                                $helpers, $data, $tpl, ''),
-        );
+        return [
+            [[Mustache_Engine::PRAGMA_FILTERS], $helpers, $data, $tpl, '2000-01-01 12:01:00'],
+            [[], $helpers, $data, $tpl, ''],
+        ];
     }
 }

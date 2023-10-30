@@ -96,7 +96,7 @@ class Mustache_Test_HelperCollectionTest extends PHPUnit\Framework\TestCase
     public function testHelperCollectionIsntAfraidToThrowExceptions($helpers = array(), $actions = array(), $exception = null)
     {
         if ($exception) {
-            $this->setExpectedException($exception);
+            $this->expectException($exception);
         }
 
         $helpers = new Mustache_HelperCollection($helpers);
@@ -106,7 +106,7 @@ class Mustache_Test_HelperCollectionTest extends PHPUnit\Framework\TestCase
         }
     }
 
-    public function getInvalidHelperArguments()
+    public static function getInvalidHelperArguments(): array
     {
         return array(
             array(

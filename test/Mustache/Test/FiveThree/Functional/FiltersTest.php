@@ -31,32 +31,32 @@ class Mustache_Test_FiveThree_Functional_FiltersTest extends PHPUnit\Framework\T
         $this->assertEquals($expect, $this->mustache->render($tpl, $data));
     }
 
-    public function singleFilterData()
+    public static function singleFilterData(): array
     {
-        $helpers = array(
+        $helpers = [
             'longdate' => function (\DateTime $value) {
                 return $value->format('Y-m-d h:m:s');
             },
             'echo' => function ($value) {
-                return array($value, $value, $value);
+                return [$value, $value, $value];
             },
-        );
+        ];
 
-        return array(
-            array(
+        return [
+            [
                 '{{% FILTERS }}{{ date | longdate }}',
                 $helpers,
-                (object) array('date' => new DateTime('1/1/2000', new DateTimeZone('UTC'))),
+                (object) ['date' => new DateTime('1/1/2000', new DateTimeZone('UTC'))],
                 '2000-01-01 12:01:00',
-            ),
+            ],
 
-            array(
+            [
                 '{{% FILTERS }}{{# word | echo }}{{ . }}!{{/ word | echo }}',
                 $helpers,
-                array('word' => 'bacon'),
+                ['word' => 'bacon'],
                 'bacon!bacon!bacon!',
-            ),
-        );
+            ],
+        ];
     }
 
     public function testChainedFilters()
@@ -112,31 +112,32 @@ EOS;
         $this->assertEquals($expect, $this->mustache->render($tpl, $data));
     }
 
-    public function interpolateFirstData()
+    public static function interpolateFirstData(): array
     {
-        $data = array(
+        $data = [
             'foo' => 'FOO',
             'bar' => function ($value) {
                 return ($value === 'FOO') ? 'win!' : 'fail :(';
             },
-        );
+        ];
 
-        return array(
-            array('{{% FILTERS }}{{ foo | bar }}',                         $data, 'win!'),
-            array('{{% FILTERS }}{{# foo | bar }}{{ . }}{{/ foo | bar }}', $data, 'win!'),
-        );
+        return [
+            ['{{% FILTERS }}{{ foo | bar }}',                         $data, 'win!'],
+            ['{{% FILTERS }}{{# foo | bar }}{{ . }}{{/ foo | bar }}', $data, 'win!'],
+        ];
     }
 
     /**
-     * @expectedException Mustache_Exception_UnknownFilterException
+     *
      * @dataProvider brokenPipeData
      */
     public function testThrowsExceptionForBrokenPipes($tpl, $data)
     {
+        $this->expectException(Mustache_Exception_UnknownFilterException::class);
         $this->mustache->render($tpl, $data);
     }
 
-    public function brokenPipeData()
+    public static function brokenPipeData()
     {
         return array(
             array('{{% FILTERS }}{{ foo | bar }}',       array()),

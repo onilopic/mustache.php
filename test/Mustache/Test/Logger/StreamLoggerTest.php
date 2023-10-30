@@ -25,7 +25,7 @@ class Mustache_Test_Logger_StreamLoggerTest extends PHPUnit\Framework\TestCase
         $this->assertEquals("CRITICAL: message\n", file_get_contents($name));
     }
 
-    public function acceptsStreamData()
+    public static function acceptsStreamData(): array
     {
         $one = tempnam(sys_get_temp_dir(), 'mustache-test');
         $two = tempnam(sys_get_temp_dir(), 'mustache-test');
@@ -36,11 +36,9 @@ class Mustache_Test_Logger_StreamLoggerTest extends PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException Mustache_Exception_LogicException
-     */
     public function testPrematurelyClosedStreamThrowsException()
     {
+        $this->expectException(Mustache_Exception_LogicException::class);
         $stream = tmpfile();
         $logger = new Mustache_Logger_StreamLogger($stream);
         fclose($stream);
@@ -61,13 +59,13 @@ class Mustache_Test_Logger_StreamLoggerTest extends PHPUnit\Framework\TestCase
         $result = fread($stream, 1024);
 
         if ($shouldLog) {
-            $this->assertContains('logged', $result);
+            $this->assertStringContainsString('logged', $result);
         } else {
             $this->assertEmpty($result);
         }
     }
 
-    public function getLevels()
+    public static function getLevels(): array
     {
         // $logLevel, $level, $shouldLog
         return array(
@@ -116,7 +114,7 @@ class Mustache_Test_Logger_StreamLoggerTest extends PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function getLogMessages()
+    public static function getLogMessages(): array
     {
         // $level, $message, $context, $expected
         return array(
@@ -189,20 +187,16 @@ class Mustache_Test_Logger_StreamLoggerTest extends PHPUnit\Framework\TestCase
         $this->assertEquals("WARNING: log this\n", $result);
     }
 
-    /**
-     * @expectedException Mustache_Exception_InvalidArgumentException
-     */
     public function testThrowsInvalidArgumentExceptionWhenSettingUnknownLevels()
     {
+        $this->expectException(Mustache_Exception_InvalidArgumentException::class);
         $logger = new Mustache_Logger_StreamLogger(tmpfile());
         $logger->setLevel('bacon');
     }
 
-    /**
-     * @expectedException Mustache_Exception_InvalidArgumentException
-     */
     public function testThrowsInvalidArgumentExceptionWhenLoggingUnknownLevels()
     {
+        $this->expectException(Mustache_Exception_InvalidArgumentException::class);
         $logger = new Mustache_Logger_StreamLogger(tmpfile());
         $logger->log('bacon', 'CODE BACON ERROR!');
     }

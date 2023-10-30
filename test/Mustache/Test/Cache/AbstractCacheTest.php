@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 class Mustache_Test_Cache_AbstractCacheTest extends PHPUnit\Framework\TestCase
 {
     public function testGetSetLogger()
@@ -19,11 +10,9 @@ class Mustache_Test_Cache_AbstractCacheTest extends PHPUnit\Framework\TestCase
         $this->assertSame($logger, $cache->getLogger());
     }
 
-    /**
-     * @expectedException Mustache_Exception_InvalidArgumentException
-     */
     public function testSetLoggerThrowsExceptions()
     {
+        $this->expectException(Mustache_Exception_InvalidArgumentException::class);
         $cache  = new CacheStub();
         $logger = new StdClass();
         $cache->setLogger($logger);

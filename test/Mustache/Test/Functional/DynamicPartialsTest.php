@@ -24,18 +24,18 @@ class Mustache_Test_Functional_DynamicPartialsTest extends PHPUnit\Framework\Tes
         ));
     }
 
-    public function getValidDynamicNamesExamples()
+    public static function getValidDynamicNamesExamples(): array
     {
       // technically not all dynamic names, but also not invalid
-        return array(
-            array('{{>* foo }}'),
-            array('{{>* foo.bar.baz }}'),
-            array('{{=* *=}}'),
-            array('{{! *foo }}'),
-            array('{{! foo.*bar }}'),
-            array('{{% FILTERS }}{{! foo | *bar }}'),
-            array('{{% BLOCKS }}{{< *foo }}{{/ *foo }}'),
-        );
+        return [
+            ['{{>* foo }}'],
+            ['{{>* foo.bar.baz }}'],
+            ['{{=* *=}}'],
+            ['{{! *foo }}'],
+            ['{{! foo.*bar }}'],
+            ['{{% FILTERS }}{{! foo | *bar }}'],
+            ['{{% BLOCKS }}{{< *foo }}{{/ *foo }}'],
+        ];
     }
 
     /**
@@ -46,23 +46,25 @@ class Mustache_Test_Functional_DynamicPartialsTest extends PHPUnit\Framework\Tes
         $this->assertSame('', $this->mustache->render($template));
     }
 
-    public function getDynamicNameParseErrors()
+    public static function getDynamicNameParseErrors(): array
     {
-        return array(
-            array('{{# foo }}{{/ *foo }}'),
-            array('{{^ foo }}{{/ *foo }}'),
-            array('{{% BLOCKS }}{{< foo }}{{/ *foo }}'),
-            array('{{% BLOCKS }}{{$ foo }}{{/ *foo }}'),
-        );
+        return [
+            ['{{# foo }}{{/ *foo }}'],
+            ['{{^ foo }}{{/ *foo }}'],
+            ['{{% BLOCKS }}{{< foo }}{{/ *foo }}'],
+            ['{{% BLOCKS }}{{$ foo }}{{/ *foo }}'],
+        ];
     }
 
     /**
      * @dataProvider getDynamicNameParseErrors
-     * @expectedException Mustache_Exception_SyntaxException
-     * @expectedExceptionMessage Nesting error:
+     *
+     *
      */
     public function testDynamicNameParseErrors($template)
     {
+        $this->expectExceptionMessage("Nesting error:");
+        $this->expectException(Mustache_Exception_SyntaxException::class);
         $this->mustache->render($template);
     }
 

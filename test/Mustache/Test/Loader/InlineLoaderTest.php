@@ -21,28 +21,22 @@ class Mustache_Test_Loader_InlineLoaderTest extends PHPUnit\Framework\TestCase
         $this->assertEquals('{{#bar}}BAR{{/bar}}', $loader->load('bar'));
     }
 
-    /**
-     * @expectedException Mustache_Exception_UnknownTemplateException
-     */
     public function testMissingTemplatesThrowExceptions()
     {
+        $this->expectException(Mustache_Exception_UnknownTemplateException::class);
         $loader = new Mustache_Loader_InlineLoader(__FILE__, __COMPILER_HALT_OFFSET__);
         $loader->load('not_a_real_template');
     }
 
-    /**
-     * @expectedException Mustache_Exception_InvalidArgumentException
-     */
     public function testInvalidOffsetThrowsException()
     {
+        $this->expectException(Mustache_Exception_InvalidArgumentException::class);
         new Mustache_Loader_InlineLoader(__FILE__, 'notanumber');
     }
 
-    /**
-     * @expectedException Mustache_Exception_InvalidArgumentException
-     */
     public function testInvalidFileThrowsException()
     {
+        $this->expectException(Mustache_Exception_InvalidArgumentException::class);
         new Mustache_Loader_InlineLoader('notarealfile', __COMPILER_HALT_OFFSET__);
     }
 }

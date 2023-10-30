@@ -38,9 +38,9 @@ class Mustache_Test_Functional_MustacheSpecTest extends Mustache_Test_SpecTestCa
         $this->assertEquals($expected, $template->render($data), $desc);
     }
 
-    public function loadCommentSpec()
+    public static function loadCommentSpec(): array
     {
-        return $this->loadSpec('comments');
+        return self::loadSpec('comments');
     }
 
     /**
@@ -53,9 +53,9 @@ class Mustache_Test_Functional_MustacheSpecTest extends Mustache_Test_SpecTestCa
         $this->assertEquals($expected, $template->render($data), $desc);
     }
 
-    public function loadDelimitersSpec()
+    public static function loadDelimitersSpec(): array
     {
-        return $this->loadSpec('delimiters');
+        return self::loadSpec('delimiters');
     }
 
     /**
@@ -68,9 +68,9 @@ class Mustache_Test_Functional_MustacheSpecTest extends Mustache_Test_SpecTestCa
         $this->assertEquals($expected, $template->render($data), $desc);
     }
 
-    public function loadInterpolationSpec()
+    public static function loadInterpolationSpec()
     {
-        return $this->loadSpec('interpolation');
+        return self::loadSpec('interpolation');
     }
 
     /**
@@ -84,9 +84,9 @@ class Mustache_Test_Functional_MustacheSpecTest extends Mustache_Test_SpecTestCa
         $this->assertEquals($expected, $template->render($data), $desc);
     }
 
-    public function loadInvertedSpec()
+    public static function loadInvertedSpec()
     {
-        return $this->loadSpec('inverted');
+        return self::loadSpec('inverted');
     }
 
     /**
@@ -99,9 +99,9 @@ class Mustache_Test_Functional_MustacheSpecTest extends Mustache_Test_SpecTestCa
         $this->assertEquals($expected, $template->render($data), $desc);
     }
 
-    public function loadPartialsSpec()
+    public static function loadPartialsSpec()
     {
-        return $this->loadSpec('partials');
+        return self::loadSpec('partials');
     }
 
     /**
@@ -114,8 +114,8 @@ class Mustache_Test_Functional_MustacheSpecTest extends Mustache_Test_SpecTestCa
         $this->assertEquals($expected, $template->render($data), $desc);
     }
 
-    public function loadSectionsSpec()
+    public static function loadSectionsSpec()
     {
-        return $this->loadSpec('sections');
+        return self::loadSpec('sections');
     }
 }
