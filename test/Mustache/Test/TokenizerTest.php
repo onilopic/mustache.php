@@ -12,7 +12,7 @@
 /**
  * @group unit
  */
-class Mustache_Test_TokenizerTest extends PHPUnit_Framework_TestCase
+class Mustache_Test_TokenizerTest extends PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider getTokens

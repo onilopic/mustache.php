@@ -12,7 +12,7 @@
 /**
  * @group unit
  */
-class Mustache_Test_Loader_FilesystemLoaderTest extends PHPUnit_Framework_TestCase
+class Mustache_Test_Loader_FilesystemLoaderTest extends PHPUnit\Framework\TestCase
 {
     public function testConstructor()
     {

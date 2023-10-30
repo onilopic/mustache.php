@@ -12,7 +12,7 @@
 /**
  * @group unit
  */
-class Mustache_Test_Logger_StreamLoggerTest extends PHPUnit_Framework_TestCase
+class Mustache_Test_Logger_StreamLoggerTest extends PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider acceptsStreamData

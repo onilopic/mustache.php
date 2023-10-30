@@ -12,7 +12,7 @@
 /**
  * @group unit
  */
-class Mustache_Test_Source_FilesystemSourceTest extends PHPUnit_Framework_TestCase
+class Mustache_Test_Source_FilesystemSourceTest extends PHPUnit\Framework\TestCase
 {
     /**
      * @expectedException Mustache_Exception_RuntimeException

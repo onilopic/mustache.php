@@ -1,23 +1,14 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 /**
  * @group lambdas
  * @group functional
  */
-class Mustache_Test_FiveThree_Functional_HigherOrderSectionsTest extends PHPUnit_Framework_TestCase
+class Mustache_Test_FiveThree_Functional_HigherOrderSectionsTest extends PHPUnit\Framework\TestCase
 {
     private $mustache;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mustache = new Mustache_Engine();
     }

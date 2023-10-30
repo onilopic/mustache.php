@@ -17,7 +17,7 @@
  */
 class Mustache_Test_Functional_MustacheDynamicNamesSpecTest extends Mustache_Test_SpecTestCase
 {
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$mustache = new Mustache_Engine(array(
           'pragmas' => array(Mustache_Engine::PRAGMA_DYNAMIC_NAMES),
