@@ -29,7 +29,7 @@ abstract class SpecTestCase extends \PHPUnit\Framework\TestCase
      */
     protected static function loadSpec($name)
     {
-        $filename = dirname(__FILE__) . '/../../../vendor/spec/specs/' . $name . '.json';
+        $filename = dirname(__FILE__) . '/../vendor/spec/specs/' . $name . '.json';
         if (!file_exists($filename)) {
             return array();
         }

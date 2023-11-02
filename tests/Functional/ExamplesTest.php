@@ -1,10 +1,12 @@
 <?php
 
+namespace Mustache\Tests\Functional;
+
 /**
  * @group examples
  * @group functional
  */
-class Mustache_Test_Functional_ExamplesTest extends PHPUnit\Framework\TestCase
+class ExamplesTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test everything in the `examples` directory.
@@ -37,7 +39,7 @@ class Mustache_Test_Functional_ExamplesTest extends PHPUnit\Framework\TestCase
      */
     public static function getExamples()
     {
-        $path     = realpath(dirname(__FILE__) . '/../../../fixtures/examples');
+        $path     = realpath(dirname(__FILE__) . '/../fixtures/examples');
         $examples = array();
 
         $handle   = opendir($path);

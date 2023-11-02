@@ -23,7 +23,7 @@ class MustacheInheritanceSpecTest extends \Mustache\Tests\SpecTestCase
      */
     public function testSpecInitialized()
     {
-        $fileExist = file_exists(dirname(__FILE__) . '/../../../../vendor/spec/specs/');
+        $fileExist = file_exists(dirname(__FILE__) . '/../../vendor/spec/specs/');
         if (!$fileExist) {
             $this->markTestSkipped('Mustache spec submodule not initialized: run "git submodule update --init"');
         } else {

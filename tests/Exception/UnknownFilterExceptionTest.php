@@ -1,12 +1,16 @@
 <?php
 
-class Mustache_Test_Exception_UnknownFilterExceptionTest extends PHPUnit\Framework\TestCase
+namespace Mustache\Tests\Exception;
+
+use UnexpectedValueException;
+
+class UnknownFilterExceptionTest extends \PHPUnit\Framework\TestCase
 {
     public function testInstance()
     {
         $e = new \Mustache\Exception\UnknownFilterException('bacon');
         $this->assertTrue($e instanceof UnexpectedValueException);
-        $this->assertTrue($e instanceof Mustache_Exception);
+        $this->assertTrue($e instanceof \Mustache\Exception);
     }
 
     public function testMessage()
@@ -27,7 +31,7 @@ class Mustache_Test_Exception_UnknownFilterExceptionTest extends PHPUnit\Framewo
             $this->markTestSkipped('Exception chaining requires at least PHP 5.3');
         }
 
-        $previous = new Exception();
+        $previous = new \Exception();
         $e = new \Mustache\Exception\UnknownFilterException('foo', $previous);
 
         $this->assertSame($previous, $e->getPrevious());

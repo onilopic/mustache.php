@@ -146,7 +146,7 @@ class Context
      *
      * @see \Mustache\Context::findDot
      *
-     * @throws InvalidArgumentException if given an invalid anchored dot $id
+     * @throws \InvalidArgumentException if given an invalid anchored dot $id
      *
      * @param string $id Dotted variable selector
      *
@@ -157,7 +157,7 @@ class Context
         $chunks = explode('.', $id);
         $first  = array_shift($chunks);
         if ($first !== '') {
-            throw new InvalidArgumentException(sprintf('Unexpected id for findAnchoredDot: %s', $id));
+            throw new \InvalidArgumentException(sprintf('Unexpected id for findAnchoredDot: %s', $id));
         }
 
         $value  = $this->last();

@@ -320,7 +320,7 @@ class Compiler
     ';
 
     const SECTION = '
-        private function section%s(Mustache_Context $context, $indent, $value)
+        private function section%s(\Mustache\Context $context, $indent, $value)
         {
             $buffer = \'\';
 

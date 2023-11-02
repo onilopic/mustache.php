@@ -5,5 +5,5 @@
 //Mustache_Autoloader::register(dirname(__FILE__) . '/../test');
 
 require dirname(__FILE__) . '/../vendor/autoload.php';
-include 'TestStream.php';
+//include 'TestStream.php';
 

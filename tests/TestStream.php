@@ -1,6 +1,6 @@
 <?php
 
-//namespace Mustache\Tests;
+namespace Mustache\Tests;
 
 /**
  * Minimal stream wrapper to test protocol-based access to templates.

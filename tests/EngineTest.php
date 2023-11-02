@@ -139,7 +139,7 @@ class EngineTest extends FunctionalTestCase
             'cache_lambda_templates' => true,
         ));
 
-        $this->assertNotInstanceOf('Mustache_Cache_NoopCache', $mustache->getProtectedLambdaCache());
+        $this->assertNotInstanceOf(\Mustache\Cache\NoopCache::class, $mustache->getProtectedLambdaCache());
         $this->assertSame($mustache->getCache(), $mustache->getProtectedLambdaCache());
     }
 
@@ -149,7 +149,7 @@ class EngineTest extends FunctionalTestCase
             'cache' => self::$tempDir,
         ));
 
-        $this->assertInstanceOf('Mustache_Cache_NoopCache', $mustache->getProtectedLambdaCache());
+        $this->assertInstanceOf(\Mustache\Cache\NoopCache::class, $mustache->getProtectedLambdaCache());
         $this->assertNotSame($mustache->getCache(), $mustache->getProtectedLambdaCache());
     }
 
@@ -322,14 +322,14 @@ class EngineTest extends FunctionalTestCase
     public function testUnknownPragmaThrowsException()
     {
         $this->expectException(\Mustache\Exception\InvalidArgumentException::class);
-        new \Mustache\Engine(array(
-            'pragmas' => array('UNKNOWN'),
-        ));
+        new \Mustache\Engine([
+            'pragmas' => ['UNKNOWN'],
+        ]);
     }
 
     public function testCompileFromMustacheSourceInstance()
     {
-        $baseDir = realpath(dirname(__FILE__) . '/../../fixtures/templates');
+        $baseDir = realpath(dirname(__FILE__) . '/fixtures/templates');
         $mustache = new \Mustache\Engine(array(
             'loader' => new \Mustache\Loader\ProductionFilesystemLoader($baseDir),
         ));

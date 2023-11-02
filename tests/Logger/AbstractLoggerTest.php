@@ -9,7 +9,7 @@ class AbstractLoggerTest extends \PHPUnit\Framework\TestCase
 {
     public function testEverything()
     {
-        $logger = new \Mustache\Test\Logger\TestLogger();
+        $logger = new \Mustache\Tests\Logger\TestLogger();
 
         $logger->emergency('emergency message');
         $logger->alert('alert message');

@@ -2,7 +2,6 @@
 
 namespace Mustache\Tests;
 
-use Mustache\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -120,21 +119,21 @@ class ContextTest extends TestCase
     {
         $context = new \Mustache\Context();
 
-        $a = array(
+        $a = [
             'name'   => 'a',
             'number' => 1,
-        );
+        ];
 
-        $b = array(
+        $b = [
             'number' => 2,
-            'child'  => array(
+            'child'  => [
                 'name' => 'baby bee',
-            ),
-        );
+            ],
+        ];
 
-        $c = array(
+        $c = [
             'name' => 'cee',
-        );
+        ];
 
         $context->push($a);
         $this->assertEquals('a', $context->find('name'));
@@ -169,7 +168,7 @@ class ContextTest extends TestCase
 
     public function testAnchoredDotNotationThrowsExceptions()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $context = new \Mustache\Context();
         $context->push(array('a' => 1));
         $context->findAnchoredDot('a');

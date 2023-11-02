@@ -2,6 +2,7 @@
 
 namespace Mustache;
 
+use Mustache\Cache\FilesystemCache;
 use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\RuntimeException;
 use Mustache\Exception\UnknownTemplateException;
@@ -154,8 +155,8 @@ class Engine
             $cache = $options['cache'];
 
             if (is_string($cache)) {
-                $mode  = isset($options['cache_file_mode']) ? $options['cache_file_mode'] : null;
-                $cache = new \Mustache\Cache\FilesystemCache($cache, $mode);
+                $mode  = $options['cache_file_mode'] ?? null;
+                $cache = new FilesystemCache($cache, $mode);
             }
 
             $this->setCache($cache);
@@ -467,7 +468,7 @@ class Engine
     /**
      * Get the current Mustache Logger instance.
      *
-     * @return \Mustache\Logger|Psr\Log\LoggerInterface
+     * @return \Mustache\Logger|\Psr\Log\LoggerInterface
      */
     public function getLogger()
     {
@@ -626,7 +627,7 @@ class Engine
         // Keep this list in alphabetical order :)
         $chunks = array(
             'charset'         => $this->charset,
-            'delimiters'      => $this->delimiters ? $this->delimiters : '{{ }}',
+            'delimiters'      => $this->delimiters ?: '{{ }}',
             'entityFlags'     => $this->entityFlags,
             'escape'          => isset($this->escape) ? 'custom' : 'default',
             'key'             => ($source instanceof \Mustache\Source) ? $source->getKey() : 'source',
@@ -688,6 +689,8 @@ class Engine
                 array('name' => $e->getTemplateName())
             );
         }
+
+        return  null;
     }
 
     /**

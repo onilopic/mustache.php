@@ -9,7 +9,7 @@ class FilesystemLoaderTest extends \PHPUnit\Framework\TestCase
 {
     public function testConstructor()
     {
-        $baseDir = realpath(dirname(__FILE__) . '/../../../fixtures/templates');
+        $baseDir = realpath(dirname(__FILE__) . '/../fixtures/templates');
         $loader = new \Mustache\Loader\FilesystemLoader($baseDir, array('extension' => '.ms'));
         $this->assertEquals('alpha contents', $loader->load('alpha'));
         $this->assertEquals('beta contents', $loader->load('beta.ms'));
@@ -17,14 +17,14 @@ class FilesystemLoaderTest extends \PHPUnit\Framework\TestCase
 
     public function testTrailingSlashes()
     {
-        $baseDir = dirname(__FILE__) . '/../../../fixtures/templates/';
+        $baseDir = dirname(__FILE__) . '/../fixtures/templates/';
         $loader = new \Mustache\Loader\FilesystemLoader($baseDir);
         $this->assertEquals('one contents', $loader->load('one'));
     }
 
     public function testConstructorWithProtocol()
     {
-        $baseDir = realpath(dirname(__FILE__) . '/../../../fixtures/templates');
+        $baseDir = realpath(dirname(__FILE__) . '/../fixtures/templates');
 
         $loader = new \Mustache\Loader\FilesystemLoader('test://' . $baseDir, array('extension' => '.ms'));
         $this->assertEquals('alpha contents', $loader->load('alpha'));
@@ -33,7 +33,7 @@ class FilesystemLoaderTest extends \PHPUnit\Framework\TestCase
 
     public function testLoadTemplates()
     {
-        $baseDir = realpath(dirname(__FILE__) . '/../../../fixtures/templates');
+        $baseDir = realpath(dirname(__FILE__) . '/../fixtures/templates');
         $loader = new \Mustache\Loader\FilesystemLoader($baseDir);
         $this->assertEquals('one contents', $loader->load('one'));
         $this->assertEquals('two contents', $loader->load('two.mustache'));
@@ -41,7 +41,7 @@ class FilesystemLoaderTest extends \PHPUnit\Framework\TestCase
 
     public function testEmptyExtensionString()
     {
-        $baseDir = realpath(dirname(__FILE__) . '/../../../fixtures/templates');
+        $baseDir = realpath(dirname(__FILE__) . '/../fixtures/templates');
 
         $loader = new \Mustache\Loader\FilesystemLoader($baseDir, array('extension' => ''));
         $this->assertEquals('one contents', $loader->load('one.mustache'));
