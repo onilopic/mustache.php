@@ -1,9 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Mustache\Loader;
 
 use Mustache\Exception\RuntimeException;
 use Mustache\Exception\UnknownTemplateException;
+use Mustache\Loader;
+use Mustache\Source\FilesystemSource;
 
 /**
  * Mustache Template filesystem Loader implementation.
@@ -20,11 +22,11 @@ use Mustache\Exception\UnknownTemplateException;
  *          'partials_loader' => new \Mustache\Loader\FilesystemLoader(dirname(__FILE__).'/views/partials'),
  *     ));
  */
-class FilesystemLoader implements \Mustache\Loader
+class FilesystemLoader implements Loader
 {
-    private $baseDir;
+    private false|string $baseDir;
     private string $extension = '.mustache';
-    private array $templates = array();
+    private array $templates = [];
 
     /**
      * Mustache filesystem Loader constructor.
@@ -36,12 +38,12 @@ class FilesystemLoader implements \Mustache\Loader
      *         'extension' => '.ms',
      *     );
      *
+     * @param string $baseDir Base directory containing Mustache template files
+     * @param array $options Array of Loader options (default: array())
      * @throws RuntimeException if $baseDir does not exist
      *
-     * @param string $baseDir Base directory containing Mustache template files
-     * @param array  $options Array of Loader options (default: array())
      */
-    public function __construct(string $baseDir, array $options = array())
+    public function __construct(string $baseDir, array $options = [])
     {
         $this->baseDir = $baseDir;
 
@@ -49,7 +51,7 @@ class FilesystemLoader implements \Mustache\Loader
             $this->baseDir = realpath($this->baseDir);
         }
 
-        if ($this->shouldCheckPath() && !is_dir($this->baseDir)) {
+        if ($this->shouldCheckPath() && !is_dir((string)$this->baseDir)) {
             throw new RuntimeException(sprintf('FilesystemLoader baseDir must be a directory: %s', $baseDir));
         }
 
@@ -70,9 +72,9 @@ class FilesystemLoader implements \Mustache\Loader
      *
      * @param string $name
      *
-     * @return string|\Mustache\Source\FilesystemSource  Mustache Template source
+     * @return string|FilesystemSource  Mustache Template source
      */
-    public function load($name)
+    public function load($name): string|FilesystemSource
     {
         if (!isset($this->templates[$name])) {
             $this->templates[$name] = $this->loadFile($name);
@@ -84,13 +86,11 @@ class FilesystemLoader implements \Mustache\Loader
     /**
      * Helper function for loading a Mustache file by name.
      *
-     * @throws UnknownTemplateException If a template file is not found
-     *
      * @param string $name
      *
-     * @return string Mustache Template source
+     * @return string|FilesystemSource Mustache Template source
      */
-    protected function loadFile($name)
+    protected function loadFile(string $name): string|FilesystemSource
     {
         $fileName = $this->getFileName($name);
 
@@ -98,7 +98,12 @@ class FilesystemLoader implements \Mustache\Loader
             throw new UnknownTemplateException($name);
         }
 
-        return file_get_contents($fileName);
+        $content = file_get_contents($fileName);
+        if ($content === false) {
+            return '';
+        }
+
+        return $content;
     }
 
     /**
@@ -108,7 +113,7 @@ class FilesystemLoader implements \Mustache\Loader
      *
      * @return string Template file name
      */
-    protected function getFileName($name): string
+    protected function getFileName(string $name): string
     {
         $fileName = $this->baseDir . '/' . $name;
         if (substr($fileName, 0 - strlen($this->extension)) !== $this->extension) {
@@ -124,8 +129,9 @@ class FilesystemLoader implements \Mustache\Loader
      *
      * @return bool Whether to check `is_dir` and `file_exists`
      */
-    protected function shouldCheckPath()
+    protected function shouldCheckPath(): bool
     {
-        return !str_contains($this->baseDir, '://') || str_starts_with($this->baseDir, 'file://');
+        $baseDir = (string)$this->baseDir;
+        return !str_contains($baseDir, '://') || str_starts_with($baseDir, 'file://');
     }
 }

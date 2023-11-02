@@ -2,6 +2,8 @@
 
 namespace Mustache;
 
+use Mustache\Exception\UnknownTemplateException;
+
 /**
  * Mustache Template Loader interface.
  */
@@ -10,11 +12,11 @@ interface Loader
     /**
      * Load a Template by name.
      *
-     * @throws \Mustache\Exception\UnknownTemplateException If a template file is not found
-     *
      * @param string $name
      *
-     * @return string|\Mustache\Source Mustache Template source
+     * @return string|Source Mustache Template source
+     * @throws UnknownTemplateException If a template file is not found
+     *
      */
-    public function load($name);
+    public function load(string $name): string|Source;
 }

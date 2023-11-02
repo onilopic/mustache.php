@@ -28,11 +28,11 @@ abstract class FunctionalTestCase extends TestCase
                 continue;
             }
 
-            $fullpath = $path . $file;
-            if (is_dir($fullpath)) {
-                self::rmdir($fullpath);
+            $fullPath = $path . $file;
+            if (is_dir($fullPath)) {
+                self::rmdir($fullPath);
             } else {
-                unlink($fullpath);
+                unlink($fullPath);
             }
         }
 

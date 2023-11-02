@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Mustache\Loader;
 
@@ -27,7 +27,7 @@ class StringLoader implements Loader
      *
      * @return string Mustache Template source
      */
-    public function load($name): string
+    public function load(string $name): string
     {
         return $name;
     }

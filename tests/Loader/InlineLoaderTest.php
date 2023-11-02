@@ -29,7 +29,7 @@ class InlineLoaderTest extends TestCase
     public function testInvalidOffsetThrowsException()
     {
         $this->expectException(InvalidArgumentException::class);
-        new InlineLoader(__FILE__, 'notanumber');
+        new InlineLoader(__FILE__, -1);
     }
 
     public function testInvalidFileThrowsException()

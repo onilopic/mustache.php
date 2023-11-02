@@ -1,8 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Mustache\Loader;
 
 use Mustache\Exception\UnknownTemplateException;
+use Mustache\Loader;
 
 /**
  * Mustache Template array Loader implementation.
@@ -19,7 +20,7 @@ use Mustache\Exception\UnknownTemplateException;
  * The ArrayLoader is used internally as a partials loader by \Mustache\Engine instance when an array of partials
  * is set. It can also be used as a quick-and-dirty Template loader.
  */
-class ArrayLoader implements \Mustache\Loader, MutableLoader
+class ArrayLoader implements Loader, MutableLoader
 {
     private array $templates;
 
@@ -42,7 +43,7 @@ class ArrayLoader implements \Mustache\Loader, MutableLoader
      *
      * @return string Mustache Template source
      */
-    public function load($name)
+    public function load(string $name): string
     {
         if (!isset($this->templates[$name])) {
             throw new UnknownTemplateException($name);
@@ -67,7 +68,7 @@ class ArrayLoader implements \Mustache\Loader, MutableLoader
      * @param string $name
      * @param string $template Mustache Template source
      */
-    public function setTemplate($name, $template)
+    public function setTemplate(string $name, string $template)
     {
         $this->templates[$name] = $template;
     }

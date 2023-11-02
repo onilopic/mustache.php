@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Mustache\Loader;
 
@@ -44,13 +44,11 @@ class CascadingLoader implements Loader
     /**
      * Load a Template by name.
      *
-     * @throws UnknownTemplateException If a template file is not found
-     *
      * @param string $name
      *
-     * @return string Mustache Template source
+     * @return string|\Mustache\Source Mustache Template source
      */
-    public function load($name)
+    public function load(string $name): string|\Mustache\Source
     {
         foreach ($this->loaders as $loader) {
             try {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Mustache\Cache;
 
@@ -14,14 +14,14 @@ use Mustache\Exception\InvalidArgumentException;
  */
 abstract class AbstractCache implements Cache
 {
-    private $logger = null;
+    private mixed $logger = null;
 
     /**
      * Get the current logger instance.
      *
      * @return \Mustache\Logger|Psr\Log\LoggerInterface
      */
-    public function getLogger()
+    public function getLogger(): mixed
     {
         return $this->logger;
     }
@@ -47,7 +47,7 @@ abstract class AbstractCache implements Cache
      * @param string $message The log message
      * @param array  $context The log context
      */
-    protected function log($level, $message, array $context = [])
+    protected function log(string $level, string $message, array $context = [])
     {
         if (isset($this->logger)) {
             $this->logger->log($level, $message, $context);

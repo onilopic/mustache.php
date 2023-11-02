@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Mustache\Loader;
 
@@ -20,5 +20,5 @@ interface MutableLoader
      * @param string $name
      * @param string $template Mustache Template source
      */
-    public function setTemplate($name, $template);
+    public function setTemplate(string $name, string $template);
 }

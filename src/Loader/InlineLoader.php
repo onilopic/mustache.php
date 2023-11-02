@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Mustache\Loader;
 
@@ -67,13 +67,13 @@ class InlineLoader implements Loader
      *                         This usually coincides with the `__halt_compiler`
      *                         call, and the `__COMPILER_HALT_OFFSET__`
      */
-    public function __construct(string $fileName, $offset)
+    public function __construct(string $fileName, int $offset)
     {
         if (!is_file($fileName)) {
             throw new InvalidArgumentException('InlineLoader expects a valid filename.');
         }
 
-        if (!is_int($offset) || $offset < 0) {
+        if ($offset < 0) {
             throw new InvalidArgumentException('InlineLoader expects a valid file offset.');
         }
 
@@ -90,7 +90,7 @@ class InlineLoader implements Loader
      *
      * @return string Mustache Template source
      */
-    public function load($name)
+    public function load(string $name): string
     {
         $this->loadTemplates();
 

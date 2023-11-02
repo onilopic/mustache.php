@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Mustache\Loader;
 
@@ -47,7 +47,7 @@ class ProductionFilesystemLoader extends FilesystemLoader
      * @param string $baseDir Base directory containing Mustache template files.
      * @param array  $options Array of Loader options (default: array())
      */
-    public function __construct($baseDir, array $options = array())
+    public function __construct(string $baseDir, array $options = [])
     {
         parent::__construct($baseDir, $options);
 
@@ -71,7 +71,7 @@ class ProductionFilesystemLoader extends FilesystemLoader
      *
      * @return Source Mustache Template source
      */
-    protected function loadFile($name)
+    protected function loadFile(string $name): FilesystemSource
     {
         $fileName = $this->getFileName($name);
 
