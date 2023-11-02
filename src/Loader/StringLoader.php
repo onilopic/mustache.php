@@ -2,7 +2,7 @@
 
 namespace Mustache\Loader;
 
-use Mustache\Loader;
+use Mustache\Contract\Loader;
 
 /**
  * Mustache Template string Loader implementation.

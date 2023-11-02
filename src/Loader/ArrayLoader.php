@@ -2,8 +2,9 @@
 
 namespace Mustache\Loader;
 
+use Mustache\Contract\Loader;
+use Mustache\Contract\MutableLoader;
 use Mustache\Exception\UnknownTemplateException;
-use Mustache\Loader;
 
 /**
  * Mustache Template array Loader implementation.

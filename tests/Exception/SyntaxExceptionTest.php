@@ -14,7 +14,7 @@ class SyntaxExceptionTest extends TestCase
     {
         $e = new SyntaxException('whot', array('is' => 'this'));
         $resultLogicException = $e instanceof LogicException;
-        $resultMustacheException = $e instanceof \Mustache\Exception;
+        $resultMustacheException = $e instanceof \Mustache\Contract\Exception;
         $this->assertTrue($resultLogicException);
         $this->assertTrue($resultMustacheException);
     }

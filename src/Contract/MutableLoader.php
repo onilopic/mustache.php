@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Mustache\Loader;
+namespace Mustache\Contract;
 
 /**
  * Mustache Template mutable Loader interface.

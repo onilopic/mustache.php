@@ -3,7 +3,7 @@
 namespace Mustache\Exception;
 
 use InvalidArgumentException as IAE;
-use Mustache\Exception;
+use Mustache\Contract\Exception;
 
 /**
  * Invalid argument exception.

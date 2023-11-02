@@ -2,10 +2,10 @@
 
 namespace Mustache\Tests\Loader;
 
+use Mustache\Contract\Source;
 use Mustache\Exception\RuntimeException;
 use Mustache\Exception\UnknownTemplateException;
 use Mustache\Loader\ProductionFilesystemLoader;
-use Mustache\Source;
 use PHPUnit\Framework\TestCase;
 
 /**

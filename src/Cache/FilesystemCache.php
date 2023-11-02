@@ -9,7 +9,7 @@ use Mustache\Exception\RuntimeException;
  *
  * A FilesystemCache instance caches Mustache Template classes from the filesystem by name:
  *
- *     $cache = new \Mustache\Cache\FilesystemCache(dirname(__FILE__).'/cache');
+ *     $cache = new \Mustache\Contract\Cache\FilesystemCache(dirname(__FILE__).'/cache');
  *     $cache->cache($className, $compiledSource);
  *
  * The FilesystemCache benefits from any opcode caching that may be setup in your environment. So do that, k?
@@ -61,7 +61,7 @@ class FilesystemCache extends AbstractCache
         $fileName = $this->getCacheFilename($key);
 
         $this->log(
-            \Mustache\Logger::DEBUG,
+            \Mustache\Contract\Logger::DEBUG,
             'Writing to template cache: "{fileName}"',
             array('fileName' => $fileName)
         );
@@ -97,7 +97,7 @@ class FilesystemCache extends AbstractCache
         $dirName = dirname($fileName);
         if (!is_dir($dirName)) {
             $this->log(
-                \Mustache\Logger::INFO,
+                \Mustache\Contract\Logger::INFO,
                 'Creating Mustache template cache directory: "{dirName}"',
                 array('dirName' => $dirName)
             );
@@ -126,7 +126,7 @@ class FilesystemCache extends AbstractCache
         $dirName = $this->buildDirectoryForFilename($fileName);
 
         $this->log(
-            \Mustache\Logger::DEBUG,
+            \Mustache\Contract\Logger::DEBUG,
             'Caching compiled template to "{fileName}"',
             array('fileName' => $fileName)
         );
@@ -142,7 +142,7 @@ class FilesystemCache extends AbstractCache
 
             // @codeCoverageIgnoreStart
             $this->log(
-                \Mustache\Logger::ERROR,
+                \Mustache\Contract\Logger::ERROR,
                 'Unable to rename Mustache temp cache file: "{tempName}" -> "{fileName}"',
                 array('tempName' => $tempFile, 'fileName' => $fileName)
             );

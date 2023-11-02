@@ -2,9 +2,9 @@
 
 namespace Mustache\Loader;
 
+use Mustache\Contract\Loader;
 use Mustache\Exception\RuntimeException;
 use Mustache\Exception\UnknownTemplateException;
-use Mustache\Loader;
 use Mustache\Source\FilesystemSource;
 
 /**
@@ -12,14 +12,14 @@ use Mustache\Source\FilesystemSource;
  *
  * A FilesystemLoader instance loads Mustache Template source from the filesystem by name:
  *
- *     $loader = new \Mustache\Loader\FilesystemLoader(dirname(__FILE__).'/views');
+ *     $loader = new \Mustache\Contract\Loader\FilesystemLoader(dirname(__FILE__).'/views');
  *     $tpl = $loader->load('foo'); // equivalent to `file_get_contents(dirname(__FILE__).'/views/foo.mustache');
  *
  * This is probably the most useful Mustache Loader implementation. It can be used for partials and normal Templates:
  *
  *     $m = new Mustache(array(
- *          'loader'          => new \Mustache\Loader\FilesystemLoader(dirname(__FILE__).'/views'),
- *          'partials_loader' => new \Mustache\Loader\FilesystemLoader(dirname(__FILE__).'/views/partials'),
+ *          'loader'          => new \Mustache\Contract\Loader\FilesystemLoader(dirname(__FILE__).'/views'),
+ *          'partials_loader' => new \Mustache\Contract\Loader\FilesystemLoader(dirname(__FILE__).'/views/partials'),
  *     ));
  */
 class FilesystemLoader implements Loader
@@ -67,7 +67,7 @@ class FilesystemLoader implements Loader
     /**
      * Load a Template by name.
      *
-     *     $loader = new \Mustache\Loader\FilesystemLoader(dirname(__FILE__).'/views');
+     *     $loader = new \Mustache\Contract\Loader\FilesystemLoader(dirname(__FILE__).'/views');
      *     $loader->load('admin/dashboard'); // loads "./views/admin/dashboard.mustache";
      *
      * @param string $name

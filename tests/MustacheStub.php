@@ -2,7 +2,7 @@
 
 namespace Mustache\Tests;
 
-use Mustache\Cache;
+use Mustache\Contract\Cache;
 use Mustache\Engine;
 use Mustache\Template;
 

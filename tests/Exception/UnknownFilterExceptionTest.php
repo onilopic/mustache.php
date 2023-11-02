@@ -13,7 +13,7 @@ class UnknownFilterExceptionTest extends TestCase
     {
         $e = new UnknownFilterException('bacon');
         $resultUnexpectedValueException = $e instanceof UnexpectedValueException;
-        $resultMustacheException = $e instanceof \Mustache\Exception;
+        $resultMustacheException = $e instanceof \Mustache\Contract\Exception;
         $this->assertTrue($resultUnexpectedValueException);
         $this->assertTrue($resultMustacheException);
     }

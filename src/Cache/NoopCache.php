@@ -31,7 +31,7 @@ class NoopCache extends AbstractCache
     public function cache($key, $value)
     {
         $this->log(
-            \Mustache\Logger::WARNING,
+            \Mustache\Contract\Logger::WARNING,
             'Template cache disabled, evaluating "{className}" class at runtime',
             array('className' => $key)
         );

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Mustache;
+namespace Mustache\Contract;
 
 use RuntimeException;
 

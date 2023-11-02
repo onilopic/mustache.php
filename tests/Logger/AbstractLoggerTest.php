@@ -2,7 +2,7 @@
 
 namespace Mustache\Tests\Logger;
 
-use Mustache\Logger;
+use Mustache\Contract\Logger;
 use PHPUnit\Framework\TestCase;
 
 /**

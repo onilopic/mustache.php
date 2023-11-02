@@ -13,7 +13,7 @@ class UnknownTemplateExceptionTest extends TestCase
     {
         $e = new UnknownTemplateException('mario');
         $resultInvalidArgumentException = $e instanceof InvalidArgumentException;
-        $resultMustacheException = $e instanceof \Mustache\Exception;
+        $resultMustacheException = $e instanceof \Mustache\Contract\Exception;
         $this->assertTrue($resultInvalidArgumentException);
         $this->assertTrue($resultMustacheException);
     }

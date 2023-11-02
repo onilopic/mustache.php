@@ -2,9 +2,9 @@
 
 namespace Mustache\Tests\Logger;
 
+use Mustache\Contract\Logger;
 use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\LogicException;
-use Mustache\Logger;
 use Mustache\Logger\StreamLogger;
 use PHPUnit\Framework\TestCase;
 

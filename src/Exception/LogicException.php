@@ -3,7 +3,7 @@
 namespace Mustache\Exception;
 
 use LogicException as LE;
-use Mustache\Exception;
+use Mustache\Contract\Exception;
 
 /**
  * Logic exception.

@@ -2,8 +2,8 @@
 
 namespace Mustache\Source;
 
+use Mustache\Contract\Source;
 use Mustache\Exception\RuntimeException;
-use Mustache\Source;
 
 /**
  * Mustache template Filesystem Source.

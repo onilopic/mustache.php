@@ -2,7 +2,7 @@
 
 namespace Mustache\Exception;
 
-use Mustache\Exception;
+use Mustache\Contract\Exception;
 
 /**
  * Unknown helper exception.
@@ -13,7 +13,7 @@ class UnknownHelperException extends InvalidArgumentException implements Excepti
 
     /**
      * @param string    $helperName
-     * @param ?Exception $previous
+     * @param ?\Mustache\Contract\Exception $previous
      */
     public function __construct($helperName, \Exception $previous = null)
     {

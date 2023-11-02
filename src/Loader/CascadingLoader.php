@@ -2,8 +2,8 @@
 
 namespace Mustache\Loader;
 
+use Mustache\Contract\Loader;
 use Mustache\Exception\UnknownTemplateException;
-use Mustache\Loader;
 
 /**
  * A Mustache Template cascading loader implementation, which delegates to other
@@ -16,9 +16,9 @@ class CascadingLoader implements Loader
     /**
      * Construct a CascadingLoader with an array of loaders.
      *
-     *     $loader = new \Mustache\Loader\CascadingLoader(array(
-     *         new \Mustache\Loader\InlineLoader(__FILE__, __COMPILER_HALT_OFFSET__),
-     *         new \Mustache\Loader\FilesystemLoader(__DIR__.'/templates')
+     *     $loader = new \Mustache\Contract\Loader\CascadingLoader(array(
+     *         new \Mustache\Contract\Loader\InlineLoader(__FILE__, __COMPILER_HALT_OFFSET__),
+     *         new \Mustache\Contract\Loader\FilesystemLoader(__DIR__.'/templates')
      *     ));
      *
      * @param Loader[] $loaders
@@ -34,7 +34,7 @@ class CascadingLoader implements Loader
     /**
      * Add a Loader instance.
      *
-     * @param Loader $loader
+     * @param \Mustache\Contract\Loader $loader
      */
     public function addLoader(Loader $loader)
     {
@@ -46,9 +46,9 @@ class CascadingLoader implements Loader
      *
      * @param string $name
      *
-     * @return string|\Mustache\Source Mustache Template source
+     * @return string|\Mustache\Contract\Source Mustache Template source
      */
-    public function load(string $name): string|\Mustache\Source
+    public function load(string $name): string|\Mustache\Contract\Source
     {
         foreach ($this->loaders as $loader) {
             try {

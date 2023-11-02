@@ -5,11 +5,15 @@ namespace Mustache;
 use Closure;
 use Mustache\Cache\FilesystemCache;
 use Mustache\Cache\NoopCache;
+use Mustache\Contract\Cache;
+use Mustache\Contract\Loader;
+use Mustache\Contract\Logger;
+use Mustache\Contract\MutableLoader;
+use Mustache\Contract\Source;
 use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\RuntimeException;
 use Mustache\Exception\UnknownTemplateException;
 use Mustache\Loader\ArrayLoader;
-use Mustache\Loader\MutableLoader;
 use Mustache\Loader\StringLoader;
 use Psr\Log\LoggerInterface as PsrLoggerInterface;
 use Traversable;
@@ -98,10 +102,10 @@ class Engine
      *         'delimiters' => '<% %>',
      *
      *         // A Mustache template loader instance. Uses a StringLoader if not specified.
-     *         'loader' => new \Mustache\Loader\FilesystemLoader(dirname(__FILE__).'/views'),
+     *         'loader' => new \Mustache\Contract\Loader\FilesystemLoader(dirname(__FILE__).'/views'),
      *
      *         // A Mustache loader instance for partials.
-     *         'partials_loader' => new \Mustache\Loader\FilesystemLoader(dirname(__FILE__).'/views/partials'),
+     *         'partials_loader' => new \Mustache\Contract\Loader\FilesystemLoader(dirname(__FILE__).'/views/partials'),
      *
      *         // An array of Mustache partials. Useful for quick-and-dirty string template loading, but not as
      *         // efficient or lazy as a Filesystem (or database) loader.
@@ -111,7 +115,7 @@ class Engine
      *         // sections), or any other valid Mustache context value. They will be prepended to the context stack,
      *         // so they will be available in any template loaded by this Mustache instance.
      *         'helpers' => array('i18n' => function ($text) {
-     *             // do something translatey here...
+     *             // do something translate here...
      *         }),
      *
      *         // An 'escape' callback, responsible for escaping double-mustache variables.
@@ -146,7 +150,7 @@ class Engine
      * @throws InvalidArgumentException If `escape` option is not callable
      *
      */
-    public function __construct(array $options = array())
+    public function __construct(array $options = [])
     {
         if (isset($options['template_class_prefix'])) {
             if ((string)$options['template_class_prefix'] === '') {
@@ -454,7 +458,7 @@ class Engine
      * Set the Mustache Logger instance.
      *
      * @param ?Logger|PsrLoggerInterface $logger
-     * @throws InvalidArgumentException If logger is not an instance of \Mustache\Logger or Psr\Log\LoggerInterface
+     * @throws InvalidArgumentException If logger is not an instance of \Mustache\Contract\Logger or Psr\Log\LoggerInterface
      *
      */
     public function setLogger(null|Logger|PsrLoggerInterface $logger = null): void
@@ -721,7 +725,7 @@ class Engine
     /**
      * Instantiate and return a Mustache Template instance by source.
      *
-     * Optionally provide a \Mustache\Cache instance. This is used internally by \Mustache\Engine::loadLambda to respect
+     * Optionally provide a \Mustache\Contract\Cache instance. This is used internally by \Mustache\Engine::loadLambda to respect
      * the 'cache_lambda_templates' configuration option.
      *
      * @param string|Source $source

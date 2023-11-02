@@ -2,9 +2,9 @@
 
 namespace Mustache\Loader;
 
+use Mustache\Contract\Source;
 use Mustache\Exception\RuntimeException;
 use Mustache\Exception\UnknownTemplateException;
-use Mustache\Source;
 use Mustache\Source\FilesystemSource;
 
 /**

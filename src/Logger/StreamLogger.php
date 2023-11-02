@@ -3,9 +3,9 @@
 namespace Mustache\Logger;
 
 use InvalidArgumentException;
+use Mustache\Contract\Logger;
 use Mustache\Exception\LogicException;
 use Mustache\Exception\RuntimeException;
-use Mustache\Logger;
 
 /**
  * A Mustache Stream Logger.

@@ -2,7 +2,7 @@
 
 namespace Mustache\Exception;
 
-use Mustache\Exception;
+use Mustache\Contract\Exception;
 
 /**
  * Unknown template exception.

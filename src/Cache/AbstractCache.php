@@ -2,7 +2,7 @@
 
 namespace Mustache\Cache;
 
-use Mustache\Cache;
+use Mustache\Contract\Cache;
 use Mustache\Exception\InvalidArgumentException;
 
 /**
@@ -19,7 +19,7 @@ abstract class AbstractCache implements Cache
     /**
      * Get the current logger instance.
      *
-     * @return \Mustache\Logger|Psr\Log\LoggerInterface
+     * @return \Mustache\Contract\Logger|Psr\Log\LoggerInterface
      */
     public function getLogger(): mixed
     {
@@ -29,11 +29,11 @@ abstract class AbstractCache implements Cache
     /**
      * Set a logger instance.
      *
-     * @param \Mustache\Logger|Psr\Log\LoggerInterface $logger
+     * @param \Mustache\Contract\Logger|Psr\Log\LoggerInterface $logger
      */
     public function setLogger($logger = null)
     {
-        if ($logger !== null && !($logger instanceof \Mustache\Logger || is_a($logger, 'Psr\\Log\\LoggerInterface'))) {
+        if ($logger !== null && !($logger instanceof \Mustache\Contract\Logger || is_a($logger, 'Psr\\Log\\LoggerInterface'))) {
             throw new InvalidArgumentException('Expected an instance of \Mustache\Logger or Psr\\Log\\LoggerInterface.');
         }
 
