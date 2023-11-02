@@ -2,9 +2,11 @@
 
 namespace Mustache\Tests\Logger;
 
-class TestLogger extends \Mustache\Logger\AbstractLogger
+use Mustache\Logger\AbstractLogger;
+
+class TestLogger extends AbstractLogger
 {
-    public $log = array();
+    public array $log = [];
 
     /**
      * Logs with an arbitrary level.

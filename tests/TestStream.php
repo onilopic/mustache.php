@@ -5,9 +5,9 @@ namespace Mustache\Tests;
 /**
  * Minimal stream wrapper to test protocol-based access to templates.
  */
-class TestStream
+final class TestStream
 {
-    private $filehandle;
+    private mixed $fileHandler;
 
     /**
      * Always returns false.
@@ -17,7 +17,7 @@ class TestStream
      *
      * @return bool
      */
-    public function url_stat($path, $flags)
+    public function url_stat(string $path, int $flags): bool
     {
         return false;
     }
@@ -30,49 +30,45 @@ class TestStream
      *
      * @return bool
      */
-    public function stream_open($path, $mode)
+    public function stream_open(string $path, string $mode): bool
     {
         $path = preg_replace('-^test://-', '', $path);
-        $this->filehandle = fopen($path, $mode);
+        $this->fileHandler = fopen($path, $mode);
 
-        return $this->filehandle !== false;
+        return $this->fileHandler !== false;
     }
 
     /**
      * @return array
      */
-    public function stream_stat()
+    public function stream_stat(): array
     {
-        return array();
+        return [];
     }
 
     /**
      * @param int $count
      *
-     * @return string
+     * @return string|false
      */
-    public function stream_read($count)
+    public function stream_read(int $count): false|string
     {
-        return fgets($this->filehandle, $count);
+        return fgets($this->fileHandler, $count);
     }
 
     /**
      * @return bool
      */
-    public function stream_eof()
+    public function stream_eof(): bool
     {
-        return feof($this->filehandle);
+        return feof($this->fileHandler);
     }
 
     /**
      * @return bool
      */
-    public function stream_close()
+    public function stream_close(): bool
     {
-        return fclose($this->filehandle);
+        return fclose($this->fileHandler);
     }
-}
-
-if (!stream_wrapper_register('test', TestStream::class)) {
-    die('Failed to register protocol');
 }

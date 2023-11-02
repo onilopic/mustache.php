@@ -2,21 +2,25 @@
 
 namespace Mustache\Tests\FiveThree\Functional;
 
+use Mustache\Engine;
+use PHPUnit\Framework\TestCase;
+use StdClass;
+
 /**
  * @group lambdas
  * @group functional
  */
-class StrictCallablesTest extends \PHPUnit\Framework\TestCase
+class StrictCallablesTest extends TestCase
 {
     /**
      * @dataProvider callables
      */
     public function testStrictCallables($strict, $name, $section, $expected)
     {
-        $mustache = new \Mustache\Engine(['strict_callables' => $strict]);
+        $mustache = new Engine(['strict_callables' => $strict]);
         $tpl      = $mustache->loadTemplate('{{# section }}{{ name }}{{/ section }}');
 
-        $data = new \StdClass();
+        $data = new StdClass();
         $data->name    = $name;
         $data->section = $section;
 

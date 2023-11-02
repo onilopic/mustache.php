@@ -2,20 +2,23 @@
 
 namespace Mustache\Tests;
 
+use Mustache\Engine;
 use Mustache\Exception\SyntaxException;
+use Mustache\Parser;
 use Mustache\Tokenizer;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group unit
  */
-class ParserTest extends \PHPUnit\Framework\TestCase
+class ParserTest extends TestCase
 {
     /**
      * @dataProvider getTokenSets
      */
     public function testParse($tokens, $expected)
     {
-        $parser = new \Mustache\Parser();
+        $parser = new Parser();
         $this->assertEquals($expected, $parser->parse($tokens));
     }
 
@@ -188,12 +191,12 @@ class ParserTest extends \PHPUnit\Framework\TestCase
      */
     public function testParseWithInheritance($tokens, $expected)
     {
-        $parser = new \Mustache\Parser();
-        $parser->setPragmas(array(\Mustache\Engine::PRAGMA_BLOCKS));
+        $parser = new Parser();
+        $parser->setPragmas(array(Engine::PRAGMA_BLOCKS));
         $this->assertEquals($expected, $parser->parse($tokens));
     }
 
-    public static function getInheritanceTokenSets()
+    public static function getInheritanceTokenSets(): array
     {
         return [
             [
@@ -318,11 +321,11 @@ class ParserTest extends \PHPUnit\Framework\TestCase
     public function testParserThrowsExceptions($tokens)
     {
         $this->expectException(SyntaxException::class);
-        $parser = new \Mustache\Parser();
+        $parser = new Parser();
         $parser->parse($tokens);
     }
 
-    public static function getBadParseTrees()
+    public static function getBadParseTrees(): array
     {
         return [
             // no close

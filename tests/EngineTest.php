@@ -2,7 +2,21 @@
 
 namespace Mustache\Tests;
 
+use Mustache\Cache\FilesystemCache;
+use Mustache\Cache\NoopCache;
+use Mustache\Compiler;
+use Mustache\Engine;
+use Mustache\Exception\InvalidArgumentException;
+use Mustache\Exception\RuntimeException;
+use Mustache\Loader\ArrayLoader;
+use Mustache\Loader\ProductionFilesystemLoader;
+use Mustache\Loader\StringLoader;
+use Mustache\Logger;
+use Mustache\Logger\StreamLogger;
+use Mustache\Parser;
+use Mustache\Template;
 use Mustache\Tokenizer;
+use StdClass;
 
 /**
  * @group unit
@@ -11,10 +25,10 @@ class EngineTest extends FunctionalTestCase
 {
     public function testConstructor()
     {
-        $logger         = new \Mustache\Logger\StreamLogger(tmpfile());
-        $loader         = new \Mustache\Loader\StringLoader();
-        $partialsLoader = new \Mustache\Loader\ArrayLoader();
-        $mustache       = new \Mustache\Engine([
+        $logger         = new StreamLogger(tmpfile());
+        $loader         = new StringLoader();
+        $partialsLoader = new ArrayLoader();
+        $mustache       = new Engine([
             'template_class_prefix' => '__whot__',
             'cache'                 => self::$tempDir,
             'cache_file_mode'       => 777,
@@ -31,7 +45,7 @@ class EngineTest extends FunctionalTestCase
             'escape'       => 'strtoupper',
             'entity_flags' => ENT_QUOTES,
             'charset'      => 'ISO-8859-1',
-            'pragmas'      => [\Mustache\Engine::PRAGMA_FILTERS],
+            'pragmas'      => [Engine::PRAGMA_FILTERS],
         ]);
 
         $this->assertSame($logger, $mustache->getLogger());
@@ -46,10 +60,10 @@ class EngineTest extends FunctionalTestCase
         $this->assertTrue($mustache->hasHelper('bar'));
         $this->assertFalse($mustache->hasHelper('baz'));
         $this->assertInstanceOf('\Mustache\Cache\FilesystemCache', $mustache->getCache());
-        $this->assertEquals(array(\Mustache\Engine::PRAGMA_FILTERS), $mustache->getPragmas());
+        $this->assertEquals(array(Engine::PRAGMA_FILTERS), $mustache->getPragmas());
     }
 
-    public static function getFoo()
+    public static function getFoo(): string
     {
         return 'foo';
     }
@@ -60,7 +74,7 @@ class EngineTest extends FunctionalTestCase
         $data   = array('bar' => 'baz');
         $output = 'TEH OUTPUT';
 
-        $template = $this->getMockBuilder(\Mustache\Template::class)
+        $template = $this->getMockBuilder(Template::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -70,7 +84,7 @@ class EngineTest extends FunctionalTestCase
         $template->expects($this->once())
             ->method('render')
             ->with($data)
-            ->will($this->returnValue($output));
+            ->willReturn($output);
 
         $this->assertEquals($output, $mustache->render($source, $data));
         $this->assertEquals($source, $mustache->source);
@@ -78,13 +92,13 @@ class EngineTest extends FunctionalTestCase
 
     public function testSettingServices()
     {
-        $logger    = new \Mustache\Logger\StreamLogger(tmpfile());
-        $loader    = new \Mustache\Loader\StringLoader();
+        $logger    = new StreamLogger(tmpfile());
+        $loader    = new StringLoader();
         $tokenizer = new Tokenizer();
-        $parser    = new \Mustache\Parser();
-        $compiler  = new \Mustache\Compiler();
-        $mustache  = new \Mustache\Engine();
-        $cache     = new \Mustache\Cache\FilesystemCache(self::$tempDir);
+        $parser    = new Parser();
+        $compiler  = new Compiler();
+        $mustache  = new Engine();
+        $cache     = new FilesystemCache(self::$tempDir);
 
         $this->assertNotSame($logger, $mustache->getLogger());
         $mustache->setLogger($logger);
@@ -120,7 +134,7 @@ class EngineTest extends FunctionalTestCase
      */
     public function testCache()
     {
-        $mustache = new \Mustache\Engine(array(
+        $mustache = new Engine(array(
             'template_class_prefix' => '__whot__',
             'cache'                 => self::$tempDir,
         ));
@@ -139,7 +153,7 @@ class EngineTest extends FunctionalTestCase
             'cache_lambda_templates' => true,
         ));
 
-        $this->assertNotInstanceOf(\Mustache\Cache\NoopCache::class, $mustache->getProtectedLambdaCache());
+        $this->assertNotInstanceOf(NoopCache::class, $mustache->getProtectedLambdaCache());
         $this->assertSame($mustache->getCache(), $mustache->getProtectedLambdaCache());
     }
 
@@ -149,14 +163,14 @@ class EngineTest extends FunctionalTestCase
             'cache' => self::$tempDir,
         ));
 
-        $this->assertInstanceOf(\Mustache\Cache\NoopCache::class, $mustache->getProtectedLambdaCache());
+        $this->assertInstanceOf(NoopCache::class, $mustache->getProtectedLambdaCache());
         $this->assertNotSame($mustache->getCache(), $mustache->getProtectedLambdaCache());
     }
 
     public function testEmptyTemplatePrefixThrowsException()
     {
-        $this->expectException(\Mustache\Exception\InvalidArgumentException::class);
-        new \Mustache\Engine(array(
+        $this->expectException(InvalidArgumentException::class);
+        new Engine(array(
             'template_class_prefix' => '',
         ));
     }
@@ -167,8 +181,8 @@ class EngineTest extends FunctionalTestCase
      */
     public function testNonCallableEscapeThrowsException($escape)
     {
-        $this->expectException(\Mustache\Exception\InvalidArgumentException::class);
-        new \Mustache\Engine(array('escape' => $escape));
+        $this->expectException(InvalidArgumentException::class);
+        new Engine(array('escape' => $escape));
     }
 
     public static function getBadEscapers(): array
@@ -181,9 +195,9 @@ class EngineTest extends FunctionalTestCase
 
     public function testImmutablePartialsLoadersThrowException()
     {
-        $this->expectException(\Mustache\Exception\RuntimeException::class);
-        $mustache = new \Mustache\Engine(array(
-            'partials_loader' => new \Mustache\Loader\StringLoader(),
+        $this->expectException(RuntimeException::class);
+        $mustache = new Engine(array(
+            'partials_loader' => new StringLoader(),
         ));
 
         $mustache->setPartials(array('foo' => '{{ foo }}'));
@@ -191,8 +205,8 @@ class EngineTest extends FunctionalTestCase
 
     public function testMissingPartialsTreatedAsEmptyString()
     {
-        $mustache = new \Mustache\Engine(array(
-            'partials_loader' => new \Mustache\Loader\ArrayLoader(array(
+        $mustache = new Engine(array(
+            'partials_loader' => new ArrayLoader(array(
                 'foo' => 'FOO',
                 'baz' => 'BAZ',
             )),
@@ -205,7 +219,7 @@ class EngineTest extends FunctionalTestCase
     {
         $foo = array($this, 'getFoo');
         $bar = 'BAR';
-        $mustache = new \Mustache\Engine(array('helpers' => array(
+        $mustache = new Engine(array('helpers' => array(
             'foo' => $foo,
             'bar' => $bar,
         )));
@@ -237,32 +251,33 @@ class EngineTest extends FunctionalTestCase
         $this->assertEquals('foo - BAR - __qux__', $tpl->render(array('qux' => "won't mess things up")));
     }
 
-    public static function wrapWithUnderscores($text)
+    public static function wrapWithUnderscores($text): string
     {
         return '__' . $text . '__';
     }
 
     public function testSetHelpersThrowsExceptions()
     {
-        $this->expectException(\Mustache\Exception\InvalidArgumentException::class);
-        $mustache = new \Mustache\Engine();
+        $this->expectException(InvalidArgumentException::class);
+        $mustache = new Engine();
+        /** @noinspection PhpParamsInspection */
         $mustache->setHelpers('monkeymonkeymonkey');
     }
 
     public function testSetLoggerThrowsExceptions()
     {
-        $this->expectException(\Mustache\Exception\InvalidArgumentException::class);
-        $mustache = new \Mustache\Engine();
-        $mustache->setLogger(new \StdClass());
+        $this->expectException(InvalidArgumentException::class);
+        $mustache = new Engine();
+        $mustache->setLogger(new StdClass());
     }
 
     public function testLoadPartialCascading()
     {
-        $loader = new \Mustache\Loader\ArrayLoader(array(
+        $loader = new ArrayLoader(array(
             'foo' => 'FOO',
         ));
 
-        $mustache = new \Mustache\Engine(array('loader' => $loader));
+        $mustache = new Engine(array('loader' => $loader));
 
         $tpl = $mustache->loadTemplate('foo');
 
@@ -282,8 +297,8 @@ class EngineTest extends FunctionalTestCase
     public function testPartialLoadFailLogging()
     {
         $name     = tempnam(sys_get_temp_dir(), 'mustache-test');
-        $mustache = new \Mustache\Engine(array(
-            'logger'   => new \Mustache\Logger\StreamLogger($name, \Mustache\Logger::WARNING),
+        $mustache = new Engine(array(
+            'logger'   => new StreamLogger($name, Logger::WARNING),
             'partials' => array(
                 'foo' => 'FOO',
                 'bar' => 'BAR',
@@ -298,7 +313,7 @@ class EngineTest extends FunctionalTestCase
 
     public function testCacheWarningLogging()
     {
-        list($name, $mustache) = $this->getLoggedMustache(\Mustache\Logger::WARNING);
+        list($name, $mustache) = $this->getLoggedMustache(Logger::WARNING);
         $mustache->render('{{ foo }}', array('foo' => 'FOO'));
         $this->assertStringContainsString('WARNING: Template cache disabled, evaluating', file_get_contents($name));
     }
@@ -312,7 +327,7 @@ class EngineTest extends FunctionalTestCase
 
     public function testVerboseLoggingIsVerbose()
     {
-        list($name, $mustache) = $this->getLoggedMustache(\Mustache\Logger::DEBUG);
+        list($name, $mustache) = $this->getLoggedMustache(Logger::DEBUG);
         $mustache->render('{{ foo }}{{> bar }}', array('foo' => 'FOO'));
         $log = file_get_contents($name);
         $this->assertStringContainsString('DEBUG: Instantiating template: ', $log);
@@ -321,8 +336,8 @@ class EngineTest extends FunctionalTestCase
 
     public function testUnknownPragmaThrowsException()
     {
-        $this->expectException(\Mustache\Exception\InvalidArgumentException::class);
-        new \Mustache\Engine([
+        $this->expectException(InvalidArgumentException::class);
+        new Engine([
             'pragmas' => ['UNKNOWN'],
         ]);
     }
@@ -330,17 +345,17 @@ class EngineTest extends FunctionalTestCase
     public function testCompileFromMustacheSourceInstance()
     {
         $baseDir = realpath(dirname(__FILE__) . '/fixtures/templates');
-        $mustache = new \Mustache\Engine(array(
-            'loader' => new \Mustache\Loader\ProductionFilesystemLoader($baseDir),
-        ));
+        $mustache = new Engine([
+            'loader' => new ProductionFilesystemLoader($baseDir),
+        ]);
         $this->assertEquals('one contents', $mustache->render('one'));
     }
 
-    private function getLoggedMustache($level = \Mustache\Logger::ERROR)
+    private function getLoggedMustache($level = Logger::ERROR): array
     {
         $name     = tempnam(sys_get_temp_dir(), 'mustache-test');
-        $mustache = new \Mustache\Engine(array(
-            'logger' => new \Mustache\Logger\StreamLogger($name, $level),
+        $mustache = new Engine(array(
+            'logger' => new StreamLogger($name, $level),
         ));
 
         return array($name, $mustache);
@@ -348,7 +363,7 @@ class EngineTest extends FunctionalTestCase
 
     public function testCustomDelimiters()
     {
-        $mustache = new \Mustache\Engine(array(
+        $mustache = new Engine(array(
             'delimiters' => '[[ ]]',
             'partials'   => array(
                 'one' => '[[> two ]]',
@@ -361,23 +376,5 @@ class EngineTest extends FunctionalTestCase
 
         $tpl = $mustache->loadTemplate('[[> one ]]');
         $this->assertEquals('b', $tpl->render(array('a' => 'b')));
-    }
-}
-
-class MustacheStub extends \Mustache\Engine
-{
-    public $source;
-    public $template;
-
-    public function loadTemplate($source)
-    {
-        $this->source = $source;
-
-        return $this->template;
-    }
-
-    public function getProtectedLambdaCache()
-    {
-        return $this->getLambdaCache();
     }
 }

@@ -2,17 +2,20 @@
 
 namespace Mustache\Tests;
 
-class HelperCollectionTest extends \PHPUnit\Framework\TestCase
+use Mustache\HelperCollection;
+use PHPUnit\Framework\TestCase;
+
+class HelperCollectionTest extends TestCase
 {
     public function testConstructor()
     {
-        $foo = array($this, 'getFoo');
+        $foo = [$this, 'getFoo'];
         $bar = 'BAR';
 
-        $helpers = new \Mustache\HelperCollection(array(
+        $helpers = new HelperCollection([
             'foo' => $foo,
             'bar' => $bar,
-        ));
+        ]);
 
         $this->assertSame($foo, $helpers->get('foo'));
         $this->assertSame($bar, $helpers->get('bar'));
@@ -25,10 +28,10 @@ class HelperCollectionTest extends \PHPUnit\Framework\TestCase
 
     public function testAccessorsAndMutators()
     {
-        $foo = array($this, 'getFoo');
+        $foo = [$this, 'getFoo'];
         $bar = 'BAR';
 
-        $helpers = new \Mustache\HelperCollection();
+        $helpers = new HelperCollection();
         $this->assertTrue($helpers->isEmpty());
         $this->assertFalse($helpers->has('foo'));
         $this->assertFalse($helpers->has('bar'));
@@ -51,10 +54,10 @@ class HelperCollectionTest extends \PHPUnit\Framework\TestCase
 
     public function testMagicMethods()
     {
-        $foo = array($this, 'getFoo');
+        $foo = [$this, 'getFoo'];
         $bar = 'BAR';
 
-        $helpers = new \Mustache\HelperCollection();
+        $helpers = new HelperCollection();
         $this->assertTrue($helpers->isEmpty());
         $this->assertFalse($helpers->has('foo'));
         $this->assertFalse($helpers->has('bar'));
@@ -94,7 +97,7 @@ class HelperCollectionTest extends \PHPUnit\Framework\TestCase
             $this->expectNotToPerformAssertions();
         }
 
-        $helpers = new \Mustache\HelperCollection($helpers);
+        $helpers = new HelperCollection($helpers);
 
         foreach ($actions as $method => $args) {
             call_user_func_array(array($helpers, $method), $args);

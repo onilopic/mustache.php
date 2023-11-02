@@ -2,19 +2,22 @@
 
 namespace Mustache\Tests;
 
+use Mustache\Compiler;
+use Mustache\Exception\SyntaxException;
 use Mustache\Tokenizer;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group unit
  */
-class CompilerTest extends \PHPUnit\Framework\TestCase
+class CompilerTest extends TestCase
 {
     /**
      * @dataProvider getCompileValues
      */
     public function testCompile($source, array $tree, $name, $customEscaper, $entityFlags, $charset, $expected)
     {
-        $compiler = new \Mustache\Compiler();
+        $compiler = new Compiler();
 
         $compiled = $compiler->compile($source, $tree, $name, $customEscaper, $charset, false, $entityFlags);
         foreach ($expected as $contains) {
@@ -129,8 +132,8 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
 
     public function testCompilerThrowsSyntaxException()
     {
-        $this->expectException(\Mustache\Exception\SyntaxException::class);
-        $compiler = new \Mustache\Compiler();
+        $this->expectException(SyntaxException::class);
+        $compiler = new Compiler();
         $compiler->compile('', array(array(Tokenizer::TYPE => 'invalid')), 'SomeClass');
     }
 

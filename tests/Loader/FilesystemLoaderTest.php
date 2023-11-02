@@ -5,6 +5,7 @@ namespace Mustache\Tests\Loader;
 use Mustache\Exception\RuntimeException;
 use Mustache\Exception\UnknownTemplateException;
 use Mustache\Loader\FilesystemLoader;
+use Mustache\Tests\TestStream;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -27,10 +28,16 @@ class FilesystemLoaderTest extends TestCase
         $this->assertEquals('one contents', $loader->load('one'));
     }
 
+    public function testRegisterProtocol()
+    {
+        $result = stream_wrapper_register('test', TestStream::class);
+        $this->assertTrue($result, 'Failed to register protocol');
+    }
+
     public function testConstructorWithProtocol()
     {
         $baseDir = realpath(dirname(__FILE__) . '/../fixtures/templates');
-        $loader = new FilesystemLoader('file://' . $baseDir, array('extension' => '.ms'));
+        $loader = new FilesystemLoader('test://' . $baseDir, array('extension' => '.ms'));
         $this->assertEquals('alpha contents', $loader->load('alpha'));
         $this->assertEquals('beta contents', $loader->load('beta.ms'));
     }

@@ -2,15 +2,20 @@
 
 namespace Mustache\Tests\Exception;
 
+use Exception;
+use InvalidArgumentException;
 use Mustache\Exception\UnknownTemplateException;
+use PHPUnit\Framework\TestCase;
 
-class UnknownTemplateExceptionTest extends \PHPUnit\Framework\TestCase
+class UnknownTemplateExceptionTest extends TestCase
 {
     public function testInstance()
     {
         $e = new UnknownTemplateException('mario');
-        $this->assertTrue($e instanceof \InvalidArgumentException);
-        $this->assertTrue($e instanceof \Mustache\Exception);
+        $resultInvalidArgumentException = $e instanceof InvalidArgumentException;
+        $resultMustacheException = $e instanceof \Mustache\Exception;
+        $this->assertTrue($resultInvalidArgumentException);
+        $this->assertTrue($resultMustacheException);
     }
 
     public function testMessage()
@@ -31,7 +36,7 @@ class UnknownTemplateExceptionTest extends \PHPUnit\Framework\TestCase
             $this->markTestSkipped('Exception chaining requires at least PHP 5.3');
         }
 
-        $previous = new \Exception();
+        $previous = new Exception();
         $e = new UnknownTemplateException('foo', $previous);
         $this->assertSame($previous, $e->getPrevious());
     }

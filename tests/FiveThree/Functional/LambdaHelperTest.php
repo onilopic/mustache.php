@@ -2,17 +2,21 @@
 
 namespace Mustache\Tests\FiveThree\Functional;
 
+use Mustache\Engine;
+use PHPUnit\Framework\TestCase;
+use StdClass;
+
 /**
  * @group lambdas
  * @group functional
  */
-class LambdaHelperTest extends \PHPUnit\Framework\TestCase
+class LambdaHelperTest extends TestCase
 {
-    private $mustache;
+    private Engine $mustache;
 
     public function setUp(): void
     {
-        $this->mustache = new \Mustache\Engine();
+        $this->mustache = new Engine();
     }
 
     public function testSectionLambdaHelper()
@@ -20,7 +24,7 @@ class LambdaHelperTest extends \PHPUnit\Framework\TestCase
         $one = $this->mustache->loadTemplate('{{name}}');
         $two = $this->mustache->loadTemplate('{{#lambda}}{{name}}{{/lambda}}');
 
-        $foo = new \StdClass();
+        $foo = new StdClass();
         $foo->name = 'Mario';
         $foo->lambda = function ($text, $mustache) {
             return strtoupper($mustache->render($text));
@@ -34,7 +38,7 @@ class LambdaHelperTest extends \PHPUnit\Framework\TestCase
     {
         $tpl = $this->mustache->loadTemplate("{{=<% %>=}}\n<%# bang %><% value %><%/ bang %>");
 
-        $data = new \StdClass();
+        $data = new StdClass();
         $data->value = 'hello world';
         $data->bang = function ($text, $mustache) {
             return $mustache->render($text) . '!';
@@ -48,7 +52,7 @@ class LambdaHelperTest extends \PHPUnit\Framework\TestCase
         $one = $this->mustache->loadTemplate('{{name}}');
         $two = $this->mustache->loadTemplate('{{#lambda}}{{name}}{{/lambda}}');
 
-        $foo = new \StdClass();
+        $foo = new StdClass();
         $foo->name = 'Mario';
         $foo->lambda = function ($text, $render) {
             return strtoupper($render($text));

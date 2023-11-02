@@ -2,16 +2,20 @@
 
 namespace Mustache\Tests;
 
-abstract class SpecTestCase extends \PHPUnit\Framework\TestCase
+use Mustache\Engine;
+use Mustache\Template;
+use PHPUnit\Framework\TestCase;
+
+abstract class SpecTestCase extends TestCase
 {
-    protected static $mustache;
+    protected static Engine $mustache;
 
     public static function setUpBeforeClass(): void
     {
-        self::$mustache = new \Mustache\Engine();
+        self::$mustache = new Engine();
     }
 
-    protected static function loadTemplate($source, $partials)
+    protected static function loadTemplate($source, $partials): Template
     {
         self::$mustache->setPartials($partials);
 
@@ -27,7 +31,7 @@ abstract class SpecTestCase extends \PHPUnit\Framework\TestCase
      *
      * @return array
      */
-    protected static function loadSpec($name)
+    protected static function loadSpec(string $name): array
     {
         $filename = dirname(__FILE__) . '/../vendor/spec/specs/' . $name . '.json';
         if (!file_exists($filename)) {
@@ -42,7 +46,7 @@ abstract class SpecTestCase extends \PHPUnit\Framework\TestCase
             $data[] = array(
                 $test['name'] . ': ' . $test['desc'],
                 $test['template'],
-                isset($test['partials']) ? $test['partials'] : array(),
+                $test['partials'] ?? array(),
                 $test['data'],
                 $test['expected'],
             );

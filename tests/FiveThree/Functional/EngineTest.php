@@ -2,18 +2,24 @@
 
 namespace Mustache\Tests\FiveThree\Functional;
 
+use DateTime;
+use DateTimeZone;
+use Exception;
+use Mustache\Engine;
+use PHPUnit\Framework\TestCase;
+
 /**
  * @group pragmas
  * @group functional
  */
-class EngineTest extends \PHPUnit\Framework\TestCase
+class EngineTest extends TestCase
 {
     /**
      * @dataProvider pragmaData
      */
     public function testPragmasConstructorOption($pragmas, $helpers, $data, $tpl, $expect)
     {
-        $mustache = new \Mustache\Engine(array(
+        $mustache = new Engine(array(
             'pragmas' => $pragmas,
             'helpers' => $helpers,
         ));
@@ -21,22 +27,25 @@ class EngineTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expect, $mustache->render($tpl, $data));
     }
 
-    public static function pragmaData()
+    /**
+     * @throws Exception
+     */
+    public static function pragmaData(): array
     {
         $helpers = [
-            'longdate' => function (\DateTime $value) {
+            'longdate' => function (DateTime $value) {
                 return $value->format('Y-m-d h:m:s');
             },
         ];
 
         $data = [
-            'date' => new \DateTime('1/1/2000', new \DateTimeZone('UTC')),
+            'date' => new DateTime('1/1/2000', new DateTimeZone('UTC')),
         ];
 
         $tpl = '{{ date | longdate }}';
 
         return [
-            [[\Mustache\Engine::PRAGMA_FILTERS], $helpers, $data, $tpl, '2000-01-01 12:01:00'],
+            [[Engine::PRAGMA_FILTERS], $helpers, $data, $tpl, '2000-01-01 12:01:00'],
             [[], $helpers, $data, $tpl, ''],
         ];
     }

@@ -1,18 +1,24 @@
 <?php
 
+namespace Mustache\Tests\Functional;
+
+use Mustache\Engine;
+use Mustache\Exception\SyntaxException;
+use PHPUnit\Framework\TestCase;
+
 /**
  * @group inheritance
  * @group functional
  */
-class Mustache_Test_Functional_InheritanceTest extends PHPUnit\Framework\TestCase
+class InheritanceTest extends TestCase
 {
-    private $mustache;
+    private Engine $mustache;
 
     public function setUp(): void
     {
-        $this->mustache = new \Mustache\Engine(array(
-            'pragmas' => array(\Mustache\Engine::PRAGMA_BLOCKS),
-        ));
+        $this->mustache = new Engine([
+            'pragmas' => [Engine::PRAGMA_BLOCKS],
+        ]);
     }
 
     public static function getIllegalInheritanceExamples(): array
@@ -316,7 +322,7 @@ class Mustache_Test_Functional_InheritanceTest extends PHPUnit\Framework\TestCas
     {
         $partials = array(
             'parent' => 'collaborate_and{{$id}}{{/id}}',
-            'child'  => '{{<parent}}{{$id}}_listen{{/id}}{{/parent}}',
+            'child' => '{{<parent}}{{$id}}_listen{{/id}}{{/parent}}',
         );
 
         $this->mustache->setPartials($partials);
@@ -372,7 +378,7 @@ class Mustache_Test_Functional_InheritanceTest extends PHPUnit\Framework\TestCas
     public function testRecursionInInheritedTemplates()
     {
         $partials = array(
-            'include'  => '{{$foo}}default content{{/foo}} {{$bar}}{{<include2}}{{/include2}}{{/bar}}',
+            'include' => '{{$foo}}default content{{/foo}} {{$bar}}{{<include2}}{{/include2}}{{/bar}}',
             'include2' => '{{$foo}}include2 default content{{/foo}} {{<include}}{{$bar}}don\'t recurse{{/bar}}{{/include}}',
         );
 
@@ -390,8 +396,8 @@ class Mustache_Test_Functional_InheritanceTest extends PHPUnit\Framework\TestCas
     public function testTopLevelSubstitutionsTakePrecedenceInMultilevelInheritance()
     {
         $partials = array(
-            'parent'      => '{{<older}}{{$a}}p{{/a}}{{/older}}',
-            'older'       => '{{<grandParent}}{{$a}}o{{/a}}{{/grandParent}}',
+            'parent' => '{{<older}}{{$a}}p{{/a}}{{/older}}',
+            'older' => '{{<grandParent}}{{$a}}o{{/a}}{{/grandParent}}',
             'grandParent' => '{{$a}}g{{/a}}',
         );
 
@@ -409,8 +415,8 @@ class Mustache_Test_Functional_InheritanceTest extends PHPUnit\Framework\TestCas
     public function testMultiLevelInheritanceNoSubChild()
     {
         $partials = array(
-            'parent'      => '{{<older}}{{$a}}p{{/a}}{{/older}}',
-            'older'       => '{{<grandParent}}{{$a}}o{{/a}}{{/grandParent}}',
+            'parent' => '{{<older}}{{$a}}p{{/a}}{{/older}}',
+            'older' => '{{<grandParent}}{{$a}}o{{/a}}{{/grandParent}}',
             'grandParent' => '{{$a}}g{{/a}}',
         );
 
@@ -429,7 +435,7 @@ class Mustache_Test_Functional_InheritanceTest extends PHPUnit\Framework\TestCas
     {
         $partials = array(
             'include' => '{{$foo}}default content{{/foo}}',
-         );
+        );
 
         $this->mustache->setPartials($partials);
 
@@ -446,7 +452,7 @@ class Mustache_Test_Functional_InheritanceTest extends PHPUnit\Framework\TestCas
     {
         $partials = array(
             'include' => '{{$foo}}default content{{/foo}}',
-         );
+        );
 
         $this->mustache->setPartials($partials);
 
@@ -518,7 +524,7 @@ class Mustache_Test_Functional_InheritanceTest extends PHPUnit\Framework\TestCas
     public function testIllegalInheritanceExamples($partials, $data, $template)
     {
         $this->expectExceptionMessage("Illegal content in < parent tag");
-        $this->expectException(\Mustache\Exception\SyntaxException::class);
+        $this->expectException(SyntaxException::class);
         $this->mustache->setPartials($partials);
         $tpl = $this->mustache->loadTemplate($template);
         $tpl->render($data);

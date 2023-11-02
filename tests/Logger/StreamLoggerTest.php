@@ -1,17 +1,25 @@
 <?php
 
+namespace Mustache\Tests\Logger;
+
+use Mustache\Exception\InvalidArgumentException;
+use Mustache\Exception\LogicException;
+use Mustache\Logger;
+use Mustache\Logger\StreamLogger;
+use PHPUnit\Framework\TestCase;
+
 /**
  * @group unit
  */
-class Mustache_Test_Logger_StreamLoggerTest extends PHPUnit\Framework\TestCase
+class StreamLoggerTest extends TestCase
 {
     /**
      * @dataProvider acceptsStreamData
      */
     public function testAcceptsStream($name, $stream)
     {
-        $logger = new \Mustache\Logger\StreamLogger($stream);
-        $logger->log(\Mustache\Logger::CRITICAL, 'message');
+        $logger = new StreamLogger($stream);
+        $logger->log(Logger::CRITICAL, 'message');
 
         $this->assertEquals("CRITICAL: message\n", file_get_contents($name));
     }
@@ -21,20 +29,20 @@ class Mustache_Test_Logger_StreamLoggerTest extends PHPUnit\Framework\TestCase
         $one = tempnam(sys_get_temp_dir(), 'mustache-test');
         $two = tempnam(sys_get_temp_dir(), 'mustache-test');
 
-        return array(
-            array($one, $one),
-            array($two, fopen($two, 'a')),
-        );
+        return [
+            [$one, $one],
+            [$two, fopen($two, 'a')],
+        ];
     }
 
     public function testPrematurelyClosedStreamThrowsException()
     {
-        $this->expectException(\Mustache\Exception\LogicException::class);
+        $this->expectException(LogicException::class);
         $stream = tmpfile();
-        $logger = new \Mustache\Logger\StreamLogger($stream);
+        $logger = new StreamLogger($stream);
         fclose($stream);
 
-        $logger->log(\Mustache\Logger::CRITICAL, 'message');
+        $logger->log(Logger::CRITICAL, 'message');
     }
 
     /**
@@ -43,7 +51,7 @@ class Mustache_Test_Logger_StreamLoggerTest extends PHPUnit\Framework\TestCase
     public function testLoggingThresholds($logLevel, $level, $shouldLog)
     {
         $stream = tmpfile();
-        $logger = new \Mustache\Logger\StreamLogger($stream, $logLevel);
+        $logger = new StreamLogger($stream, $logLevel);
         $logger->log($level, 'logged');
 
         rewind($stream);
@@ -59,35 +67,35 @@ class Mustache_Test_Logger_StreamLoggerTest extends PHPUnit\Framework\TestCase
     public static function getLevels(): array
     {
         // $logLevel, $level, $shouldLog
-        return array(
+        return [
             // identities
-            array(\Mustache\Logger::EMERGENCY, \Mustache\Logger::EMERGENCY, true),
-            array(\Mustache\Logger::ALERT,     \Mustache\Logger::ALERT,     true),
-            array(\Mustache\Logger::CRITICAL,  \Mustache\Logger::CRITICAL,  true),
-            array(\Mustache\Logger::ERROR,     \Mustache\Logger::ERROR,     true),
-            array(\Mustache\Logger::WARNING,   \Mustache\Logger::WARNING,   true),
-            array(\Mustache\Logger::NOTICE,    \Mustache\Logger::NOTICE,    true),
-            array(\Mustache\Logger::INFO,      \Mustache\Logger::INFO,      true),
-            array(\Mustache\Logger::DEBUG,     \Mustache\Logger::DEBUG,     true),
+            [Logger::EMERGENCY, Logger::EMERGENCY, true],
+            [Logger::ALERT,     Logger::ALERT,     true],
+            [Logger::CRITICAL,  Logger::CRITICAL,  true],
+            [Logger::ERROR,     Logger::ERROR,     true],
+            [Logger::WARNING,   Logger::WARNING,   true],
+            [Logger::NOTICE,    Logger::NOTICE,    true],
+            [Logger::INFO,      Logger::INFO,      true],
+            [Logger::DEBUG,     Logger::DEBUG,     true],
 
             // one above
-            array(\Mustache\Logger::ALERT,     \Mustache\Logger::EMERGENCY, true),
-            array(\Mustache\Logger::CRITICAL,  \Mustache\Logger::ALERT,     true),
-            array(\Mustache\Logger::ERROR,     \Mustache\Logger::CRITICAL,  true),
-            array(\Mustache\Logger::WARNING,   \Mustache\Logger::ERROR,     true),
-            array(\Mustache\Logger::NOTICE,    \Mustache\Logger::WARNING,   true),
-            array(\Mustache\Logger::INFO,      \Mustache\Logger::NOTICE,    true),
-            array(\Mustache\Logger::DEBUG,     \Mustache\Logger::INFO,      true),
+            [Logger::ALERT,     Logger::EMERGENCY, true],
+            [Logger::CRITICAL,  Logger::ALERT,     true],
+            [Logger::ERROR,     Logger::CRITICAL,  true],
+            [Logger::WARNING,   Logger::ERROR,     true],
+            [Logger::NOTICE,    Logger::WARNING,   true],
+            [Logger::INFO,      Logger::NOTICE,    true],
+            [Logger::DEBUG,     Logger::INFO,      true],
 
             // one below
-            array(\Mustache\Logger::EMERGENCY, \Mustache\Logger::ALERT,     false),
-            array(\Mustache\Logger::ALERT,     \Mustache\Logger::CRITICAL,  false),
-            array(\Mustache\Logger::CRITICAL,  \Mustache\Logger::ERROR,     false),
-            array(\Mustache\Logger::ERROR,     \Mustache\Logger::WARNING,   false),
-            array(\Mustache\Logger::WARNING,   \Mustache\Logger::NOTICE,    false),
-            array(\Mustache\Logger::NOTICE,    \Mustache\Logger::INFO,      false),
-            array(\Mustache\Logger::INFO,      \Mustache\Logger::DEBUG,     false),
-        );
+            [Logger::EMERGENCY, Logger::ALERT,     false],
+            [Logger::ALERT,     Logger::CRITICAL,  false],
+            [Logger::CRITICAL,  Logger::ERROR,     false],
+            [Logger::ERROR,     Logger::WARNING,   false],
+            [Logger::WARNING,   Logger::NOTICE,    false],
+            [Logger::NOTICE,    Logger::INFO,      false],
+            [Logger::INFO,      Logger::DEBUG,     false],
+        ];
     }
 
     /**
@@ -96,7 +104,7 @@ class Mustache_Test_Logger_StreamLoggerTest extends PHPUnit\Framework\TestCase
     public function testLogging($level, $message, $context, $expected)
     {
         $stream = tmpfile();
-        $logger = new \Mustache\Logger\StreamLogger($stream, \Mustache\Logger::DEBUG);
+        $logger = new StreamLogger($stream, Logger::DEBUG);
         $logger->log($level, $message, $context);
 
         rewind($stream);
@@ -108,69 +116,69 @@ class Mustache_Test_Logger_StreamLoggerTest extends PHPUnit\Framework\TestCase
     public static function getLogMessages(): array
     {
         // $level, $message, $context, $expected
-        return array(
-            array(\Mustache\Logger::DEBUG,     'debug message',     array(),  "DEBUG: debug message\n"),
-            array(\Mustache\Logger::INFO,      'info message',      array(),  "INFO: info message\n"),
-            array(\Mustache\Logger::NOTICE,    'notice message',    array(),  "NOTICE: notice message\n"),
-            array(\Mustache\Logger::WARNING,   'warning message',   array(),  "WARNING: warning message\n"),
-            array(\Mustache\Logger::ERROR,     'error message',     array(),  "ERROR: error message\n"),
-            array(\Mustache\Logger::CRITICAL,  'critical message',  array(),  "CRITICAL: critical message\n"),
-            array(\Mustache\Logger::ALERT,     'alert message',     array(),  "ALERT: alert message\n"),
-            array(\Mustache\Logger::EMERGENCY, 'emergency message', array(),  "EMERGENCY: emergency message\n"),
+        return [
+            [Logger::DEBUG,     'debug message',     [],  "DEBUG: debug message\n"],
+            [Logger::INFO,      'info message',      [],  "INFO: info message\n"],
+            [Logger::NOTICE,    'notice message',    [],  "NOTICE: notice message\n"],
+            [Logger::WARNING,   'warning message',   [],  "WARNING: warning message\n"],
+            [Logger::ERROR,     'error message',     [],  "ERROR: error message\n"],
+            [Logger::CRITICAL,  'critical message',  [],  "CRITICAL: critical message\n"],
+            [Logger::ALERT,     'alert message',     [],  "ALERT: alert message\n"],
+            [Logger::EMERGENCY, 'emergency message', [],  "EMERGENCY: emergency message\n"],
 
             // with context
-            array(
-                \Mustache\Logger::ERROR,
+            [
+                Logger::ERROR,
                 'error message',
-                array('name' => 'foo', 'number' => 42),
+                ['name' => 'foo', 'number' => 42],
                 "ERROR: error message\n",
-            ),
+            ],
 
             // with interpolation
-            array(
-                \Mustache\Logger::ERROR,
+            [
+                Logger::ERROR,
                 'error {name}-{number}',
-                array('name' => 'foo', 'number' => 42),
+                ['name' => 'foo', 'number' => 42],
                 "ERROR: error foo-42\n",
-            ),
+            ],
 
             // with iterpolation false positive
-            array(
-                \Mustache\Logger::ERROR,
+            [
+                Logger::ERROR,
                 'error {nothing}',
-                array('name' => 'foo', 'number' => 42),
+                ['name' => 'foo', 'number' => 42],
                 "ERROR: error {nothing}\n",
-            ),
+            ],
 
             // with interpolation injection
-            array(
-                \Mustache\Logger::ERROR,
+            [
+                Logger::ERROR,
                 '{foo}',
-                array('foo' => '{bar}', 'bar' => 'FAIL'),
+                ['foo' => '{bar}', 'bar' => 'FAIL'],
                 "ERROR: {bar}\n",
-            ),
-        );
+            ],
+        ];
     }
 
     public function testChangeLoggingLevels()
     {
         $stream = tmpfile();
-        $logger = new \Mustache\Logger\StreamLogger($stream);
+        $logger = new StreamLogger($stream);
 
-        $logger->setLevel(\Mustache\Logger::ERROR);
-        $this->assertEquals(\Mustache\Logger::ERROR, $logger->getLevel());
+        $logger->setLevel(Logger::ERROR);
+        $this->assertEquals(Logger::ERROR, $logger->getLevel());
 
-        $logger->log(\Mustache\Logger::WARNING, 'ignore this');
+        $logger->log(Logger::WARNING, 'ignore this');
 
-        $logger->setLevel(\Mustache\Logger::INFO);
-        $this->assertEquals(\Mustache\Logger::INFO, $logger->getLevel());
+        $logger->setLevel(Logger::INFO);
+        $this->assertEquals(Logger::INFO, $logger->getLevel());
 
-        $logger->log(\Mustache\Logger::WARNING, 'log this');
+        $logger->log(Logger::WARNING, 'log this');
 
-        $logger->setLevel(\Mustache\Logger::CRITICAL);
-        $this->assertEquals(\Mustache\Logger::CRITICAL, $logger->getLevel());
+        $logger->setLevel(Logger::CRITICAL);
+        $this->assertEquals(Logger::CRITICAL, $logger->getLevel());
 
-        $logger->log(\Mustache\Logger::ERROR, 'ignore this');
+        $logger->log(Logger::ERROR, 'ignore this');
 
         rewind($stream);
         $result = fread($stream, 1024);
@@ -180,15 +188,15 @@ class Mustache_Test_Logger_StreamLoggerTest extends PHPUnit\Framework\TestCase
 
     public function testThrowsInvalidArgumentExceptionWhenSettingUnknownLevels()
     {
-        $this->expectException(\Mustache\Exception\InvalidArgumentException::class);
-        $logger = new \Mustache\Logger\StreamLogger(tmpfile());
+        $this->expectException(InvalidArgumentException::class);
+        $logger = new StreamLogger(tmpfile());
         $logger->setLevel('bacon');
     }
 
     public function testThrowsInvalidArgumentExceptionWhenLoggingUnknownLevels()
     {
-        $this->expectException(\Mustache\Exception\InvalidArgumentException::class);
-        $logger = new \Mustache\Logger\StreamLogger(tmpfile());
+        $this->expectException(InvalidArgumentException::class);
+        $logger = new StreamLogger(tmpfile());
         $logger->log('bacon', 'CODE BACON ERROR!');
     }
 }

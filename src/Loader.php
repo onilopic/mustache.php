@@ -14,7 +14,7 @@ interface Loader
      *
      * @param string $name
      *
-     * @return string|Mustache_Source Mustache Template source
+     * @return string|\Mustache\Source Mustache Template source
      */
     public function load($name);
 }

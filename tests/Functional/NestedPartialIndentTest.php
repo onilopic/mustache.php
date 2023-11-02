@@ -1,19 +1,24 @@
 <?php
 
+namespace Mustache\Tests\Functional;
+
+use Mustache\Engine;
+use PHPUnit\Framework\TestCase;
+
 /**
  * @group functional
  * @group partials
  */
-class Mustache_Test_Functional_NestedPartialIndentTest extends PHPUnit\Framework\TestCase
+class NestedPartialIndentTest extends TestCase
 {
     /**
      * @dataProvider partialsAndStuff
      */
     public function testNestedPartialsAreIndentedProperly($src, array $partials, $expected)
     {
-        $m = new \Mustache\Engine(array(
+        $m = new Engine([
             'partials' => $partials,
-        ));
+        ]);
         $tpl = $m->loadTemplate($src);
         $this->assertEquals($expected, $tpl->render());
     }

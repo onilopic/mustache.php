@@ -2,6 +2,8 @@
 
 namespace Mustache\Tests;
 
+use Mustache\Context;
+use Mustache\Engine;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -11,7 +13,7 @@ class TemplateTest extends TestCase
 {
     public function testConstructor()
     {
-        $mustache = new \Mustache\Engine();
+        $mustache = new Engine();
         $template = new TemplateStub($mustache);
         $this->assertSame($mustache, $template->getMustache());
     }
@@ -19,10 +21,10 @@ class TemplateTest extends TestCase
     public function testRendering()
     {
         $rendered = '<< wheee >>';
-        $mustache = new \Mustache\Engine();
+        $mustache = new Engine();
         $template = new TemplateStub($mustache);
         $template->rendered = $rendered;
-        $context  = new \Mustache\Context();
+        $context  = new Context();
 
         if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
             $this->assertEquals($rendered, $template());

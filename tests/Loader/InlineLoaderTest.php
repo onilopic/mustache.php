@@ -1,34 +1,41 @@
 <?php
 
+namespace Mustache\Tests\Loader;
+
+use Mustache\Exception\InvalidArgumentException;
+use Mustache\Exception\UnknownTemplateException;
+use Mustache\Loader\InlineLoader;
+use PHPUnit\Framework\TestCase;
+
 /**
  * @group unit
  */
-class Mustache_Test_Loader_InlineLoaderTest extends PHPUnit\Framework\TestCase
+class InlineLoaderTest extends TestCase
 {
     public function testLoadTemplates()
     {
-        $loader = new \Mustache\Loader\InlineLoader(__FILE__, __COMPILER_HALT_OFFSET__);
+        $loader = new InlineLoader(__FILE__, __COMPILER_HALT_OFFSET__);
         $this->assertEquals('{{ foo }}', $loader->load('foo'));
         $this->assertEquals('{{#bar}}BAR{{/bar}}', $loader->load('bar'));
     }
 
     public function testMissingTemplatesThrowExceptions()
     {
-        $this->expectException(\Mustache\Exception\UnknownTemplateException::class);
-        $loader = new \Mustache\Loader\InlineLoader(__FILE__, __COMPILER_HALT_OFFSET__);
+        $this->expectException(UnknownTemplateException::class);
+        $loader = new InlineLoader(__FILE__, __COMPILER_HALT_OFFSET__);
         $loader->load('not_a_real_template');
     }
 
     public function testInvalidOffsetThrowsException()
     {
-        $this->expectException(\Mustache\Exception\InvalidArgumentException::class);
-        new \Mustache\Loader\InlineLoader(__FILE__, 'notanumber');
+        $this->expectException(InvalidArgumentException::class);
+        new InlineLoader(__FILE__, 'notanumber');
     }
 
     public function testInvalidFileThrowsException()
     {
-        $this->expectException(\Mustache\Exception\InvalidArgumentException::class);
-        new \Mustache\Loader\InlineLoader('notarealfile', __COMPILER_HALT_OFFSET__);
+        $this->expectException(InvalidArgumentException::class);
+        new InlineLoader('notarealfile', __COMPILER_HALT_OFFSET__);
     }
 }
 

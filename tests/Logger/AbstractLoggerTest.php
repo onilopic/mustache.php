@@ -2,14 +2,17 @@
 
 namespace Mustache\Tests\Logger;
 
+use Mustache\Logger;
+use PHPUnit\Framework\TestCase;
+
 /**
  * @group unit
  */
-class AbstractLoggerTest extends \PHPUnit\Framework\TestCase
+class AbstractLoggerTest extends TestCase
 {
     public function testEverything()
     {
-        $logger = new \Mustache\Tests\Logger\TestLogger();
+        $logger = new TestLogger();
 
         $logger->emergency('emergency message');
         $logger->alert('alert message');
@@ -20,16 +23,16 @@ class AbstractLoggerTest extends \PHPUnit\Framework\TestCase
         $logger->info('info message');
         $logger->debug('debug message');
 
-        $expected = array(
-            array(\Mustache\Logger::EMERGENCY, 'emergency message', array()),
-            array(\Mustache\Logger::ALERT, 'alert message', array()),
-            array(\Mustache\Logger::CRITICAL, 'critical message', array()),
-            array(\Mustache\Logger::ERROR, 'error message', array()),
-            array(\Mustache\Logger::WARNING, 'warning message', array()),
-            array(\Mustache\Logger::NOTICE, 'notice message', array()),
-            array(\Mustache\Logger::INFO, 'info message', array()),
-            array(\Mustache\Logger::DEBUG, 'debug message', array()),
-        );
+        $expected = [
+            [Logger::EMERGENCY, 'emergency message', []],
+            [Logger::ALERT, 'alert message', []],
+            [Logger::CRITICAL, 'critical message', []],
+            [Logger::ERROR, 'error message', []],
+            [Logger::WARNING, 'warning message', []],
+            [Logger::NOTICE, 'notice message', []],
+            [Logger::INFO, 'info message', []],
+            [Logger::DEBUG, 'debug message', []],
+        ];
 
         $this->assertEquals($expected, $logger->log);
     }

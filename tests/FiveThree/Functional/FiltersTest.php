@@ -2,19 +2,25 @@
 
 namespace Mustache\Tests\FiveThree\Functional;
 
+use DateTime;
+use DateTimeZone;
+use Exception;
+use Mustache\Engine;
 use Mustache\Exception\UnknownFilterException;
+use PHPUnit\Framework\TestCase;
+use StdClass;
 
 /**
  * @group filters
  * @group functional
  */
-class FiltersTest extends \PHPUnit\Framework\TestCase
+class FiltersTest extends TestCase
 {
-    private $mustache;
+    private Engine $mustache;
 
     public function setUp(): void
     {
-        $this->mustache = new \Mustache\Engine();
+        $this->mustache = new Engine();
     }
 
     /**
@@ -26,10 +32,13 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expect, $this->mustache->render($tpl, $data));
     }
 
+    /**
+     * @throws Exception
+     */
     public static function singleFilterData(): array
     {
         $helpers = [
-            'longdate' => function (\DateTime $value) {
+            'longdate' => function (DateTime $value) {
                 return $value->format('Y-m-d h:m:s');
             },
             'echo' => function ($value) {
@@ -41,7 +50,7 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
             [
                 '{{% FILTERS }}{{ date | longdate }}',
                 $helpers,
-                (object) ['date' => new \DateTime('1/1/2000', new \DateTimeZone('UTC'))],
+                (object)['date' => new DateTime('1/1/2000', new DateTimeZone('UTC'))],
                 '2000-01-01 12:01:00',
             ],
 
@@ -54,11 +63,14 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
+    /**
+     * @throws Exception
+     */
     public function testChainedFilters()
     {
         $tpl = $this->mustache->loadTemplate('{{% FILTERS }}{{ date | longdate | withbrackets }}');
 
-        $this->mustache->addHelper('longdate', function (\DateTime $value) {
+        $this->mustache->addHelper('longdate', function (DateTime $value) {
             return $value->format('Y-m-d h:m:s');
         });
 
@@ -66,8 +78,8 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
             return sprintf('[[%s]]', $value);
         });
 
-        $foo = new \StdClass();
-        $foo->date = new \DateTime('1/1/2000', new \DateTimeZone('UTC'));
+        $foo = new StdClass();
+        $foo->date = new DateTime('1/1/2000', new DateTimeZone('UTC'));
 
         $this->assertEquals('[[2000-01-01 12:01:00]]', $tpl->render($foo));
     }
@@ -88,12 +100,10 @@ EOS;
         });
 
         $this->mustache->addHelper('with_index', function ($value) {
-            return array_map(function ($k, $v) {
-                return array(
-                    'key'   => $k,
-                    'value' => $v,
-                );
-            }, array_keys($value), $value);
+            return array_map(fn($k, $v) => [
+                'key' => $k,
+                'value' => $v,
+            ], array_keys($value), $value);
         });
 
         $this->assertEquals("0: bacon\n1: bacon\n2: bacon\n", $tpl->render(array('word' => 'bacon')));
@@ -111,13 +121,11 @@ EOS;
     {
         $data = [
             'foo' => 'FOO',
-            'bar' => function ($value) {
-                return ($value === 'FOO') ? 'win!' : 'fail :(';
-            },
+            'bar' => fn($value): string => ($value === 'FOO') ? 'win!' : 'fail :(',
         ];
 
         return [
-            ['{{% FILTERS }}{{ foo | bar }}',                         $data, 'win!'],
+            ['{{% FILTERS }}{{ foo | bar }}', $data, 'win!'],
             ['{{% FILTERS }}{{# foo | bar }}{{ . }}{{/ foo | bar }}', $data, 'win!'],
         ];
     }
@@ -132,52 +140,28 @@ EOS;
         $this->mustache->render($tpl, $data);
     }
 
-    public static function brokenPipeData()
+    public static function brokenPipeData(): array
     {
-        return array(
-            array('{{% FILTERS }}{{ foo | bar }}',       array()),
-            array('{{% FILTERS }}{{ foo | bar }}',       array('foo' => 'FOO')),
-            array('{{% FILTERS }}{{ foo | bar }}',       array('foo' => 'FOO', 'bar' => 'BAR')),
-            array('{{% FILTERS }}{{ foo | bar }}',       array('foo' => 'FOO', 'bar' => array(1, 2))),
-            array('{{% FILTERS }}{{ foo | bar | baz }}', array('foo' => 'FOO', 'bar' => function () {
-                return 'BAR';
-            })),
-            array('{{% FILTERS }}{{ foo | bar | baz }}', array('foo' => 'FOO', 'baz' => function () {
-                return 'BAZ';
-            })),
-            array('{{% FILTERS }}{{ foo | bar | baz }}', array('bar' => function () {
-                return 'BAR';
-            })),
-            array('{{% FILTERS }}{{ foo | bar | baz }}', array('baz' => function () {
-                return 'BAZ';
-            })),
-            array('{{% FILTERS }}{{ foo | bar.baz }}',   array('foo' => 'FOO', 'bar' => function () {
-                return 'BAR';
-            }, 'baz' => function () {
-                return 'BAZ';
-            })),
+        return [
+            ['{{% FILTERS }}{{ foo | bar }}', []],
+            ['{{% FILTERS }}{{ foo | bar }}', ['foo' => 'FOO']],
+            ['{{% FILTERS }}{{ foo | bar }}', ['foo' => 'FOO', 'bar' => 'BAR']],
+            ['{{% FILTERS }}{{ foo | bar }}', ['foo' => 'FOO', 'bar' => [1, 2]]],
+            ['{{% FILTERS }}{{ foo | bar | baz }}', ['foo' => 'FOO', 'bar' => fn() => 'BAR']],
+            ['{{% FILTERS }}{{ foo | bar | baz }}', ['foo' => 'FOO', 'baz' => fn() => 'BAZ']],
+            ['{{% FILTERS }}{{ foo | bar | baz }}', ['bar' => fn() => 'BAR']],
+            ['{{% FILTERS }}{{ foo | bar | baz }}', ['baz' => fn() => 'BAZ']],
+            ['{{% FILTERS }}{{ foo | bar.baz }}', ['foo' => 'FOO', 'bar' => fn() => 'BAR', 'baz' => fn() => 'BAZ']],
 
-            array('{{% FILTERS }}{{# foo | bar }}{{ . }}{{/ foo | bar }}',             array()),
-            array('{{% FILTERS }}{{# foo | bar }}{{ . }}{{/ foo | bar }}',             array('foo' => 'FOO')),
-            array('{{% FILTERS }}{{# foo | bar }}{{ . }}{{/ foo | bar }}',             array('foo' => 'FOO', 'bar' => 'BAR')),
-            array('{{% FILTERS }}{{# foo | bar }}{{ . }}{{/ foo | bar }}',             array('foo' => 'FOO', 'bar' => array(1, 2))),
-            array('{{% FILTERS }}{{# foo | bar | baz }}{{ . }}{{/ foo | bar | baz }}', array('foo' => 'FOO', 'bar' => function () {
-                return 'BAR';
-            })),
-            array('{{% FILTERS }}{{# foo | bar | baz }}{{ . }}{{/ foo | bar | baz }}', array('foo' => 'FOO', 'baz' => function () {
-                return 'BAZ';
-            })),
-            array('{{% FILTERS }}{{# foo | bar | baz }}{{ . }}{{/ foo | bar | baz }}', array('bar' => function () {
-                return 'BAR';
-            })),
-            array('{{% FILTERS }}{{# foo | bar | baz }}{{ . }}{{/ foo | bar | baz }}', array('baz' => function () {
-                return 'BAZ';
-            })),
-            array('{{% FILTERS }}{{# foo | bar.baz }}{{ . }}{{/ foo | bar.baz }}',     array('foo' => 'FOO', 'bar' => function () {
-                return 'BAR';
-            }, 'baz' => function () {
-                return 'BAZ';
-            })),
-        );
+            ['{{% FILTERS }}{{# foo | bar }}{{ . }}{{/ foo | bar }}', []],
+            ['{{% FILTERS }}{{# foo | bar }}{{ . }}{{/ foo | bar }}', ['foo' => 'FOO']],
+            ['{{% FILTERS }}{{# foo | bar }}{{ . }}{{/ foo | bar }}', ['foo' => 'FOO', 'bar' => 'BAR']],
+            ['{{% FILTERS }}{{# foo | bar }}{{ . }}{{/ foo | bar }}', ['foo' => 'FOO', 'bar' => [1, 2]]],
+            ['{{% FILTERS }}{{# foo | bar | baz }}{{ . }}{{/ foo | bar | baz }}', ['foo' => 'FOO', 'bar' => fn() => 'BAR']],
+            ['{{% FILTERS }}{{# foo | bar | baz }}{{ . }}{{/ foo | bar | baz }}', ['foo' => 'FOO', 'baz' => fn() => 'BAZ']],
+            ['{{% FILTERS }}{{# foo | bar | baz }}{{ . }}{{/ foo | bar | baz }}', ['bar' => fn() => 'BAR']],
+            ['{{% FILTERS }}{{# foo | bar | baz }}{{ . }}{{/ foo | bar | baz }}', ['baz' => fn() => 'BAZ']],
+            ['{{% FILTERS }}{{# foo | bar.baz }}{{ . }}{{/ foo | bar.baz }}', ['foo' => 'FOO', 'bar' => fn() => 'BAR', 'baz' => fn() => 'BAZ']],
+        ];
     }
 }

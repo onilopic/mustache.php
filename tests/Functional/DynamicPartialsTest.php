@@ -1,18 +1,24 @@
 <?php
 
+namespace Mustache\Tests\Functional;
+
+use Mustache\Engine;
+use Mustache\Exception\SyntaxException;
+use PHPUnit\Framework\TestCase;
+
 /**
  * @group dynamic-names
  * @group functional
  */
-class Mustache_Test_Functional_DynamicPartialsTest extends PHPUnit\Framework\TestCase
+class DynamicPartialsTest extends TestCase
 {
-    private $mustache;
+    private Engine $mustache;
 
     public function setUp(): void
     {
-        $this->mustache = new \Mustache\Engine(array(
-            'pragmas' => array(\Mustache\Engine::PRAGMA_DYNAMIC_NAMES),
-        ));
+        $this->mustache = new Engine([
+            'pragmas' => [Engine::PRAGMA_DYNAMIC_NAMES],
+        ]);
     }
 
     public static function getValidDynamicNamesExamples(): array
@@ -55,7 +61,7 @@ class Mustache_Test_Functional_DynamicPartialsTest extends PHPUnit\Framework\Tes
     public function testDynamicNameParseErrors($template)
     {
         $this->expectExceptionMessage("Nesting error:");
-        $this->expectException(\Mustache\Exception\SyntaxException::class);
+        $this->expectException(SyntaxException::class);
         $this->mustache->render($template);
     }
 
@@ -74,6 +80,6 @@ class Mustache_Test_Functional_DynamicPartialsTest extends PHPUnit\Framework\Tes
             'value' => 'BAR',
         ));
 
-        $this->assertSame($result, 'fooBARbaz');
+        $this->assertSame('fooBARbaz', $result);
     }
 }

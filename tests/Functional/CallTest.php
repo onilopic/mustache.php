@@ -1,31 +1,34 @@
 <?php
 
+namespace Mustache\Tests\Functional;
+
+use Mustache\Engine;
+use PHPUnit\Framework\TestCase;
+
 /**
  * @group magic_methods
  * @group functional
  */
-class Mustache_Test_Functional_CallTest extends PHPUnit\Framework\TestCase
+class CallTest extends TestCase
 {
     public function testCallEatsContext()
     {
-        $m = new \Mustache\Engine();
+        $m = new Engine();
         $tpl = $m->loadTemplate('{{# foo }}{{ label }}: {{ name }}{{/ foo }}');
 
-        $foo = new Mustache_Test_Functional_ClassWithCall();
+        $foo = new class() {
+            public string $name;
+
+            public function __call($method, $args)
+            {
+                return 'unknown value';
+            }
+        };
+
         $foo->name = 'Bob';
 
-        $data = array('label' => 'name', 'foo' => $foo);
+        $data = ['label' => 'name', 'foo' => $foo];
 
         $this->assertEquals('name: Bob', $tpl->render($data));
-    }
-}
-
-class Mustache_Test_Functional_ClassWithCall
-{
-    public $name;
-
-    public function __call($method, $args)
-    {
-        return 'unknown value';
     }
 }

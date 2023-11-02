@@ -9,7 +9,7 @@ use Traversable;
  */
 class HelperCollection
 {
-    private $helpers = array();
+    private array $helpers = [];
 
     /**
      * Helper Collection constructor.

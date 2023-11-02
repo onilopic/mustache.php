@@ -2,24 +2,31 @@
 
 namespace Mustache\Tests\Exception;
 
-class UnknownHelperExceptionTest extends \PHPUnit\Framework\TestCase
+use Exception;
+use InvalidArgumentException;
+use Mustache\Exception\UnknownHelperException;
+use PHPUnit\Framework\TestCase;
+
+class UnknownHelperExceptionTest extends TestCase
 {
     public function testInstance()
     {
-        $e = new \Mustache\Exception\UnknownHelperException('alpha');
-        $this->assertTrue($e instanceof \InvalidArgumentException);
-        $this->assertTrue($e instanceof \Mustache\Exception);
+        $e = new UnknownHelperException('alpha');
+        $resultInvalidArgumentException = $e instanceof InvalidArgumentException;
+        $resultMustacheException = $e instanceof \Mustache\Exception;
+        $this->assertTrue($resultInvalidArgumentException);
+        $this->assertTrue($resultMustacheException);
     }
 
     public function testMessage()
     {
-        $e = new \Mustache\Exception\UnknownHelperException('beta');
+        $e = new UnknownHelperException('beta');
         $this->assertEquals('Unknown helper: beta', $e->getMessage());
     }
 
     public function testGetHelperName()
     {
-        $e = new \Mustache\Exception\UnknownHelperException('gamma');
+        $e = new UnknownHelperException('gamma');
         $this->assertEquals('gamma', $e->getHelperName());
     }
 
@@ -29,8 +36,8 @@ class UnknownHelperExceptionTest extends \PHPUnit\Framework\TestCase
             $this->markTestSkipped('Exception chaining requires at least PHP 5.3');
         }
 
-        $previous = new \Exception();
-        $e = new \Mustache\Exception\UnknownHelperException('foo', $previous);
+        $previous = new Exception();
+        $e = new UnknownHelperException('foo', $previous);
         $this->assertSame($previous, $e->getPrevious());
     }
 }

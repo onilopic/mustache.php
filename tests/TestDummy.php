@@ -4,19 +4,19 @@ namespace Mustache\Tests;
 
 class TestDummy
 {
-    public $name = 'dummy';
+    public string $name = 'dummy';
 
-    public function __invoke()
+    public function __invoke(): void
     {
         // nothing
     }
 
-    public static function foo()
+    public static function foo(): string
     {
         return '<foo>';
     }
 
-    public function bar()
+    public function bar(): string
     {
         return '<bar>';
     }

@@ -3,44 +3,38 @@
 namespace Mustache\Tests;
 
 
-class AllTheThings implements \ArrayAccess
-{
-    public $foo  = 'fail';
-    public $bar  = 'win';
-    private $qux = 'fail';
+use ArrayAccess;
 
-    public function foo()
+class AllTheThings implements ArrayAccess
+{
+    public string $foo  = 'fail';
+    public string $bar  = 'win';
+
+    public function foo(): string
     {
         return 'win';
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return true;
     }
 
-    public function offsetGet($offset)
+    public function offsetGet($offset): string
     {
-        switch ($offset) {
-            case 'foo':
-            case 'bar':
-                return 'fail';
-
-            case 'baz':
-            case 'qux':
-                return 'win';
-
-            default:
-                return 'lolwhut';
-        }
+        return match ($offset) {
+            'foo', 'bar' => 'fail',
+            'baz', 'qux' => 'win',
+            default => 'lolwhut',
+        };
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         // nada
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         // nada
     }

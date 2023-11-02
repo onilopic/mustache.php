@@ -2,17 +2,21 @@
 
 namespace Mustache\Tests\Exception;
 
+use Exception;
 use LogicException;
 use Mustache\Exception\SyntaxException;
 use Mustache\Tokenizer;
+use PHPUnit\Framework\TestCase;
 
-class SyntaxExceptionTest extends \PHPUnit\Framework\TestCase
+class SyntaxExceptionTest extends TestCase
 {
     public function testInstance()
     {
         $e = new SyntaxException('whot', array('is' => 'this'));
-        $this->assertTrue($e instanceof LogicException);
-        $this->assertTrue($e instanceof \Mustache\Exception);
+        $resultLogicException = $e instanceof LogicException;
+        $resultMustacheException = $e instanceof \Mustache\Exception;
+        $this->assertTrue($resultLogicException);
+        $this->assertTrue($resultMustacheException);
     }
 
     public function testGetToken()
@@ -28,7 +32,7 @@ class SyntaxExceptionTest extends \PHPUnit\Framework\TestCase
             $this->markTestSkipped('Exception chaining requires at least PHP 5.3');
         }
 
-        $previous = new \Exception();
+        $previous = new Exception();
         $e = new SyntaxException('foo', array(), $previous);
 
         $this->assertSame($previous, $e->getPrevious());

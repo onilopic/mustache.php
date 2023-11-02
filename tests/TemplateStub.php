@@ -2,16 +2,20 @@
 
 namespace Mustache\Tests;
 
-class TemplateStub extends \Mustache\Template
-{
-    public $rendered;
+use Mustache\Context;
+use Mustache\Engine;
+use Mustache\Template;
 
-    public function getMustache()
+class TemplateStub extends Template
+{
+    public string $rendered;
+
+    public function getMustache(): Engine
     {
         return $this->mustache;
     }
 
-    public function renderInternal(\Mustache\Context $context, $indent = '', $escape = false)
+    public function renderInternal(Context $context, $indent = '', $escape = false): string
     {
         return $this->rendered;
     }

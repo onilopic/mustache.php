@@ -2,28 +2,29 @@
 
 namespace Mustache\Tests\FiveThree\Functional;
 
+use Mustache\Engine;
+use PHPUnit\Framework\TestCase;
+
 /**
  * @group lambdas
  * @group functional
  */
-class HigherOrderSectionsTest extends \PHPUnit\Framework\TestCase
+class HigherOrderSectionsTest extends TestCase
 {
-    private $mustache;
+    private Engine $mustache;
 
     public function setUp(): void
     {
-        $this->mustache = new \Mustache\Engine();
+        $this->mustache = new Engine();
     }
 
     public function testAnonymousFunctionSectionCallback()
     {
         $tpl = $this->mustache->loadTemplate('{{#wrapper}}{{name}}{{/wrapper}}');
 
-        $foo = new Foo();
+        $foo = new Context\Foo();
         $foo->name = 'Mario';
-        $foo->wrapper = function ($text) {
-            return sprintf('<div class="anonymous">%s</div>', $text);
-        };
+        $foo->wrapper = fn($text) => sprintf('<div class="anonymous">%s</div>', $text);
 
         $this->assertEquals(sprintf('<div class="anonymous">%s</div>', $foo->name), $tpl->render($foo));
     }
@@ -33,7 +34,7 @@ class HigherOrderSectionsTest extends \PHPUnit\Framework\TestCase
         $one = $this->mustache->loadTemplate('{{name}}');
         $two = $this->mustache->loadTemplate('{{#wrap}}{{name}}{{/wrap}}');
 
-        $foo = new Foo();
+        $foo = new Context\Foo();
         $foo->name = 'Luigi';
 
         $this->assertEquals($foo->name, $one->render($foo));
@@ -52,19 +53,5 @@ class HigherOrderSectionsTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->assertEquals(sprintf('[[%s]]', $data['name']), $tpl->render($data));
-    }
-}
-
-class Foo
-{
-    public $name  = 'Justin';
-    public $lorem = 'Lorem ipsum dolor sit amet,';
-    public $wrap;
-
-    public function __construct()
-    {
-        $this->wrap = function ($text) {
-            return sprintf('<em>%s</em>', $text);
-        };
     }
 }

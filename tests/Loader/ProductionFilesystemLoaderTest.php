@@ -2,25 +2,31 @@
 
 namespace Mustache\Tests\Loader;
 
+use Mustache\Exception\RuntimeException;
+use Mustache\Exception\UnknownTemplateException;
+use Mustache\Loader\ProductionFilesystemLoader;
+use Mustache\Source;
+use PHPUnit\Framework\TestCase;
+
 /**
  * @group unit
  */
-class ProductionFilesystemLoaderTest extends \PHPUnit\Framework\TestCase
+class ProductionFilesystemLoaderTest extends TestCase
 {
     public function testConstructor()
     {
         $baseDir = realpath(dirname(__FILE__) . '/../fixtures/templates');
-        $loader = new \Mustache\Loader\ProductionFilesystemLoader($baseDir, array('extension' => '.ms'));
-        $this->assertInstanceOf(\Mustache\Source::class, $loader->load('alpha'));
+        $loader = new ProductionFilesystemLoader($baseDir, array('extension' => '.ms'));
+        $this->assertInstanceOf(Source::class, $loader->load('alpha'));
         $this->assertEquals('alpha contents', $loader->load('alpha')->getSource());
-        $this->assertInstanceOf(\Mustache\Source::class, $loader->load('beta.ms'));
+        $this->assertInstanceOf(Source::class, $loader->load('beta.ms'));
         $this->assertEquals('beta contents', $loader->load('beta.ms')->getSource());
     }
 
     public function testTrailingSlashes()
     {
         $baseDir = dirname(__FILE__) . '/../fixtures/templates/';
-        $loader = new \Mustache\Loader\ProductionFilesystemLoader($baseDir);
+        $loader = new ProductionFilesystemLoader($baseDir);
         $this->assertEquals('one contents', $loader->load('one')->getSource());
     }
 
@@ -28,7 +34,7 @@ class ProductionFilesystemLoaderTest extends \PHPUnit\Framework\TestCase
     {
         $baseDir = realpath(dirname(__FILE__) . '/../fixtures/templates');
 
-        $loader = new \Mustache\Loader\ProductionFilesystemLoader('file://' . $baseDir, array('extension' => '.ms'));
+        $loader = new ProductionFilesystemLoader('file://' . $baseDir, array('extension' => '.ms'));
         $this->assertEquals('alpha contents', $loader->load('alpha')->getSource());
         $this->assertEquals('beta contents', $loader->load('beta.ms')->getSource());
     }
@@ -36,7 +42,7 @@ class ProductionFilesystemLoaderTest extends \PHPUnit\Framework\TestCase
     public function testLoadTemplates()
     {
         $baseDir = realpath(dirname(__FILE__) . '/../fixtures/templates');
-        $loader = new \Mustache\Loader\ProductionFilesystemLoader($baseDir);
+        $loader = new ProductionFilesystemLoader($baseDir);
         $this->assertEquals('one contents', $loader->load('one')->getSource());
         $this->assertEquals('two contents', $loader->load('two.mustache')->getSource());
     }
@@ -45,26 +51,26 @@ class ProductionFilesystemLoaderTest extends \PHPUnit\Framework\TestCase
     {
         $baseDir = realpath(dirname(__FILE__) . '/../fixtures/templates');
 
-        $loader = new \Mustache\Loader\ProductionFilesystemLoader($baseDir, array('extension' => ''));
+        $loader = new ProductionFilesystemLoader($baseDir, array('extension' => ''));
         $this->assertEquals('one contents', $loader->load('one.mustache')->getSource());
         $this->assertEquals('alpha contents', $loader->load('alpha.ms')->getSource());
 
-        $loader = new \Mustache\Loader\ProductionFilesystemLoader($baseDir, array('extension' => null));
+        $loader = new ProductionFilesystemLoader($baseDir, array('extension' => null));
         $this->assertEquals('two contents', $loader->load('two.mustache')->getSource());
         $this->assertEquals('beta contents', $loader->load('beta.ms')->getSource());
     }
 
     public function testMissingBaseDirThrowsException()
     {
-        $this->expectException(\Mustache\Exception\RuntimeException::class);
-        new \Mustache\Loader\ProductionFilesystemLoader(dirname(__FILE__) . '/not_a_directory');
+        $this->expectException(RuntimeException::class);
+        new ProductionFilesystemLoader(dirname(__FILE__) . '/not_a_directory');
     }
 
     public function testMissingTemplateThrowsException()
     {
-        $this->expectException(\Mustache\Exception\UnknownTemplateException::class);
+        $this->expectException(UnknownTemplateException::class);
         $baseDir = realpath(dirname(__FILE__) . '/../fixtures/templates');
-        $loader = new \Mustache\Loader\ProductionFilesystemLoader($baseDir);
+        $loader = new ProductionFilesystemLoader($baseDir);
 
         $loader->load('fake');
     }
@@ -72,10 +78,10 @@ class ProductionFilesystemLoaderTest extends \PHPUnit\Framework\TestCase
     public function testLoadWithDifferentStatProps()
     {
         $baseDir = realpath(dirname(__FILE__) . '/../fixtures/templates');
-        $noStatLoader = new \Mustache\Loader\ProductionFilesystemLoader($baseDir, array('stat_props' => null));
-        $mtimeLoader = new \Mustache\Loader\ProductionFilesystemLoader($baseDir, array('stat_props' => array('mtime')));
-        $sizeLoader = new \Mustache\Loader\ProductionFilesystemLoader($baseDir, array('stat_props' => array('size')));
-        $bothLoader = new \Mustache\Loader\ProductionFilesystemLoader($baseDir, array('stat_props' => array('mtime', 'size')));
+        $noStatLoader = new ProductionFilesystemLoader($baseDir, array('stat_props' => null));
+        $mtimeLoader = new ProductionFilesystemLoader($baseDir, array('stat_props' => array('mtime')));
+        $sizeLoader = new ProductionFilesystemLoader($baseDir, array('stat_props' => array('size')));
+        $bothLoader = new ProductionFilesystemLoader($baseDir, array('stat_props' => array('mtime', 'size')));
 
         $noStatKey = $noStatLoader->load('one.mustache')->getKey();
         $mtimeKey = $mtimeLoader->load('one.mustache')->getKey();

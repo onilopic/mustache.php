@@ -2,11 +2,14 @@
 
 namespace Mustache\Tests\FiveThree\Functional;
 
+use Mustache\Engine;
+use PHPUnit\Framework\TestCase;
+
 /**
  * @group lambdas
  * @group functional
  */
-class PartialLambdaIndentTest extends \PHPUnit\Framework\TestCase
+class PartialLambdaIndentTest extends TestCase
 {
     public function testLambdasInsidePartialsAreIndentedProperly()
     {
@@ -28,13 +31,13 @@ EOS;
 
 EOS;
 
-        $m = new \Mustache\Engine(array(
+        $m = new Engine(array(
             'partials' => array('input' => $partial),
         ));
 
         $tpl = $m->loadTemplate($src);
 
-        $data = new ClassWithLambda();
+        $data = new Context\ClassWithLambda();
         $this->assertEquals($expected, $tpl->render($data));
     }
 
@@ -58,30 +61,13 @@ EOS;
 
 EOS;
 
-        $m = new \Mustache\Engine(array(
-            'partials' => array('input' => $partial),
-        ));
+        $m = new Engine([
+            'partials' => ['input' => $partial],
+        ]);
 
         $tpl = $m->loadTemplate($src);
 
-        $data = new ClassWithLambda();
+        $data = new Context\ClassWithLambda();
         $this->assertEquals($expected, $tpl->render($data));
-    }
-}
-
-class ClassWithLambda
-{
-    public function _t()
-    {
-        return function ($val) {
-            return strtoupper($val);
-        };
-    }
-
-    public function placeholder()
-    {
-        return function () {
-            return 'Enter your name';
-        };
     }
 }

@@ -70,7 +70,7 @@ class FilesystemLoader implements \Mustache\Loader
      *
      * @param string $name
      *
-     * @return string Mustache Template source
+     * @return string|\Mustache\Source\FilesystemSource  Mustache Template source
      */
     public function load($name)
     {

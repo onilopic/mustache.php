@@ -2,17 +2,20 @@
 
 namespace Mustache\Tests\FiveThree\Functional;
 
+use Mustache\Engine;
+use PHPUnit\Framework\TestCase;
+
 /**
  * @group lambdas
  * @group functional
  */
-class ClosureQuirksTest extends \PHPUnit\Framework\TestCase
+class ClosureQuirksTest extends TestCase
 {
-    private $mustache;
+    private Engine $mustache;
 
     public function setUp(): void
     {
-        $this->mustache = new \Mustache\Engine();
+        $this->mustache = new Engine();
     }
 
     public function testClosuresDontLikeItWhenYouTouchTheirProperties()

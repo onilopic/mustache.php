@@ -35,27 +35,24 @@ class MustacheSpecTest extends SpecTestCase
         $this->assertEquals($expected, $template($this->prepareLambdasSpec($data)), $desc);
     }
 
-    public static function loadLambdasSpec()
+    public static function loadLambdasSpec(): array
     {
         return self::loadSpec('~lambdas');
     }
 
     /**
-     * Extract and lambdafy any 'lambda' values found in the $data array.
+     * Extract and lambda by any 'lambda' values found in the $data array.
      */
     private function prepareLambdasSpec($data)
     {
         foreach ($data as $key => $val) {
             if (isset($val['__tag__']) && $val['__tag__'] === 'code') {
                 if (!isset($val['php'])) {
-                    $this->markTestSkipped(sprintf('PHP lambda test not implemented for this test.'));
-                    return;
+                    $this->markTestSkipped('PHP lambda test not implemented for this test.');
                 }
 
                 $func = $val['php'];
-                $data[$key] = function ($text = null) use ($func) {
-                    return eval($func);
-                };
+                $data[$key] = fn($text = null) => eval($func);
             } elseif (is_array($val)) {
                 $data[$key] = $this->prepareLambdasSpec($val);
             }

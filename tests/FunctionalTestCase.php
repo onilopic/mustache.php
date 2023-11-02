@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 abstract class FunctionalTestCase extends TestCase
 {
-    protected static $tempDir;
+    protected static string $tempDir;
 
     public static function setUpBeforeClass(): void
     {
@@ -19,7 +19,7 @@ abstract class FunctionalTestCase extends TestCase
     /**
      * @param string $path
      */
-    protected static function rmdir($path)
+    protected static function rmdir(string $path)
     {
         $path = rtrim($path, '/') . '/';
         $handle = opendir($path);

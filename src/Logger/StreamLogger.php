@@ -3,7 +3,6 @@
 namespace Mustache\Logger;
 
 use InvalidArgumentException;
-use Mustache\Exception\InvalidArgumentException as Mustache_Exception_InvalidArgumentException;
 use Mustache\Exception\LogicException;
 use Mustache\Exception\RuntimeException;
 use Mustache\Logger;
