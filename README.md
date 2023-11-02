@@ -3,6 +3,13 @@ Mustache.php
 
 A [Mustache](https://mustache.github.io/) implementation in PHP.
 
+This is fork [Mustache.php](https://github.com/bobthecow/mustache.php/wiki/Home) from bobthecow.
+
+* Minimum Php version was updated to 8.1
+* Remove autoloader, add composer autoloader support
+* Add namespace, types
+
+
 Usage
 -----
 
@@ -10,8 +17,8 @@ A quick example:
 
 ```php
 <?php
-$m = new \Mustache\Engine(array('entity_flags' => ENT_QUOTES));
-echo $m->render('Hello {{planet}}', array('planet' => 'World!')); // "Hello World!"
+$m = new \Mustache\Engine(['entity_flags' => ENT_QUOTES]);
+echo $m->render('Hello {{planet}}', ['planet' => 'World!']); // "Hello World!"
 ```
 
 
@@ -34,7 +41,8 @@ class Chris {
     public $name  = "Chris";
     public $value = 10000;
 
-    public function taxedValue() {
+    public function taxedValue() 
+    {
         return $this->value - ($this->value * 0.4);
     }
 
