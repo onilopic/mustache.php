@@ -41,11 +41,11 @@ class FilesystemLoader implements \Mustache\Loader
      * @param string $baseDir Base directory containing Mustache template files
      * @param array  $options Array of Loader options (default: array())
      */
-    public function __construct($baseDir, array $options = array())
+    public function __construct(string $baseDir, array $options = array())
     {
         $this->baseDir = $baseDir;
 
-        if (strpos($this->baseDir, '://') === false) {
+        if (!str_contains($this->baseDir, '://')) {
             $this->baseDir = realpath($this->baseDir);
         }
 
@@ -126,6 +126,6 @@ class FilesystemLoader implements \Mustache\Loader
      */
     protected function shouldCheckPath()
     {
-        return strpos($this->baseDir, '://') === false || strpos($this->baseDir, 'file://') === 0;
+        return !str_contains($this->baseDir, '://') || str_starts_with($this->baseDir, 'file://');
     }
 }

@@ -3,7 +3,8 @@
 namespace Mustache\Tests\Cache;
 
 use Mustache\Exception\InvalidArgumentException;
-use Phpunit\FrameWork\TestCase;
+use PHPUnit\Framework\TestCase;
+
 
 class AbstractCacheTest extends TestCase
 {
