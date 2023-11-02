@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Mustache;
 
@@ -40,22 +40,22 @@ class Engine
     ];
 
     // Template cache
-    private $templates = array();
+    private array $templates = [];
 
     // Environment
-    private $templateClassPrefix = '__Mustache_';
-    private $cache;
-    private $lambdaCache;
-    private $cacheLambdaTemplates = false;
-    private $loader;
-    private $partialsLoader;
-    private $helpers;
-    private $escape;
-    private $entityFlags = ENT_COMPAT;
-    private $charset = 'UTF-8';
+    private string $templateClassPrefix = '__Mustache_';
+    private Cache $cache;
+    private Cache $lambdaCache;
+    private bool $cacheLambdaTemplates = false;
+    private Loader $loader;
+    private Loader $partialsLoader;
+    private HelperCollection $helpers;
+    private string|\Closure $escape;
+    private int $entityFlags = ENT_COMPAT;
+    private string $charset = 'UTF-8';
     private $logger;
-    private $strictCallables = false;
-    private $pragmas = array();
+    private bool $strictCallables = false;
+    private array $pragmas = [];
     private $delimiters;
 
     // Services
@@ -625,7 +625,7 @@ class Engine
         // 'default' escapes.
         //
         // Keep this list in alphabetical order :)
-        $chunks = array(
+        $chunks = [
             'charset'         => $this->charset,
             'delimiters'      => $this->delimiters ?: '{{ }}',
             'entityFlags'     => $this->entityFlags,
@@ -634,7 +634,7 @@ class Engine
             'pragmas'         => $this->getPragmas(),
             'strictCallables' => $this->strictCallables,
             'version'         => self::VERSION,
-        );
+        ];
 
         $key = json_encode($chunks);
 
@@ -704,9 +704,9 @@ class Engine
      *
      * @return \Mustache\Template
      */
-    public function loadLambda($source, $delims = null)
+    public function loadLambda(string $source, string $delims = '')
     {
-        if ($delims !== null) {
+        if ($delims !== '') {
             $source = $delims . "\n" . $source;
         }
 

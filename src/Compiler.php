@@ -617,7 +617,7 @@ class Compiler
         {
             private $lambdaHelper;%s
 
-            public function renderInternal(\Mustache\Context $context, $indent = \'\')
+            public function renderInternal(\Mustache\Context $context, string $indent = \'\'): string
             {
                 $this->lambdaHelper = new \Mustache\LambdaHelper($this->mustache, $context);
                 $buffer = \'\';
@@ -632,7 +632,7 @@ class Compiler
 
         class %s extends \Mustache\Template
         {%s
-            public function renderInternal(\Mustache\Context $context, $indent = \'\')
+            public function renderInternal(\Mustache\Context $context, string $indent = \'\'): string
             {
                 $buffer = \'\';
         %s
@@ -640,7 +640,7 @@ class Compiler
                 return $buffer;
             }
         }';
-    private const STRICT_CALLABLE = 'protected $strictCallables = true;';
+    private const STRICT_CALLABLE = 'protected bool $strictCallables = true;';
     private const BLOCK_VAR = '
         $blockFunction = $context->findInBlock(%s);
         if (is_callable($blockFunction)) {
@@ -667,7 +667,7 @@ class Compiler
     ';
 
     private const SECTION = '
-        private function section%s(\Mustache\Context $context, $indent, $value)
+        private function section%s(\Mustache\Context $context, string $indent, $value): string
         {
             $buffer = \'\';
 

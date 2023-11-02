@@ -89,13 +89,13 @@ class StreamLogger extends AbstractLogger
     /**
      * Logs with an arbitrary level.
      *
-     * @throws \Mustache\Exception\InvalidArgumentException if the logging level is unknown
-     *
      * @param mixed  $level
      * @param string $message
      * @param array  $context
+     *@throws \Mustache\Exception\InvalidArgumentException if the logging level is unknown
+     *
      */
-    public function log($level, $message, array $context = array())
+    public function log(mixed $level, string $message, array $context = array())
     {
         if (!array_key_exists($level, self::$levels)) {
             throw new \Mustache\Exception\InvalidArgumentException(sprintf('Unexpected logging level: %s', $level));

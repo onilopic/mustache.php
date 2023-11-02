@@ -3,6 +3,7 @@
 namespace Mustache\Tests;
 
 use Mustache\HelperCollection;
+use PHPUnit\Framework\Attributes\WithoutErrorHandler;
 use PHPUnit\Framework\TestCase;
 
 class HelperCollectionTest extends TestCase
@@ -89,29 +90,29 @@ class HelperCollectionTest extends TestCase
     /**
      * @dataProvider getInvalidHelperArguments
      */
-    public function testHelperCollectionIsntAfraidToThrowExceptions($helpers = array(), $actions = array(), $exception = null)
+    public function testHelperCollectionIsntAfraidToThrowExceptions(array $helpers = [], array $actions = [], $exception = null)
     {
-        if ($exception) {
+       if($exception) {
             $this->expectException($exception);
         } else {
             $this->expectNotToPerformAssertions();
         }
 
         $helpers = new HelperCollection($helpers);
-
         foreach ($actions as $method => $args) {
             call_user_func_array(array($helpers, $method), $args);
         }
     }
 
+    public function testHelperCollectionIsntAfraidToThrowError()
+    {
+        $this->expectException(\TypeError::class);
+        $helpers = new HelperCollection(1);
+    }
+
     public static function getInvalidHelperArguments(): array
     {
         return [
-            [
-                'not helpers',
-                [],
-                'InvalidArgumentException',
-            ],
             [
                 [],
                 ['get' => ['foo']],

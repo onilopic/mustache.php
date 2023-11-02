@@ -15,7 +15,7 @@ class TemplateStub extends Template
         return $this->mustache;
     }
 
-    public function renderInternal(Context $context, $indent = '', $escape = false): string
+    public function renderInternal(Context $context, string $indent = '', bool $escape = false): string
     {
         return $this->rendered;
     }

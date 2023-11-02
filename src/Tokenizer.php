@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Mustache;
 
@@ -49,7 +49,7 @@ class Tokenizer
         self::T_BLOCK_VAR    => true,
     ];
 
-    private static $tagNames = array(
+    private static array $tagNames = [
         self::T_SECTION      => 'section',
         self::T_INVERTED     => 'inverted section',
         self::T_END_SECTION  => 'section end',
@@ -63,7 +63,7 @@ class Tokenizer
         self::T_PRAGMA       => 'pragma',
         self::T_BLOCK_VAR    => 'block variable',
         self::T_BLOCK_ARG    => 'block variable',
-    );
+    ];
 
     // Token properties
     const TYPE    = 'type';
@@ -101,11 +101,11 @@ class Tokenizer
      * @throws InvalidArgumentException when $delimiters string is invalid
      *
      * @param string $text       Mustache template source to tokenize
-     * @param string $delimiters Optionally, pass initial opening and closing delimiters (default: empty string)
+     * @param int|string|null $delimiters Optionally, pass initial opening and closing delimiters (default: empty string)
      *
      * @return array Set of Mustache tokens
      */
-    public function scan($text, $delimiters = '')
+    public function scan(string $text, int|string|null $delimiters = '')
     {
         // Setting mbstring.func_overload makes things *really* slow.
         // Let's do everyone a favor and scan this string as ASCII instead.
@@ -351,7 +351,7 @@ class Tokenizer
      *
      * @return int New index value
      */
-    private function addPragma($text, $index)
+    private function addPragma(string $text, int $index): int
     {
         $end    = strpos($text, $this->ctag, $index);
         if ($end === false) {
@@ -371,7 +371,7 @@ class Tokenizer
     }
 
 
-    private function throwUnclosedTagException()
+    private function throwUnclosedTagException(): void
     {
         $name = trim($this->buffer);
         if ($name !== '') {
@@ -397,7 +397,7 @@ class Tokenizer
      *
      * @return string
      */
-    static function getTagName($tagType)
+    static function getTagName(string $tagType): string
     {
         return self::$tagNames[$tagType] ?? 'unknown';
     }

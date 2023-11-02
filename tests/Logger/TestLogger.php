@@ -11,11 +11,11 @@ class TestLogger extends AbstractLogger
     /**
      * Logs with an arbitrary level.
      *
-     * @param mixed  $level
+     * @param mixed $level
      * @param string $message
      * @param array  $context
      */
-    public function log($level, $message, array $context = array())
+    public function log(mixed $level, string $message, array $context = array())
     {
         $this->log[] = array($level, $message, $context);
     }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Mustache;
 
@@ -14,12 +14,12 @@ abstract class Template
     /**
      * @var Engine
      */
-    protected $mustache;
+    protected Engine $mustache;
 
     /**
      * @var bool
      */
-    protected $strictCallables = false;
+    protected bool $strictCallables = false;
 
     /**
      * Mustache Template constructor.
@@ -38,13 +38,13 @@ abstract class Template
      *     $tpl = $m->loadTemplate('Hello, {{ name }}!');
      *     echo $tpl(array('name' => 'World')); // "Hello, World!"
      *
-     * @see \Mustache\Template::render
-     *
-     * @param mixed $context Array or object rendering context (default: array())
+     * @param mixed|array $context Array or object rendering context (default: array())
      *
      * @return string Rendered template
+     *@see \Mustache\Template::render
+     *
      */
-    public function __invoke($context = array())
+    public function __invoke(array $context = array()): string
     {
         return $this->render($context);
     }
@@ -52,11 +52,11 @@ abstract class Template
     /**
      * Render this template given the rendering context.
      *
-     * @param mixed $context Array or object rendering context (default: array())
+     * @param mixed|array $context Array or object rendering context (default: array())
      *
      * @return string Rendered template
      */
-    public function render($context = array())
+    public function render(mixed $context = array()): string
     {
         return $this->renderInternal(
             $this->prepareContextStack($context)
@@ -71,11 +71,11 @@ abstract class Template
      * NOTE: This method is not part of the Mustache.php public API.
      *
      * @param Context $context
-     * @param string           $indent  (default: '')
+     * @param string $indent  (default: '')
      *
      * @return string Rendered template
      */
-    abstract public function renderInternal(Context $context, $indent = '');
+    abstract public function renderInternal(Context $context, string $indent = ''): string;
 
     /**
      * Tests whether a value should be iterated over (e.g. in a section context).
@@ -85,7 +85,7 @@ abstract class Template
      * Java, Python, etc.
      *
      * PHP, however, treats lists and hashes as one primitive type: array. So Mustache.php needs a way to distinguish
-     * between between a list of things (numeric, normalized array) and a set of variables to be used as section context
+     * between a list of things (numeric, normalized array) and a set of variables to be used as section context
      * (associative array). In other words, this will be iterated over:
      *
      *     $items = array(
@@ -106,7 +106,7 @@ abstract class Template
      *
      * @return bool True if the value is 'iterable'
      */
-    protected function isIterable($value)
+    protected function isIterable(mixed $value): bool
     {
         switch (gettype($value)) {
             case 'object':
@@ -132,11 +132,11 @@ abstract class Template
      *
      * Adds the Mustache HelperCollection to the stack's top context frame if helpers are present.
      *
-     * @param mixed $context Optional first context frame (default: null)
+     * @param mixed|null $context Optional first context frame (default: null)
      *
      * @return Context
      */
-    protected function prepareContextStack($context = null)
+    protected function prepareContextStack(mixed $context = null): Context
     {
         $stack = new Context();
 
@@ -160,9 +160,9 @@ abstract class Template
      * @param mixed            $value
      * @param Context $context
      *
-     * @return string
+     * @return mixed
      */
-    protected function resolveValue($value, Context $context)
+    protected function resolveValue(mixed $value, Context $context): mixed
     {
         if (($this->strictCallables ? is_object($value) : !is_string($value)) && is_callable($value)) {
             return $this->mustache

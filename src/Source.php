@@ -1,6 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Mustache;
+
+use RuntimeException;
 
 /**
  * Mustache template Source interface.
@@ -18,16 +20,16 @@ interface Source
      *
      * @throws RuntimeException when a source file cannot be read
      *
-     * @return string
+     * @return false|string
      */
-    public function getKey();
+    public function getKey(): false|string;
 
     /**
      * Get the template Source.
      *
      * @throws RuntimeException when a source file cannot be read
      *
-     * @return string
+     * @return false|string
      */
-    public function getSource();
+    public function getSource(): false|string;
 }

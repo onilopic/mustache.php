@@ -1,24 +1,25 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Mustache;
 
 use ArrayAccess;
 use Closure;
+use InvalidArgumentException;
 
 /**
  * Mustache Template rendering Context.
  */
 class Context
 {
-    private $stack      = array();
-    private $blockStack = array();
+    private array $stack = [];
+    private array $blockStack = [];
 
     /**
      * Mustache rendering Context constructor.
      *
      * @param mixed $context Default rendering context (default: null)
      */
-    public function __construct($context = null)
+    public function __construct(mixed $context = null)
     {
         if ($context !== null) {
             $this->stack = array($context);
@@ -30,9 +31,9 @@ class Context
      *
      * @param mixed $value Object or array to use for context
      */
-    public function push($value)
+    public function push(mixed $value): void
     {
-        array_push($this->stack, $value);
+        $this->stack[] = $value;
     }
 
     /**
@@ -40,9 +41,9 @@ class Context
      *
      * @param mixed $value Object or array to use for block context
      */
-    public function pushBlockContext($value)
+    public function pushBlockContext(mixed $value): void
     {
-        array_push($this->blockStack, $value);
+        $this->blockStack[] = $value;
     }
 
     /**
@@ -50,7 +51,7 @@ class Context
      *
      * @return mixed Last Context frame (object or array)
      */
-    public function pop()
+    public function pop(): mixed
     {
         return array_pop($this->stack);
     }
@@ -60,7 +61,7 @@ class Context
      *
      * @return mixed Last block Context frame (object or array)
      */
-    public function popBlockContext()
+    public function popBlockContext(): mixed
     {
         return array_pop($this->blockStack);
     }
@@ -70,7 +71,7 @@ class Context
      *
      * @return mixed Last Context frame (object or array)
      */
-    public function last()
+    public function last(): mixed
     {
         return end($this->stack);
     }
@@ -90,7 +91,7 @@ class Context
      *
      * @return mixed Variable value, or '' if not found
      */
-    public function find($id)
+    public function find(string $id): mixed
     {
         return $this->findVariableInStack($id, $this->stack);
     }
@@ -120,11 +121,11 @@ class Context
      *
      * @return mixed Variable value, or '' if not found
      */
-    public function findDot($id)
+    public function findDot(string $id): mixed
     {
         $chunks = explode('.', $id);
-        $first  = array_shift($chunks);
-        $value  = $this->findVariableInStack($first, $this->stack);
+        $first = array_shift($chunks);
+        $value = $this->findVariableInStack($first, $this->stack);
 
         foreach ($chunks as $chunk) {
             if ($value === '') {
@@ -144,23 +145,23 @@ class Context
      * stack for the first value, rather than searching the whole context stack
      * and starting from there.
      *
-     * @see \Mustache\Context::findDot
-     *
-     * @throws \InvalidArgumentException if given an invalid anchored dot $id
-     *
      * @param string $id Dotted variable selector
      *
      * @return mixed Variable value, or '' if not found
+     * @throws InvalidArgumentException if given an invalid anchored dot $id
+     *
+     * @see \Mustache\Context::findDot
+     *
      */
-    public function findAnchoredDot($id)
+    public function findAnchoredDot(string $id): mixed
     {
         $chunks = explode('.', $id);
-        $first  = array_shift($chunks);
+        $first = array_shift($chunks);
         if ($first !== '') {
-            throw new \InvalidArgumentException(sprintf('Unexpected id for findAnchoredDot: %s', $id));
+            throw new InvalidArgumentException(sprintf('Unexpected id for findAnchoredDot: %s', $id));
         }
 
-        $value  = $this->last();
+        $value = $this->last();
 
         foreach ($chunks as $chunk) {
             if ($value === '') {
@@ -180,7 +181,7 @@ class Context
      *
      * @return mixed Variable value, or '' if not found
      */
-    public function findInBlock($id)
+    public function findInBlock(string $id): mixed
     {
         foreach ($this->blockStack as $context) {
             if (array_key_exists($id, $context)) {
@@ -194,14 +195,14 @@ class Context
     /**
      * Helper function to find a variable in the Context stack.
      *
-     * @see \Mustache\Context::find
-     *
-     * @param string $id    Variable name
-     * @param array  $stack Context stack
+     * @param string $id Variable name
+     * @param array $stack Context stack
      *
      * @return mixed Variable value, or '' if not found
+     * @see \Mustache\Context::find
+     *
      */
-    private function findVariableInStack($id, array $stack)
+    private function findVariableInStack(string $id, array $stack): mixed
     {
         for ($i = count($stack) - 1; $i >= 0; $i--) {
             $frame = &$stack[$i];
