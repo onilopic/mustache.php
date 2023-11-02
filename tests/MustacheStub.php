@@ -2,21 +2,23 @@
 
 namespace Mustache\Tests;
 
+use Mustache\Cache;
 use Mustache\Engine;
+use Mustache\Template;
 
 class MustacheStub extends Engine
 {
-    public $source;
-    public $template;
+    public string $source;
+    public Template $template;
 
-    public function loadTemplate($source)
+    public function loadTemplate(string $source): Template
     {
         $this->source = $source;
 
         return $this->template;
     }
 
-    public function getProtectedLambdaCache()
+    public function getProtectedLambdaCache(): Cache
     {
         return $this->getLambdaCache();
     }

@@ -258,7 +258,7 @@ class EngineTest extends FunctionalTestCase
 
     public function testSetHelpersThrowsExceptions()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\TypeError::class);
         $mustache = new Engine();
         /** @noinspection PhpParamsInspection */
         $mustache->setHelpers('monkeymonkeymonkey');
@@ -266,7 +266,7 @@ class EngineTest extends FunctionalTestCase
 
     public function testSetLoggerThrowsExceptions()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\TypeError::class);
         $mustache = new Engine();
         $mustache->setLogger(new StdClass());
     }

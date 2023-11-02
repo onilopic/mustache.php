@@ -2,6 +2,8 @@
 
 namespace Mustache;
 
+use Mustache\Exception\SyntaxException;
+
 /**
  * Mustache Parser class.
  *
@@ -9,14 +11,14 @@ namespace Mustache;
  */
 class Parser
 {
-    private $lineNum;
-    private $lineTokens;
-    private $pragmas;
-    private $defaultPragmas = array();
+    private int $lineNum;
+    private int $lineTokens;
+    private array $pragmas;
+    private array $defaultPragmas = [];
 
-    private $pragmaFilters;
-    private $pragmaBlocks;
-    private $pragmaDynamicNames;
+    private bool $pragmaFilters;
+    private bool $pragmaBlocks;
+    private bool $pragmaDynamicNames;
 
     /**
      * Process an array of Mustache tokens and convert them into a parse tree.
@@ -25,15 +27,15 @@ class Parser
      *
      * @return array Mustache token parse tree
      */
-    public function parse(array $tokens = array())
+    public function parse(array $tokens = array()): array
     {
         $this->lineNum    = -1;
         $this->lineTokens = 0;
         $this->pragmas    = $this->defaultPragmas;
 
-        $this->pragmaFilters      = isset($this->pragmas[\Mustache\Engine::PRAGMA_FILTERS]);
-        $this->pragmaBlocks       = isset($this->pragmas[\Mustache\Engine::PRAGMA_BLOCKS]);
-        $this->pragmaDynamicNames = isset($this->pragmas[\Mustache\Engine::PRAGMA_DYNAMIC_NAMES]);
+        $this->pragmaFilters      = isset($this->pragmas[Engine::PRAGMA_FILTERS]);
+        $this->pragmaBlocks       = isset($this->pragmas[Engine::PRAGMA_BLOCKS]);
+        $this->pragmaDynamicNames = isset($this->pragmas[Engine::PRAGMA_DYNAMIC_NAMES]);
 
         return $this->buildTree($tokens);
     }
@@ -41,12 +43,12 @@ class Parser
     /**
      * Enable pragmas across all templates, regardless of the presence of pragma
      * tags in the individual templates.
-     *
-     * @internal Users should set global pragmas in \Mustache\Engine, not here :)
+     * <br><br>
+     * Users should set global pragmas in \Mustache\Engine, not here :)
      *
      * @param string[] $pragmas
      */
-    public function setPragmas(array $pragmas)
+    public function setPragmas(array $pragmas): void
     {
         $this->pragmas = array();
         foreach ($pragmas as $pragma) {
@@ -58,14 +60,14 @@ class Parser
     /**
      * Helper method for recursively building a parse tree.
      *
-     * @throws \Mustache\Exception\SyntaxException when nesting errors or mismatched section tags are encountered
+     * @throws SyntaxException when nesting errors or mismatched section tags are encountered
      *
      * @param array &$tokens Set of Mustache tokens
-     * @param array $parent  Parent token (default: null)
+     * @param ?array $parent  Parent token (default: null)
      *
      * @return array Mustache Token parse tree
      */
-    private function buildTree(array &$tokens, array $parent = null)
+    private function buildTree(array &$tokens, array $parent = null): array
     {
         $nodes = array();
 
@@ -117,7 +119,7 @@ class Parser
                             $token[Tokenizer::NAME],
                             $token[Tokenizer::LINE]
                         );
-                        throw new \Mustache\Exception\SyntaxException($msg, $token);
+                        throw new SyntaxException($msg, $token);
                     }
 
                     $sameName = $token[Tokenizer::NAME] !== $parent[Tokenizer::NAME];
@@ -134,7 +136,7 @@ class Parser
                             $token[Tokenizer::NAME],
                             $token[Tokenizer::LINE]
                         );
-                        throw new \Mustache\Exception\SyntaxException($msg, $token);
+                        throw new SyntaxException($msg, $token);
                     }
 
                     $this->clearStandaloneLines($nodes, $tokens);
@@ -145,7 +147,7 @@ class Parser
 
                 case Tokenizer::T_PARTIAL:
                     $this->checkIfTokenIsAllowedInParent($parent, $token);
-                    //store the whitespace prefix for laters!
+                    // store the whitespace prefix for later
                     if ($indent = $this->clearStandaloneLines($nodes, $tokens)) {
                         $token[Tokenizer::INDENT] = $indent[Tokenizer::VALUE];
                     }
@@ -195,7 +197,7 @@ class Parser
                 $parent[Tokenizer::NAME],
                 $parent[Tokenizer::LINE]
             );
-            throw new \Mustache\Exception\SyntaxException($msg, $parent);
+            throw new SyntaxException($msg, $parent);
         }
 
         return $nodes;
@@ -211,11 +213,11 @@ class Parser
      *
      * @return array|null Resulting indent token, if any
      */
-    private function clearStandaloneLines(array &$nodes, array &$tokens)
+    private function clearStandaloneLines(array &$nodes, array &$tokens): array|null
     {
         if ($this->lineTokens > 1) {
             // this is the third or later node on this line, so it can't be standalone
-            return;
+            return null;
         }
 
         $prev = null;
@@ -224,7 +226,7 @@ class Parser
             // unless the previous node is whitespace.
             if ($prev = end($nodes)) {
                 if (!$this->tokenIsWhitespace($prev)) {
-                    return;
+                    return null;
                 }
             }
         }
@@ -232,19 +234,19 @@ class Parser
         if ($next = reset($tokens)) {
             // If we're on a new line, bail.
             if ($next[Tokenizer::LINE] !== $this->lineNum) {
-                return;
+                return null;
             }
 
             // If the next token isn't whitespace, bail.
             if (!$this->tokenIsWhitespace($next)) {
-                return;
+                return null;
             }
 
             if (count($tokens) !== 1) {
                 // Unless it's the last token in the template, the next token
                 // must end in newline for this to be standalone.
-                if (substr($next[Tokenizer::VALUE], -1) !== "\n") {
-                    return;
+                if (!str_ends_with($next[Tokenizer::VALUE], "\n")) {
+                    return null;
                 }
             }
 
@@ -256,6 +258,8 @@ class Parser
             // Return the whitespace prefix, if any
             return array_pop($nodes);
         }
+
+        return null;
     }
 
     /**
@@ -265,12 +269,12 @@ class Parser
      *
      * @param array $token
      *
-     * @return bool True if token is a whitespace token
+     * @return  True if token is a whitespace token
      */
-    private function tokenIsWhitespace(array $token)
+    private function tokenIsWhitespace(array $token): bool
     {
         if ($token[Tokenizer::TYPE] === Tokenizer::T_TEXT) {
-            return preg_match('/^\s*$/', $token[Tokenizer::VALUE]);
+            return boolval(preg_match('/^\s*$/', $token[Tokenizer::VALUE]));
         }
 
         return false;
@@ -279,25 +283,25 @@ class Parser
     /**
      * Check whether a token is allowed inside a parent tag.
      *
-     * @throws \Mustache\Exception\SyntaxException if an invalid token is found inside a parent tag
+     * @throws SyntaxException if an invalid token is found inside a parent tag
      *
      * @param array|null $parent
      * @param array      $token
      */
-    private function checkIfTokenIsAllowedInParent($parent, array $token)
+    private function checkIfTokenIsAllowedInParent(?array $parent, array $token): void
     {
         if (isset($parent) && $parent[Tokenizer::TYPE] === Tokenizer::T_PARENT) {
-            throw new \Mustache\Exception\SyntaxException('Illegal content in < parent tag', $token);
+            throw new SyntaxException('Illegal content in < parent tag', $token);
         }
     }
 
     /**
      * Parse dynamic names.
      *
-     * @throws \Mustache\Exception\SyntaxException when a tag does not allow *
-     * @throws \Mustache\Exception\SyntaxException on multiple *s, or dots or filters with *
+     * @throws SyntaxException when a tag does not allow *
+     * @throws SyntaxException on multiple *s, or dots or filters with *
      */
-    private function getDynamicName(array $token)
+    private function getDynamicName(array $token): array
     {
         $name = $token[Tokenizer::NAME];
         $isDynamic = false;
@@ -308,17 +312,17 @@ class Parser
             $isDynamic = true;
         }
 
-        return array($name, $isDynamic);
+        return [$name, $isDynamic];
     }
 
     /**
      * Check whether the given token supports dynamic tag names.
      *
-     * @throws \Mustache\Exception\SyntaxException when a tag does not allow *
+     * @throws SyntaxException when a tag does not allow *
      *
      * @param array $token
      */
-    private function ensureTagAllowsDynamicNames(array $token)
+    private function ensureTagAllowsDynamicNames(array $token): void
     {
         switch ($token[Tokenizer::TYPE]) {
             case Tokenizer::T_PARTIAL:
@@ -333,7 +337,7 @@ class Parser
             Tokenizer::getTagName($token[Tokenizer::TYPE])
         );
 
-        throw new \Mustache\Exception\SyntaxException($msg, $token);
+        throw new SyntaxException($msg, $token);
     }
 
 
@@ -344,12 +348,12 @@ class Parser
      *
      * @return array [Tag name, Array of filters]
      */
-    private function getNameAndFilters($name)
+    private function getNameAndFilters(string $name): array
     {
         $filters = array_map('trim', explode('|', $name));
         $name    = array_shift($filters);
 
-        return array($name, $filters);
+        return [$name, $filters];
     }
 
     /**
@@ -357,20 +361,20 @@ class Parser
      *
      * @param string $name
      */
-    private function enablePragma($name)
+    private function enablePragma(string $name): void
     {
         $this->pragmas[$name] = true;
 
         switch ($name) {
-            case \Mustache\Engine::PRAGMA_BLOCKS:
+            case Engine::PRAGMA_BLOCKS:
                 $this->pragmaBlocks = true;
                 break;
 
-            case \Mustache\Engine::PRAGMA_FILTERS:
+            case Engine::PRAGMA_FILTERS:
                 $this->pragmaFilters = true;
                 break;
 
-            case \Mustache\Engine::PRAGMA_DYNAMIC_NAMES:
+            case Engine::PRAGMA_DYNAMIC_NAMES:
                 $this->pragmaDynamicNames = true;
                 break;
         }

@@ -79,20 +79,20 @@ class Tokenizer
     const VALUE   = 'value';
     const FILTERS = 'filters';
 
-    private $state;
-    private $tagType;
-    private $buffer;
-    private $tokens;
-    private $seenTag;
-    private $line;
+    private int $state;
+    private ?string $tagType;
+    private string $buffer;
+    private array $tokens;
+    private bool|int $seenTag;
+    private int $line;
 
-    private $otag;
-    private $otagChar;
-    private $otagLen;
+    private string $otag;
+    private string $otagChar;
+    private int $otagLen;
 
-    private $ctag;
-    private $ctagChar;
-    private $ctagLen;
+    private string $ctag;
+    private string $ctagChar;
+    private int $ctagLen;
 
     /**
      * Scan and tokenize template source.
@@ -105,25 +105,9 @@ class Tokenizer
      *
      * @return array Set of Mustache tokens
      */
-    public function scan(string $text, int|string|null $delimiters = '')
+    public function scan(string $text, int|string|null $delimiters = ''): array
     {
-        // Setting mbstring.func_overload makes things *really* slow.
-        // Let's do everyone a favor and scan this string as ASCII instead.
-        //
-        // The INI directive was removed in PHP 8.0 so we don't need to check there (and can drop it
-        // when we remove support for older versions of PHP).
-        //
-        // @codeCoverageIgnoreStart
-        $encoding = null;
-        if (version_compare(PHP_VERSION, '8.0.0', '<')) {
-            if (function_exists('mb_internal_encoding') && ini_get('mbstring.func_overload') & 2) {
-                $encoding = mb_internal_encoding();
-                mb_internal_encoding('ASCII');
-            }
-        }
-        // @codeCoverageIgnoreEnd
-
-        $this->reset();
+       $this->reset();
 
         if (is_string($delimiters) && $delimiters = trim($delimiters)) {
             $this->setDelimiters($delimiters);
@@ -234,20 +218,13 @@ class Tokenizer
 
         $this->flushBuffer();
 
-        // Restore the user's encoding...
-        // @codeCoverageIgnoreStart
-        if ($encoding) {
-            mb_internal_encoding($encoding);
-        }
-        // @codeCoverageIgnoreEnd
-
         return $this->tokens;
     }
 
     /**
      * Helper function to reset tokenizer internal state.
      */
-    private function reset()
+    private function reset(): void
     {
         $this->state    = self::IN_TEXT;
         $this->tagType  = null;
@@ -268,7 +245,7 @@ class Tokenizer
     /**
      * Flush the current buffer to a token.
      */
-    private function flushBuffer()
+    private function flushBuffer(): void
     {
         if (strlen($this->buffer) > 0) {
             $this->tokens[] = array(
@@ -290,7 +267,7 @@ class Tokenizer
      *
      * @return int New index value
      */
-    private function changeDelimiters($text, $index)
+    private function changeDelimiters(string $text, int $index): int
     {
         $startIndex = strpos($text, '=', $index) + 1;
         $close      = '=' . $this->ctag;
@@ -323,7 +300,7 @@ class Tokenizer
      *
      * @param string $delimiters
      */
-    private function setDelimiters($delimiters)
+    private function setDelimiters(string $delimiters): void
     {
         if (!preg_match('/^\s*(\S+)\s+(\S+)\s*$/', $delimiters, $matches)) {
             throw new InvalidArgumentException(sprintf('Invalid delimiters: %s', $delimiters));
