@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Mustache;
 
@@ -17,7 +17,7 @@ interface Cache
      *
      * @return bool indicates successfully class load
      */
-    public function load($key);
+    public function load(string $key): bool;
 
     /**
      * Cache and load a compiled \Mustache\Template class.
@@ -25,7 +25,7 @@ interface Cache
      * @param string $key
      * @param string $value
      */
-    public function cache($key, $value);
+    public function cache(string $key, string $value);
 
     /**
      * Set a logger instance.

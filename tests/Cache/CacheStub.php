@@ -6,8 +6,9 @@ use Mustache\Cache\AbstractCache;
 
 class CacheStub extends AbstractCache
 {
-    public function load($key)
+    public function load(string $key): bool
     {
+        return true;
         // nada
     }
 

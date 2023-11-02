@@ -17,7 +17,7 @@ class NoopCache extends AbstractCache
      *
      * @return bool
      */
-    public function load($key)
+    public function load(string $key): bool
     {
         return false;
     }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Mustache\Source;
 
@@ -17,13 +17,13 @@ class FilesystemSource implements Source
 {
     private string $fileName;
     private array $statProps;
-    private $stat;
+    private array|false $stat;
 
     /**
      * Filesystem Source constructor.
      *
      * @param string $fileName
-     * @param array  $statProps
+     * @param array $statProps
      */
     public function __construct(string $fileName, array $statProps)
     {
@@ -34,11 +34,11 @@ class FilesystemSource implements Source
     /**
      * Get the Source key (used to generate the compiled class name).
      *
+     * @return string|false
      * @throws RuntimeException when a source file cannot be read
      *
-     * @return string
      */
-    public function getKey()
+    public function getKey(): false|string
     {
         $chunks = [
             'fileName' => $this->fileName,
@@ -64,9 +64,9 @@ class FilesystemSource implements Source
     /**
      * Get the template Source.
      *
-     * @return string
+     * @return false|string
      */
-    public function getSource()
+    public function getSource(): false|string
     {
         return file_get_contents($this->fileName);
     }

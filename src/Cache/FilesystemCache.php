@@ -38,7 +38,7 @@ class FilesystemCache extends AbstractCache
      *
      * @return bool
      */
-    public function load($key)
+    public function load(string $key): bool
     {
         $fileName = $this->getCacheFilename($key);
         if (!is_file($fileName)) {
