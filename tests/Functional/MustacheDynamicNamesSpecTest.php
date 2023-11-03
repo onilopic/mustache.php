@@ -25,7 +25,7 @@ class MustacheDynamicNamesSpecTest extends \Mustache\Tests\SpecTestCase
     {
         if (!file_exists(dirname(__FILE__) . '/../../spec/specs/')) {
             $this->markTestSkipped('Mustache spec submodule not initialized: run "git submodule update --init"');
-        }  else {
+        } else {
             $this->assertEquals(true, file_exists(dirname(__FILE__) . '/../../spec/specs/'));
         }
     }

@@ -2,7 +2,6 @@
 
 namespace Mustache\Tests\Loader;
 
-
 use Mustache\Exception\UnknownTemplateException;
 use Mustache\Loader\ArrayLoader;
 use Mustache\Loader\CascadingLoader;

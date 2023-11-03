@@ -92,7 +92,7 @@ class HelperCollectionTest extends TestCase
      */
     public function testHelperCollectionIsntAfraidToThrowExceptions(array $helpers = [], array $actions = [], $exception = null)
     {
-       if($exception) {
+        if ($exception) {
             $this->expectException($exception);
         } else {
             $this->expectNotToPerformAssertions();

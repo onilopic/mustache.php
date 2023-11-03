@@ -7,7 +7,6 @@ use Mustache\Logger\StreamLogger;
 use PHPUnit\Framework\TestCase;
 use StdClass;
 
-
 class AbstractCacheTest extends TestCase
 {
     public function testGetSetLogger()
@@ -26,5 +25,3 @@ class AbstractCacheTest extends TestCase
         $cache->setLogger($logger);
     }
 }
-
-

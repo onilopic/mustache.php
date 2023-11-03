@@ -2,7 +2,6 @@
 
 namespace Mustache\Tests;
 
-
 use ArrayAccess;
 
 class AllTheThings implements ArrayAccess

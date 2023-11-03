@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Mustache;
 
@@ -37,14 +39,13 @@ class Compiler
      */
     public function compile(
         string $source,
-        array  $tree,
+        array $tree,
         string $name,
-        bool   $customEscape = false,
+        bool $customEscape = false,
         string $charset = 'UTF-8',
-        bool   $strictCallables = false,
-        int    $entityFlags = ENT_COMPAT
-    ): string
-    {
+        bool $strictCallables = false,
+        int $entityFlags = ENT_COMPAT
+    ): string {
         $this->pragmas = $this->defaultPragmas;
         $this->sections = [];
         $this->blocks = [];
@@ -140,10 +141,10 @@ class Compiler
                     $code .= $this->blockArg(
                         $node[Tokenizer::NODES],
                         $node[Tokenizer::NAME],
-//                        $node[Tokenizer::INDEX],
-//                        $node[Tokenizer::END],
-//                        $node[Tokenizer::OTAG],
-//                        $node[Tokenizer::CTAG],
+                        //                        $node[Tokenizer::INDEX],
+                        //                        $node[Tokenizer::END],
+                        //                        $node[Tokenizer::OTAG],
+                        //                        $node[Tokenizer::CTAG],
                         $level
                     );
                     break;
@@ -152,10 +153,10 @@ class Compiler
                     $code .= $this->blockVar(
                         $node[Tokenizer::NODES],
                         $node[Tokenizer::NAME],
-//                        $node[Tokenizer::INDEX],
-//                        $node[Tokenizer::END],
-//                        $node[Tokenizer::OTAG],
-//                        $node[Tokenizer::CTAG],
+                        //                        $node[Tokenizer::INDEX],
+                        //                        $node[Tokenizer::END],
+                        //                        $node[Tokenizer::OTAG],
+                        //                        $node[Tokenizer::CTAG],
                         $level
                     );
                     break;
@@ -220,15 +221,14 @@ class Compiler
      * @return string Generated PHP source code
      */
     private function blockVar(
-        array  $nodes,
+        array $nodes,
         string $id,
-//        int    $start,
-//        int    $end,
-//        string $otag,
-//        string $ctag,
-        int    $level
-    ): string
-    {
+        //        int    $start,
+        //        int    $end,
+        //        string $otag,
+        //        string $ctag,
+        int $level
+    ): string {
         $id = var_export($id, true);
 
         $else = $this->walk($nodes, $level);
@@ -253,15 +253,14 @@ class Compiler
      * @return string Generated PHP source code
      */
     private function blockArg(
-        array  $nodes,
+        array $nodes,
         string $id,
-//        int    $start,
-//        int    $end,
-//        string $otag,
-//        string $ctag,
-        int    $level
-    ): string
-    {
+        //        int    $start,
+        //        int    $end,
+        //        string $otag,
+        //        string $ctag,
+        int $level
+    ): string {
         $key = $this->block($nodes);
         $id = var_export($id, true);
 
@@ -302,16 +301,15 @@ class Compiler
      * @return string Generated section PHP source code
      */
     private function section(
-        array  $nodes,
+        array $nodes,
         string $id,
-        array  $filters,
-        int    $start,
-        int    $end,
+        array $filters,
+        int $start,
+        int $end,
         string $otag,
         string $ctag,
-        int    $level
-    ): string
-    {
+        int $level
+    ): string {
         $source = var_export(substr($this->source, $start, $end - $start), true);
         $callable = $this->getCallable();
 
@@ -417,11 +415,10 @@ class Compiler
     private function parent(
         string $id,
         bool $dynamic,
-//        string $indent,
+        //        string $indent,
         array $children,
         int $level
-    ): string
-    {
+    ): string {
         $realChildren = array_filter($children, array(__CLASS__, 'onlyBlockArgs'));
         $partialName = $this->resolveDynamicName($id, $dynamic);
 

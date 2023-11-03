@@ -34,7 +34,7 @@ class TestArrayAccess implements ArrayAccess
         unset($this->container[$offset]);
     }
 
-    public function offsetGet($offset) : mixed
+    public function offsetGet($offset): mixed
     {
         return $this->container[$offset] ?? null;
     }

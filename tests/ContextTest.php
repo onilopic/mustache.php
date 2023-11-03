@@ -177,4 +177,3 @@ class ContextTest extends TestCase
         $context->findAnchoredDot('a');
     }
 }
-

@@ -37,5 +37,3 @@ class AbstractLoggerTest extends TestCase
         $this->assertEquals($expected, $logger->log);
     }
 }
-
-

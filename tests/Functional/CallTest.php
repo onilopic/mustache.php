@@ -16,7 +16,7 @@ class CallTest extends TestCase
         $m = new Engine();
         $tpl = $m->loadTemplate('{{# foo }}{{ label }}: {{ name }}{{/ foo }}');
 
-        $foo = new class() {
+        $foo = new class () {
             public string $name;
 
             public function __call($method, $args)

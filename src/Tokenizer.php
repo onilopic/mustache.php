@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Mustache;
 
@@ -107,7 +109,7 @@ class Tokenizer
      */
     public function scan(string $text, int|string|null $delimiters = ''): array
     {
-       $this->reset();
+        $this->reset();
 
         if (is_string($delimiters) && $delimiters = trim($delimiters)) {
             $this->setDelimiters($delimiters);
