@@ -151,7 +151,7 @@ class HelperCollection
      */
     public function clear(): void
     {
-        $this->helpers = array();
+        $this->helpers = [];
     }
 
     /**

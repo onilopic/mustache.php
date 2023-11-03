@@ -24,9 +24,9 @@ class ClosureQuirksTest extends TestCase
         $this->assertEquals(
             '',
             $tpl->render(
-                array('foo' => function () {
+                ['foo' => function () {
                     return 'FOO';
-                })
+                }]
             )
         );
     }

@@ -21,14 +21,14 @@ final class Whitespace
 
     public function qux()
     {
-        return array(
-            array('key with space' => 'A'),
-            array('key with space' => 'B'),
-            array('key with space' => 'C'),
-            array('key with space' => 'D'),
-            array('key with space' => 'E'),
-            array('key with space' => 'F'),
-            array('key with space' => 'G'),
-        );
+        return [
+            ['key with space' => 'A'],
+            ['key with space' => 'B'],
+            ['key with space' => 'C'],
+            ['key with space' => 'D'],
+            ['key with space' => 'E'],
+            ['key with space' => 'F'],
+            ['key with space' => 'G'],
+        ];
     }
 }

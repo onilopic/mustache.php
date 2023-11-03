@@ -55,12 +55,12 @@ class ProductionFilesystemLoader extends FilesystemLoader
 
         if (array_key_exists('stat_props', $options)) {
             if (empty($options['stat_props'])) {
-                $this->statProps = array();
+                $this->statProps = [];
             } else {
                 $this->statProps = $options['stat_props'];
             }
         } else {
-            $this->statProps = array('size', 'mtime');
+            $this->statProps = ['size', 'mtime'];
         }
     }
 

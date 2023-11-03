@@ -46,7 +46,7 @@ abstract class Template
      *@see \Mustache\Template::render
      *
      */
-    public function __invoke(array $context = array()): string
+    public function __invoke(array $context = []): string
     {
         return $this->render($context);
     }
@@ -58,7 +58,7 @@ abstract class Template
      *
      * @return string Rendered template
      */
-    public function render(mixed $context = array()): string
+    public function render(mixed $context = []): string
     {
         return $this->renderInternal(
             $this->prepareContextStack($context)

@@ -12,7 +12,7 @@ class SyntaxExceptionTest extends TestCase
 {
     public function testInstance()
     {
-        $e = new SyntaxException('whot', array('is' => 'this'));
+        $e = new SyntaxException('whot', ['is' => 'this']);
         $resultLogicException = $e instanceof LogicException;
         $resultMustacheException = $e instanceof \Mustache\Contract\Exception;
         $this->assertTrue($resultLogicException);
@@ -21,7 +21,7 @@ class SyntaxExceptionTest extends TestCase
 
     public function testGetToken()
     {
-        $token = array(Tokenizer::TYPE => 'whatever');
+        $token = [Tokenizer::TYPE => 'whatever'];
         $e = new SyntaxException('ignore this', $token);
         $this->assertEquals($token, $e->getToken());
     }
@@ -33,7 +33,7 @@ class SyntaxExceptionTest extends TestCase
         }
 
         $previous = new Exception();
-        $e = new SyntaxException('foo', array(), $previous);
+        $e = new SyntaxException('foo', [], $previous);
 
         $this->assertSame($previous, $e->getPrevious());
     }

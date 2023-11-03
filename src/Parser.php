@@ -29,7 +29,7 @@ class Parser
      *
      * @return array Mustache token parse tree
      */
-    public function parse(array $tokens = array()): array
+    public function parse(array $tokens = []): array
     {
         $this->lineNum    = -1;
         $this->lineTokens = 0;
@@ -52,7 +52,7 @@ class Parser
      */
     public function setPragmas(array $pragmas): void
     {
-        $this->pragmas = array();
+        $this->pragmas = [];
         foreach ($pragmas as $pragma) {
             $this->enablePragma($pragma);
         }
@@ -71,7 +71,7 @@ class Parser
      */
     private function buildTree(array &$tokens, array $parent = null): array
     {
-        $nodes = array();
+        $nodes = [];
 
         while (!empty($tokens)) {
             $token = array_shift($tokens);
@@ -85,7 +85,7 @@ class Parser
 
             if ($token[Tokenizer::TYPE] !== Tokenizer::T_COMMENT) {
                 if ($this->pragmaDynamicNames && isset($token[Tokenizer::NAME])) {
-                    list($name, $isDynamic) = $this->getDynamicName($token);
+                    [$name, $isDynamic] = $this->getDynamicName($token);
                     if ($isDynamic) {
                         $token[Tokenizer::NAME]    = $name;
                         $token[Tokenizer::DYNAMIC] = true;
@@ -93,7 +93,7 @@ class Parser
                 }
 
                 if ($this->pragmaFilters && isset($token[Tokenizer::NAME])) {
-                    list($name, $filters) = $this->getNameAndFilters($token[Tokenizer::NAME]);
+                    [$name, $filters] = $this->getNameAndFilters($token[Tokenizer::NAME]);
                     if (!empty($filters)) {
                         $token[Tokenizer::NAME]    = $name;
                         $token[Tokenizer::FILTERS] = $filters;

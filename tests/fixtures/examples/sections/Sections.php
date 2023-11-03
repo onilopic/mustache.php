@@ -6,10 +6,10 @@ class Sections
 
     public function middle()
     {
-        return array(
-            array('item' => 'And it worked the second time.'),
-            array('item' => 'As well as the third.'),
-        );
+        return [
+            ['item' => 'And it worked the second time.'],
+            ['item' => 'As well as the third.'],
+        ];
     }
 
     public $final = 'Then, surprisingly, it worked the final time.';

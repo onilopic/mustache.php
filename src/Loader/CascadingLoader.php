@@ -25,7 +25,7 @@ class CascadingLoader implements Loader
      *
      * @param Loader[] $loaders
      */
-    public function __construct(array $loaders = array())
+    public function __construct(array $loaders = [])
     {
         //$this->loaders = array();
         foreach ($loaders as $loader) {

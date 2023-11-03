@@ -13,9 +13,9 @@ class MustacheInheritanceSpecTest extends \Mustache\Tests\SpecTestCase
     public static function setUpBeforeClass(): void
     {
         self::$mustache = new \Mustache\Engine(
-            array(
-            'pragmas' => array(\Mustache\Engine::PRAGMA_BLOCKS),
-            )
+            [
+            'pragmas' => [\Mustache\Engine::PRAGMA_BLOCKS],
+            ]
         );
     }
 

@@ -2,5 +2,5 @@
 
 class ImplicitIterator
 {
-    public $data = array('Donkey Kong', 'Luigi', 'Mario', 'Peach', 'Yoshi');
+    public $data = ['Donkey Kong', 'Luigi', 'Mario', 'Peach', 'Yoshi'];
 }

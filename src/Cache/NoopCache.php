@@ -35,7 +35,7 @@ class NoopCache extends AbstractCache
         $this->log(
             \Mustache\Contract\Logger::WARNING,
             'Template cache disabled, evaluating "{className}" class at runtime',
-            array('className' => $key)
+            ['className' => $key]
         );
         eval('?>' . $value);
     }

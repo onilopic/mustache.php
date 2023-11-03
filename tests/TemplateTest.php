@@ -32,6 +32,6 @@ class TemplateTest extends TestCase
 
         $this->assertEquals($rendered, $template->render());
         $this->assertEquals($rendered, $template->renderInternal($context));
-        $this->assertEquals($rendered, $template->render(array('foo' => 'bar')));
+        $this->assertEquals($rendered, $template->render(['foo' => 'bar']));
     }
 }

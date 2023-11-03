@@ -71,18 +71,18 @@ class DynamicPartialsTest extends TestCase
         $tpl = '{{% BLOCKS }}{{< *partial }}{{$ bar }}{{ value }}{{/ bar }}{{/ *partial }}';
 
         $this->mustache->setPartials(
-            array(
+            [
             'foobarbaz' => '{{% BLOCKS }}{{$ foo }}foo{{/ foo }}{{$ bar }}bar{{/ bar }}{{$ baz }}baz{{/ baz }}',
             'qux' => 'qux',
-            )
+            ]
         );
 
         $result = $this->mustache->render(
             $tpl,
-            array(
+            [
             'partial' => 'foobarbaz',
             'value' => 'BAR',
-            )
+            ]
         );
 
         $this->assertSame('fooBARbaz', $result);

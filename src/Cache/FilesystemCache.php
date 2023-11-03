@@ -65,7 +65,7 @@ class FilesystemCache extends AbstractCache
         $this->log(
             \Mustache\Contract\Logger::DEBUG,
             'Writing to template cache: "{fileName}"',
-            array('fileName' => $fileName)
+            ['fileName' => $fileName]
         );
 
         $this->writeFile($fileName, $value);
@@ -101,10 +101,10 @@ class FilesystemCache extends AbstractCache
             $this->log(
                 \Mustache\Contract\Logger::INFO,
                 'Creating Mustache template cache directory: "{dirName}"',
-                array('dirName' => $dirName)
+                ['dirName' => $dirName]
             );
 
-            @mkdir($dirName, 0777, true);
+            @mkdir($dirName, 0o777, true);
             // @codeCoverageIgnoreStart
             if (!is_dir($dirName)) {
                 throw new RuntimeException(sprintf('Failed to create cache directory "%s".', $dirName));
@@ -130,13 +130,13 @@ class FilesystemCache extends AbstractCache
         $this->log(
             \Mustache\Contract\Logger::DEBUG,
             'Caching compiled template to "{fileName}"',
-            array('fileName' => $fileName)
+            ['fileName' => $fileName]
         );
 
         $tempFile = tempnam($dirName, basename($fileName));
         if (false !== @file_put_contents($tempFile, $value)) {
             if (@rename($tempFile, $fileName)) {
-                $mode = isset($this->fileMode) ? $this->fileMode : (0666 & ~umask());
+                $mode = $this->fileMode ?? (0o666 & ~umask());
                 @chmod($fileName, $mode);
 
                 return;
@@ -146,7 +146,7 @@ class FilesystemCache extends AbstractCache
             $this->log(
                 \Mustache\Contract\Logger::ERROR,
                 'Unable to rename Mustache temp cache file: "{tempName}" -> "{fileName}"',
-                array('tempName' => $tempFile, 'fileName' => $fileName)
+                ['tempName' => $tempFile, 'fileName' => $fileName]
             );
             // @codeCoverageIgnoreEnd
         }

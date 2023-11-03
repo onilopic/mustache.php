@@ -19,10 +19,10 @@ class ContextTest extends TestCase
         $this->assertSame('', $one->find('bar'));
 
         $two = new Context(
-            array(
+            [
             'foo' => 'FOO',
             'bar' => '<BAR>',
-            )
+            ]
         );
         $this->assertEquals('FOO', $two->find('foo'));
         $this->assertEquals('<BAR>', $two->find('bar'));
@@ -64,10 +64,10 @@ class ContextTest extends TestCase
         $obj = new StdClass();
         $obj->name = 'obj';
 
-        $arr = array(
-            'a' => array('b' => array('c' => 'see')),
+        $arr = [
+            'a' => ['b' => ['c' => 'see']],
             'b' => 'bee',
-        );
+        ];
 
         $string = 'some arbitrary string';
 
@@ -100,10 +100,10 @@ class ContextTest extends TestCase
     public function testArrayAccessFind()
     {
         $access = new TestArrayAccess(
-            array(
-            'a' => array('b' => array('c' => 'see')),
+            [
+            'a' => ['b' => ['c' => 'see']],
             'b' => 'bee',
-            )
+            ]
         );
 
         $context = new Context($access);
@@ -177,7 +177,7 @@ class ContextTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $context = new Context();
-        $context->push(array('a' => 1));
+        $context->push(['a' => 1]);
         $context->findAnchoredDot('a');
     }
 }

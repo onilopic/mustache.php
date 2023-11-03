@@ -21,9 +21,9 @@ class ExamplesTest extends \PHPUnit\Framework\TestCase
     public function testExamples($context, $source, $partials, $expected)
     {
         $mustache = new \Mustache\Engine(
-            array(
+            [
             'partials' => $partials,
-            )
+            ]
         );
         $this->assertEquals($expected, $mustache->loadTemplate($source)->render($context));
     }
@@ -42,7 +42,7 @@ class ExamplesTest extends \PHPUnit\Framework\TestCase
     public static function getExamples()
     {
         $path     = realpath(dirname(__FILE__) . '/../fixtures/examples');
-        $examples = array();
+        $examples = [];
 
         $handle   = opendir($path);
         while (($file = readdir($handle)) !== false) {
@@ -71,7 +71,7 @@ class ExamplesTest extends \PHPUnit\Framework\TestCase
     {
         $context  = null;
         $source   = null;
-        $partials = array();
+        $partials = [];
         $expected = null;
 
         $handle = opendir($path);
@@ -103,7 +103,7 @@ class ExamplesTest extends \PHPUnit\Framework\TestCase
         }
         closedir($handle);
 
-        return array($context, $source, $partials, $expected);
+        return [$context, $source, $partials, $expected];
     }
 
     /**
@@ -115,7 +115,7 @@ class ExamplesTest extends \PHPUnit\Framework\TestCase
      */
     private static function loadPartials($path): array
     {
-        $partials = array();
+        $partials = [];
 
         $handle = opendir($path);
         while (($file = readdir($handle)) !== false) {

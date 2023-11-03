@@ -20,10 +20,10 @@ class EngineTest extends TestCase
     public function testPragmasConstructorOption($pragmas, $helpers, $data, $tpl, $expect)
     {
         $mustache = new Engine(
-            array(
+            [
             'pragmas' => $pragmas,
             'helpers' => $helpers,
-            )
+            ]
         );
 
         $this->assertEquals($expect, $mustache->render($tpl, $data));

@@ -14,7 +14,7 @@ class FilesystemSourceTest extends TestCase
     public function testMissingTemplateThrowsException()
     {
         $this->expectException(RuntimeException::class);
-        $source = new FilesystemSource(dirname(__FILE__) . '/not_a_file.mustache', array('mtime'));
+        $source = new FilesystemSource(dirname(__FILE__) . '/not_a_file.mustache', ['mtime']);
         $source->getKey();
     }
 }

@@ -14,27 +14,27 @@ class PartialLambdaIndentTest extends TestCase
     public function testLambdasInsidePartialsAreIndentedProperly()
     {
         $src = <<<'EOS'
-<fieldset>
-  {{> input }}
-</fieldset>
+            <fieldset>
+              {{> input }}
+            </fieldset>
 
-EOS;
+            EOS;
         $partial = <<<'EOS'
-<input placeholder="{{# toUpper }}Enter your name{{/ toUpper }}">
+            <input placeholder="{{# toUpper }}Enter your name{{/ toUpper }}">
 
-EOS;
+            EOS;
 
         $expected = <<<'EOS'
-<fieldset>
-  <input placeholder="ENTER YOUR NAME">
-</fieldset>
+            <fieldset>
+              <input placeholder="ENTER YOUR NAME">
+            </fieldset>
 
-EOS;
+            EOS;
 
         $m = new Engine(
-            array(
-            'partials' => array('input' => $partial),
-            )
+            [
+            'partials' => ['input' => $partial],
+            ]
         );
 
         $tpl = $m->loadTemplate($src);
@@ -46,22 +46,22 @@ EOS;
     public function testLambdaInterpolationsInsidePartialsAreIndentedProperly()
     {
         $src = <<<'EOS'
-<fieldset>
-  {{> input }}
-</fieldset>
+            <fieldset>
+              {{> input }}
+            </fieldset>
 
-EOS;
+            EOS;
         $partial = <<<'EOS'
-<input placeholder="{{ placeholder }}">
+            <input placeholder="{{ placeholder }}">
 
-EOS;
+            EOS;
 
         $expected = <<<'EOS'
-<fieldset>
-  <input placeholder="Enter your name">
-</fieldset>
+            <fieldset>
+              <input placeholder="Enter your name">
+            </fieldset>
 
-EOS;
+            EOS;
 
         $m = new Engine(
             [

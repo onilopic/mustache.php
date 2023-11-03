@@ -16,7 +16,7 @@ class ProductionFilesystemLoaderTest extends TestCase
     public function testConstructor()
     {
         $baseDir = realpath(dirname(__FILE__) . '/../fixtures/templates');
-        $loader = new ProductionFilesystemLoader($baseDir, array('extension' => '.ms'));
+        $loader = new ProductionFilesystemLoader($baseDir, ['extension' => '.ms']);
         $this->assertInstanceOf(Source::class, $loader->load('alpha'));
         $this->assertEquals('alpha contents', $loader->load('alpha')->getSource());
         $this->assertInstanceOf(Source::class, $loader->load('beta.ms'));
@@ -34,7 +34,7 @@ class ProductionFilesystemLoaderTest extends TestCase
     {
         $baseDir = realpath(dirname(__FILE__) . '/../fixtures/templates');
 
-        $loader = new ProductionFilesystemLoader('file://' . $baseDir, array('extension' => '.ms'));
+        $loader = new ProductionFilesystemLoader('file://' . $baseDir, ['extension' => '.ms']);
         $this->assertEquals('alpha contents', $loader->load('alpha')->getSource());
         $this->assertEquals('beta contents', $loader->load('beta.ms')->getSource());
     }
@@ -51,11 +51,11 @@ class ProductionFilesystemLoaderTest extends TestCase
     {
         $baseDir = realpath(dirname(__FILE__) . '/../fixtures/templates');
 
-        $loader = new ProductionFilesystemLoader($baseDir, array('extension' => ''));
+        $loader = new ProductionFilesystemLoader($baseDir, ['extension' => '']);
         $this->assertEquals('one contents', $loader->load('one.mustache')->getSource());
         $this->assertEquals('alpha contents', $loader->load('alpha.ms')->getSource());
 
-        $loader = new ProductionFilesystemLoader($baseDir, array('extension' => null));
+        $loader = new ProductionFilesystemLoader($baseDir, ['extension' => null]);
         $this->assertEquals('two contents', $loader->load('two.mustache')->getSource());
         $this->assertEquals('beta contents', $loader->load('beta.ms')->getSource());
     }
@@ -78,10 +78,10 @@ class ProductionFilesystemLoaderTest extends TestCase
     public function testLoadWithDifferentStatProps()
     {
         $baseDir = realpath(dirname(__FILE__) . '/../fixtures/templates');
-        $noStatLoader = new ProductionFilesystemLoader($baseDir, array('stat_props' => null));
-        $mtimeLoader = new ProductionFilesystemLoader($baseDir, array('stat_props' => array('mtime')));
-        $sizeLoader = new ProductionFilesystemLoader($baseDir, array('stat_props' => array('size')));
-        $bothLoader = new ProductionFilesystemLoader($baseDir, array('stat_props' => array('mtime', 'size')));
+        $noStatLoader = new ProductionFilesystemLoader($baseDir, ['stat_props' => null]);
+        $mtimeLoader = new ProductionFilesystemLoader($baseDir, ['stat_props' => ['mtime']]);
+        $sizeLoader = new ProductionFilesystemLoader($baseDir, ['stat_props' => ['size']]);
+        $bothLoader = new ProductionFilesystemLoader($baseDir, ['stat_props' => ['mtime', 'size']]);
 
         $noStatKey = $noStatLoader->load('one.mustache')->getKey();
         $mtimeKey = $mtimeLoader->load('one.mustache')->getKey();

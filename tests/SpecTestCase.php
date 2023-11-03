@@ -35,21 +35,21 @@ abstract class SpecTestCase extends TestCase
     {
         $filename = dirname(__FILE__) . '/../spec/specs/' . $name . '.json';
         if (!file_exists($filename)) {
-            return array();
+            return [];
         }
 
-        $data = array();
+        $data = [];
         $file = file_get_contents($filename);
         $spec = json_decode($file, true);
 
         foreach ($spec['tests'] as $test) {
-            $data[] = array(
+            $data[] = [
                 $test['name'] . ': ' . $test['desc'],
                 $test['template'],
-                $test['partials'] ?? array(),
+                $test['partials'] ?? [],
                 $test['data'],
                 $test['expected'],
-            );
+            ];
         }
 
         return $data;

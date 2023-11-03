@@ -45,12 +45,12 @@ class HigherOrderSectionsTest extends TestCase
     {
         $tpl = $this->mustache->loadTemplate('{{#wrap}}{{name}}{{/wrap}}');
 
-        $data = array(
+        $data = [
             'name' => 'Bob',
             'wrap' => function ($text) {
                 return sprintf('[[%s]]', $text);
             },
-        );
+        ];
 
         $this->assertEquals(sprintf('[[%s]]', $data['name']), $tpl->render($data));
     }

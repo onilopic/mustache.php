@@ -109,11 +109,11 @@ class InlineLoader implements Loader
     protected function loadTemplates()
     {
         if ($this->templates === null) {
-            $this->templates = array();
+            $this->templates = [];
             $data = file_get_contents($this->fileName, false, null, $this->offset);
             foreach (preg_split("/^@@(?= [\w\d.]+$)/m", $data, -1) as $chunk) {
                 if (trim($chunk)) {
-                    list($name, $content)         = explode("\n", $chunk, 2);
+                    [$name, $content]         = explode("\n", $chunk, 2);
                     $this->templates[trim($name)] = trim($content);
                 }
             }

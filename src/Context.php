@@ -24,7 +24,7 @@ class Context
     public function __construct(mixed $context = null)
     {
         if ($context !== null) {
-            $this->stack = array($context);
+            $this->stack = [$context];
         }
     }
 
@@ -134,7 +134,7 @@ class Context
                 return $value;
             }
 
-            $value = $this->findVariableInStack($chunk, array($value));
+            $value = $this->findVariableInStack($chunk, [$value]);
         }
 
         return $value;
@@ -170,7 +170,7 @@ class Context
                 return $value;
             }
 
-            $value = $this->findVariableInStack($chunk, array($value));
+            $value = $this->findVariableInStack($chunk, [$value]);
         }
 
         return $value;
