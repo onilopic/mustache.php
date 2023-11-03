@@ -3,3 +3,6 @@
 composer.lock
 mustache.php
 vendor
+spec/*
+!spec/keep.me
+
