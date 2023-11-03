@@ -24,7 +24,7 @@ class MustacheSpecTest extends \Mustache\Tests\SpecTestCase
     }
 
     /**
-     * @group comments
+     * @group        comments
      * @dataProvider loadCommentSpec
      */
     public function testCommentSpec($desc, $source, $partials, $data, $expected)
@@ -39,7 +39,7 @@ class MustacheSpecTest extends \Mustache\Tests\SpecTestCase
     }
 
     /**
-     * @group delimiters
+     * @group        delimiters
      * @dataProvider loadDelimitersSpec
      */
     public function testDelimitersSpec($desc, $source, $partials, $data, $expected)
@@ -54,7 +54,7 @@ class MustacheSpecTest extends \Mustache\Tests\SpecTestCase
     }
 
     /**
-     * @group interpolation
+     * @group        interpolation
      * @dataProvider loadInterpolationSpec
      */
     public function testInterpolationSpec($desc, $source, $partials, $data, $expected)
@@ -69,8 +69,8 @@ class MustacheSpecTest extends \Mustache\Tests\SpecTestCase
     }
 
     /**
-     * @group inverted
-     * @group inverted-sections
+     * @group        inverted
+     * @group        inverted-sections
      * @dataProvider loadInvertedSpec
      */
     public function testInvertedSpec($desc, $source, $partials, $data, $expected)
@@ -85,7 +85,7 @@ class MustacheSpecTest extends \Mustache\Tests\SpecTestCase
     }
 
     /**
-     * @group partials
+     * @group        partials
      * @dataProvider loadPartialsSpec
      */
     public function testPartialsSpec($desc, $source, $partials, $data, $expected)
@@ -100,7 +100,7 @@ class MustacheSpecTest extends \Mustache\Tests\SpecTestCase
     }
 
     /**
-     * @group sections
+     * @group        sections
      * @dataProvider loadSectionsSpec
      */
     public function testSectionsSpec($desc, $source, $partials, $data, $expected)

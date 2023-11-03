@@ -6,7 +6,7 @@ use Closure;
 
 final class ClassWithLambda
 {
-    public function _t(): Closure
+    public function toUpper(): Closure
     {
         return fn($val) => strtoupper($val);
     }

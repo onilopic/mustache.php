@@ -5,4 +5,4 @@ mustache.php
 vendor
 spec/*
 !spec/keep.me
-
+/.php-cs-fixer.cache

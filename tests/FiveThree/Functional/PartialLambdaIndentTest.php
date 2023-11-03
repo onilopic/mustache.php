@@ -20,7 +20,7 @@ class PartialLambdaIndentTest extends TestCase
 
 EOS;
         $partial = <<<'EOS'
-<input placeholder="{{# _t }}Enter your name{{/ _t }}">
+<input placeholder="{{# toUpper }}Enter your name{{/ toUpper }}">
 
 EOS;
 
@@ -31,9 +31,11 @@ EOS;
 
 EOS;
 
-        $m = new Engine(array(
+        $m = new Engine(
+            array(
             'partials' => array('input' => $partial),
-        ));
+            )
+        );
 
         $tpl = $m->loadTemplate($src);
 
@@ -61,9 +63,11 @@ EOS;
 
 EOS;
 
-        $m = new Engine([
+        $m = new Engine(
+            [
             'partials' => ['input' => $partial],
-        ]);
+            ]
+        );
 
         $tpl = $m->loadTemplate($src);
 

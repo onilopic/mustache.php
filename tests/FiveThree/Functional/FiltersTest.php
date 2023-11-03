@@ -70,13 +70,19 @@ class FiltersTest extends TestCase
     {
         $tpl = $this->mustache->loadTemplate('{{% FILTERS }}{{ date | longdate | withbrackets }}');
 
-        $this->mustache->addHelper('longdate', function (DateTime $value) {
-            return $value->format('Y-m-d h:m:s');
-        });
+        $this->mustache->addHelper(
+            'longdate',
+            function (DateTime $value) {
+                return $value->format('Y-m-d h:m:s');
+            }
+        );
 
-        $this->mustache->addHelper('withbrackets', function ($value) {
-            return sprintf('[[%s]]', $value);
-        });
+        $this->mustache->addHelper(
+            'withbrackets',
+            function ($value) {
+                return sprintf('[[%s]]', $value);
+            }
+        );
 
         $foo = new StdClass();
         $foo->date = new DateTime('1/1/2000', new DateTimeZone('UTC'));
@@ -84,29 +90,39 @@ class FiltersTest extends TestCase
         $this->assertEquals('[[2000-01-01 12:01:00]]', $tpl->render($foo));
     }
 
-    const CHAINED_SECTION_FILTERS_TPL = <<<'EOS'
-{{% FILTERS }}
-{{# word | echo | with_index }}
-{{ key }}: {{ value }}
-{{/ word | echo | with_index }}
-EOS;
+    private const CHAINED_SECTION_FILTERS_TPL = <<<'EOS'
+        {{% FILTERS }}
+        {{# word | echo | with_index }}
+        {{ key }}: {{ value }}
+        {{/ word | echo | with_index }}
+        EOS;
 
     public function testChainedSectionFilters()
     {
         $tpl = $this->mustache->loadTemplate(self::CHAINED_SECTION_FILTERS_TPL);
 
-        $this->mustache->addHelper('echo', function ($value) {
-            return array($value, $value, $value);
-        });
+        $this->mustache->addHelper(
+            'echo',
+            function ($value) {
+                return [$value, $value, $value];
+            }
+        );
 
-        $this->mustache->addHelper('with_index', function ($value) {
-            return array_map(fn($k, $v) => [
-                'key' => $k,
-                'value' => $v,
-            ], array_keys($value), $value);
-        });
+        $this->mustache->addHelper(
+            'with_index',
+            function ($value) {
+                return array_map(
+                    fn($k, $v) => [
+                    'key' => $k,
+                    'value' => $v,
+                    ],
+                    array_keys($value),
+                    $value
+                );
+            }
+        );
 
-        $this->assertEquals("0: bacon\n1: bacon\n2: bacon\n", $tpl->render(array('word' => 'bacon')));
+        $this->assertEquals("0: bacon\n1: bacon\n2: bacon\n", $tpl->render(['word' => 'bacon']));
     }
 
     /**
@@ -157,11 +173,20 @@ EOS;
             ['{{% FILTERS }}{{# foo | bar }}{{ . }}{{/ foo | bar }}', ['foo' => 'FOO']],
             ['{{% FILTERS }}{{# foo | bar }}{{ . }}{{/ foo | bar }}', ['foo' => 'FOO', 'bar' => 'BAR']],
             ['{{% FILTERS }}{{# foo | bar }}{{ . }}{{/ foo | bar }}', ['foo' => 'FOO', 'bar' => [1, 2]]],
-            ['{{% FILTERS }}{{# foo | bar | baz }}{{ . }}{{/ foo | bar | baz }}', ['foo' => 'FOO', 'bar' => fn() => 'BAR']],
-            ['{{% FILTERS }}{{# foo | bar | baz }}{{ . }}{{/ foo | bar | baz }}', ['foo' => 'FOO', 'baz' => fn() => 'BAZ']],
+            [
+                '{{% FILTERS }}{{# foo | bar | baz }}{{ . }}{{/ foo | bar | baz }}',
+                ['foo' => 'FOO', 'bar' => fn() => 'BAR'],
+            ],
+            [
+                '{{% FILTERS }}{{# foo | bar | baz }}{{ . }}{{/ foo | bar | baz }}',
+                ['foo' => 'FOO', 'baz' => fn() => 'BAZ'],
+            ],
             ['{{% FILTERS }}{{# foo | bar | baz }}{{ . }}{{/ foo | bar | baz }}', ['bar' => fn() => 'BAR']],
             ['{{% FILTERS }}{{# foo | bar | baz }}{{ . }}{{/ foo | bar | baz }}', ['baz' => fn() => 'BAZ']],
-            ['{{% FILTERS }}{{# foo | bar.baz }}{{ . }}{{/ foo | bar.baz }}', ['foo' => 'FOO', 'bar' => fn() => 'BAR', 'baz' => fn() => 'BAZ']],
+            [
+                '{{% FILTERS }}{{# foo | bar.baz }}{{ . }}{{/ foo | bar.baz }}',
+                ['foo' => 'FOO', 'bar' => fn() => 'BAR', 'baz' => fn() => 'BAZ'],
+            ],
         ];
     }
 }

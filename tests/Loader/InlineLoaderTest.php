@@ -38,7 +38,7 @@ class InlineLoaderTest extends TestCase
         new InlineLoader('notarealfile', __COMPILER_HALT_OFFSET__);
     }
 }
-
+//phpcs:disable
 __halt_compiler();
 
 @@ foo

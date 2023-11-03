@@ -16,14 +16,16 @@ class DynamicPartialsTest extends TestCase
 
     public function setUp(): void
     {
-        $this->mustache = new Engine([
+        $this->mustache = new Engine(
+            [
             'pragmas' => [Engine::PRAGMA_DYNAMIC_NAMES],
-        ]);
+            ]
+        );
     }
 
     public static function getValidDynamicNamesExamples(): array
     {
-      // technically not all dynamic names, but also not invalid
+        // technically not all dynamic names, but also not invalid
         return [
             ['{{>* foo }}'],
             ['{{>* foo.bar.baz }}'],
@@ -55,8 +57,6 @@ class DynamicPartialsTest extends TestCase
 
     /**
      * @dataProvider getDynamicNameParseErrors
-     *
-     *
      */
     public function testDynamicNameParseErrors($template)
     {
@@ -70,15 +70,20 @@ class DynamicPartialsTest extends TestCase
     {
         $tpl = '{{% BLOCKS }}{{< *partial }}{{$ bar }}{{ value }}{{/ bar }}{{/ *partial }}';
 
-        $this->mustache->setPartials(array(
+        $this->mustache->setPartials(
+            array(
             'foobarbaz' => '{{% BLOCKS }}{{$ foo }}foo{{/ foo }}{{$ bar }}bar{{/ bar }}{{$ baz }}baz{{/ baz }}',
             'qux' => 'qux',
-        ));
+            )
+        );
 
-        $result = $this->mustache->render($tpl, array(
+        $result = $this->mustache->render(
+            $tpl,
+            array(
             'partial' => 'foobarbaz',
             'value' => 'BAR',
-        ));
+            )
+        );
 
         $this->assertSame('fooBARbaz', $result);
     }

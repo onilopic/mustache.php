@@ -20,9 +20,11 @@ class ExamplesTest extends \PHPUnit\Framework\TestCase
      */
     public function testExamples($context, $source, $partials, $expected)
     {
-        $mustache = new \Mustache\Engine(array(
+        $mustache = new \Mustache\Engine(
+            array(
             'partials' => $partials,
-        ));
+            )
+        );
         $this->assertEquals($expected, $mustache->loadTemplate($source)->render($context));
     }
 
@@ -84,7 +86,7 @@ class ExamplesTest extends \PHPUnit\Framework\TestCase
                 // load other files
                 switch ($info['extension']) {
                     case 'php':
-                        require_once $fullpath;
+                        include_once $fullpath;
                         $className = $info['filename'];
                         $context   = new $className();
                         break;

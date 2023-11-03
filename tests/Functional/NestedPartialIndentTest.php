@@ -16,9 +16,11 @@ class NestedPartialIndentTest extends TestCase
      */
     public function testNestedPartialsAreIndentedProperly($src, array $partials, $expected)
     {
-        $m = new Engine([
+        $m = new Engine(
+            [
             'partials' => $partials,
-        ]);
+            ]
+        );
         $tpl = $m->loadTemplate($src);
         $this->assertEquals($expected, $tpl->render());
     }

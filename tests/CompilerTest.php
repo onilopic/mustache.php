@@ -12,19 +12,6 @@ use PHPUnit\Framework\TestCase;
  */
 class CompilerTest extends TestCase
 {
-    /**
-     * @dataProvider getCompileValues
-     */
-    public function testCompile($source, array $tree, $name, $customEscaper, $entityFlags, $charset, $expected)
-    {
-        $compiler = new Compiler();
-
-        $compiled = $compiler->compile($source, $tree, $name, $customEscaper, $charset, false, $entityFlags);
-        foreach ($expected as $contains) {
-            $this->assertStringContainsString($contains, $compiled);
-        }
-    }
-
     public static function getCompileValues(): array
     {
         return [
@@ -54,7 +41,8 @@ class CompilerTest extends TestCase
                 [
                     "\nclass Monkey extends \Mustache\Template",
                     '$value = $this->resolveValue($context->find(\'name\'), $context);',
-                    '$buffer .= $indent . ($value === null ? \'\' : call_user_func($this->mustache->getEscape(), $value));',
+                    '$buffer .= '
+                    . '$indent . ($value === null ? \'\' : call_user_func($this->mustache->getEscape(), $value));',
                     'return $buffer;',
                 ],
             ],
@@ -74,7 +62,8 @@ class CompilerTest extends TestCase
                 [
                     "\nclass Monkey extends \Mustache\Template",
                     '$value = $this->resolveValue($context->find(\'name\'), $context);',
-                    '$buffer .= $indent . ($value === null ? \'\' : htmlspecialchars($value, ' . ENT_COMPAT . ', \'ISO-8859-1\'));',
+                    '$buffer .= $indent . ($value === null ? \'\' : htmlspecialchars($value, '
+                    . ENT_COMPAT . ', \'ISO-8859-1\'));',
                     'return $buffer;',
                 ],
             ],
@@ -94,7 +83,8 @@ class CompilerTest extends TestCase
                 [
                     "\nclass Monkey extends \Mustache\Template",
                     '$value = $this->resolveValue($context->find(\'name\'), $context);',
-                    '$buffer .= $indent . ($value === null ? \'\' : htmlspecialchars($value, ' . ENT_QUOTES . ', \'ISO-8859-1\'));',
+                    '$buffer .= $indent . ($value === null ? \'\' : htmlspecialchars($value, '
+                    . ENT_QUOTES . ', \'ISO-8859-1\'));',
                     'return $buffer;',
                 ],
             ],
@@ -130,13 +120,6 @@ class CompilerTest extends TestCase
         ];
     }
 
-    public function testCompilerThrowsSyntaxException()
-    {
-        $this->expectException(SyntaxException::class);
-        $compiler = new Compiler();
-        $compiler->compile('', array(array(Tokenizer::TYPE => 'invalid')), 'SomeClass');
-    }
-
     /**
      * @param string $value
      * @return array
@@ -147,5 +130,25 @@ class CompilerTest extends TestCase
             Tokenizer::TYPE => Tokenizer::T_TEXT,
             Tokenizer::VALUE => $value,
         ];
+    }
+
+    /**
+     * @dataProvider getCompileValues
+     */
+    public function testCompile($source, array $tree, $name, $customEscaper, $entityFlags, $charset, $expected)
+    {
+        $compiler = new Compiler();
+
+        $compiled = $compiler->compile($source, $tree, $name, $customEscaper, $charset, false, $entityFlags);
+        foreach ($expected as $contains) {
+            $this->assertStringContainsString($contains, $compiled);
+        }
+    }
+
+    public function testCompilerThrowsSyntaxException()
+    {
+        $this->expectException(SyntaxException::class);
+        $compiler = new Compiler();
+        $compiler->compile('', [[Tokenizer::TYPE => 'invalid']], 'SomeClass');
     }
 }

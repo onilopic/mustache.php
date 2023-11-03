@@ -15,25 +15,25 @@ use Mustache\Exception\SyntaxException;
 class Tokenizer
 {
     // Finite state machine states
-    const IN_TEXT     = 0;
-    const IN_TAG_TYPE = 1;
-    const IN_TAG      = 2;
+    public const IN_TEXT     = 0;
+    public const IN_TAG_TYPE = 1;
+    public const IN_TAG      = 2;
 
     // Token types
-    const T_SECTION      = '#';
-    const T_INVERTED     = '^';
-    const T_END_SECTION  = '/';
-    const T_COMMENT      = '!';
-    const T_PARTIAL      = '>';
-    const T_PARENT       = '<';
-    const T_DELIM_CHANGE = '=';
-    const T_ESCAPED      = '_v';
-    const T_UNESCAPED    = '{';
-    const T_UNESCAPED_2  = '&';
-    const T_TEXT         = '_t';
-    const T_PRAGMA       = '%';
-    const T_BLOCK_VAR    = '$';
-    const T_BLOCK_ARG    = '$arg';
+    public const T_SECTION      = '#';
+    public const T_INVERTED     = '^';
+    public const T_END_SECTION  = '/';
+    public const T_COMMENT      = '!';
+    public const T_PARTIAL      = '>';
+    public const T_PARENT       = '<';
+    public const T_DELIM_CHANGE = '=';
+    public const T_ESCAPED      = '_v';
+    public const T_UNESCAPED    = '{';
+    public const T_UNESCAPED_2  = '&';
+    public const T_TEXT         = '_t';
+    public const T_PRAGMA       = '%';
+    public const T_BLOCK_VAR    = '$';
+    public const T_BLOCK_ARG    = '$arg';
 
     // Valid token types
     private static array $tagTypes = [
@@ -68,18 +68,18 @@ class Tokenizer
     ];
 
     // Token properties
-    const TYPE    = 'type';
-    const NAME    = 'name';
-    const DYNAMIC = 'dynamic';
-    const OTAG    = 'otag';
-    const CTAG    = 'ctag';
-    const LINE    = 'line';
-    const INDEX   = 'index';
-    const END     = 'end';
-    const INDENT  = 'indent';
-    const NODES   = 'nodes';
-    const VALUE   = 'value';
-    const FILTERS = 'filters';
+    public const TYPE    = 'type';
+    public const NAME    = 'name';
+    public const DYNAMIC = 'dynamic';
+    public const OTAG    = 'otag';
+    public const CTAG    = 'ctag';
+    public const LINE    = 'line';
+    public const INDEX   = 'index';
+    public const END     = 'end';
+    public const INDENT  = 'indent';
+    public const NODES   = 'nodes';
+    public const VALUE   = 'value';
+    public const FILTERS = 'filters';
 
     private int $state;
     private ?string $tagType;
@@ -103,7 +103,8 @@ class Tokenizer
      * @throws InvalidArgumentException when $delimiters string is invalid
      *
      * @param string $text       Mustache template source to tokenize
-     * @param int|string|null $delimiters Optionally, pass initial opening and closing delimiters (default: empty string)
+     * @param int|string|null $delimiters Optionally, pass initial opening and closing delimiters
+     * (default: empty string)
      *
      * @return array Set of Mustache tokens
      */
@@ -164,14 +165,16 @@ class Tokenizer
                     $char = $text[$i];
                     // Test whether it's time to change tags.
                     if ($char === $this->ctagChar && substr($text, $i, $this->ctagLen) === $this->ctag) {
-                        $token = array(
+                        $token = [
                             self::TYPE  => $this->tagType,
                             self::NAME  => trim($this->buffer),
                             self::OTAG  => $this->otag,
                             self::CTAG  => $this->ctag,
                             self::LINE  => $this->line,
-                            self::INDEX => ($this->tagType === self::T_END_SECTION) ? $this->seenTag - $this->otagLen : $i + $this->ctagLen,
-                        );
+                            self::INDEX => ($this->tagType === self::T_END_SECTION)
+                                ? $this->seenTag - $this->otagLen
+                                : $i + $this->ctagLen,
+                        ];
 
                         if ($this->tagType === self::T_UNESCAPED) {
                             // Clean up `{{{ tripleStache }}}` style tokens.
@@ -231,7 +234,7 @@ class Tokenizer
         $this->state    = self::IN_TEXT;
         $this->tagType  = null;
         $this->buffer   = '';
-        $this->tokens   = array();
+        $this->tokens   = [];
         $this->seenTag  = false;
         $this->line     = 0;
 
@@ -250,11 +253,11 @@ class Tokenizer
     private function flushBuffer(): void
     {
         if (strlen($this->buffer) > 0) {
-            $this->tokens[] = array(
+            $this->tokens[] = [
                 self::TYPE  => self::T_TEXT,
                 self::LINE  => $this->line,
                 self::VALUE => $this->buffer,
-            );
+            ];
             $this->buffer   = '';
         }
     }
@@ -279,10 +282,10 @@ class Tokenizer
             $this->throwUnclosedTagException();
         }
 
-        $token = array(
+        $token = [
             self::TYPE => self::T_DELIM_CHANGE,
             self::LINE => $this->line,
-        );
+        ];
 
         try {
             $this->setDelimiters(trim(substr($text, $startIndex, $closeIndex - $startIndex)));
@@ -308,7 +311,7 @@ class Tokenizer
             throw new InvalidArgumentException(sprintf('Invalid delimiters: %s', $delimiters));
         }
 
-        list(, $otag, $ctag) = $matches;
+        [, $otag, $ctag] = $matches;
 
         $this->otag     = $otag;
         $this->otagChar = $otag[0];
@@ -340,11 +343,11 @@ class Tokenizer
         $pragma = trim(substr($text, $index + 2, $end - $index - 2));
 
         // Pragmas are hoisted to the front of the template.
-        array_unshift($this->tokens, array(
+        array_unshift($this->tokens, [
             self::TYPE => self::T_PRAGMA,
             self::NAME => $pragma,
             self::LINE => 0,
-        ));
+        ]);
 
         return $end + $this->ctagLen - 1;
     }
@@ -376,7 +379,7 @@ class Tokenizer
      *
      * @return string
      */
-    static function getTagName(string $tagType): string
+    public static function getTagName(string $tagType): string
     {
         return self::$tagNames[$tagType] ?? 'unknown';
     }

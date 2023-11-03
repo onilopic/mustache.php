@@ -100,7 +100,7 @@ class Compiler
                     $code .= $this->section(
                         $node[Tokenizer::NODES],
                         $node[Tokenizer::NAME],
-                        $node[Tokenizer::FILTERS] ?? array(),
+                        $node[Tokenizer::FILTERS] ?? [],
                         $node[Tokenizer::INDEX],
                         $node[Tokenizer::END],
                         $node[Tokenizer::OTAG],
@@ -113,7 +113,7 @@ class Compiler
                     $code .= $this->invertedSection(
                         $node[Tokenizer::NODES],
                         $node[Tokenizer::NAME],
-                        $node[Tokenizer::FILTERS] ?? array(),
+                        $node[Tokenizer::FILTERS] ?? [],
                         $level
                     );
                     break;
@@ -169,7 +169,7 @@ class Compiler
                 case Tokenizer::T_UNESCAPED_2:
                     $code .= $this->variable(
                         $node[Tokenizer::NAME],
-                        $node[Tokenizer::FILTERS] ?? array(),
+                        $node[Tokenizer::FILTERS] ?? [],
                         $node[Tokenizer::TYPE] === Tokenizer::T_ESCAPED,
                         $level
                     );
@@ -212,10 +212,10 @@ class Compiler
      *
      * @param array $nodes Array of child tokens
      * @param string $id Section name
-//     * @param int $start Section start offset
-//     * @param int $end Section end offset
-//     * @param string $otag Current Mustache opening tag
-//     * @param string $ctag Current Mustache closing tag
+     * //     * @param int $start Section start offset
+     * //     * @param int $end Section end offset
+     * //     * @param string $otag Current Mustache opening tag
+     * //     * @param string $ctag Current Mustache closing tag
      * @param int $level
      *
      * @return string Generated PHP source code
@@ -244,10 +244,10 @@ class Compiler
      *
      * @param array $nodes Array of child tokens
      * @param string $id Section name
-//   * @param int $start Section start offset
-//   * @param int $end Section end offset
-//   * @param string $otag Current Mustache opening tag
-//   * @param string $ctag Current Mustache closing tag
+     * //   * @param int $start Section start offset
+     * //   * @param int $end Section end offset
+     * //   * @param string $otag Current Mustache opening tag
+     * //   * @param string $ctag Current Mustache closing tag
      * @param int $level
      *
      * @return string Generated PHP source code
@@ -325,7 +325,15 @@ class Compiler
         $key = ucfirst(md5($delims . "\n" . $source));
 
         if (!isset($this->sections[$key])) {
-            $this->sections[$key] = sprintf($this->prepare(self::SECTION), $key, $callable, $source, $helper, $delims, $this->walk($nodes, 2));
+            $this->sections[$key] = sprintf(
+                $this->prepare(self::SECTION),
+                $key,
+                $callable,
+                $source,
+                $helper,
+                $delims,
+                $this->walk($nodes, 2)
+            );
         }
 
         $method = $this->getFindMethod($id);
@@ -351,7 +359,13 @@ class Compiler
         $id = var_export($id, true);
         $filters = $this->getFilters($filters, $level);
 
-        return sprintf($this->prepare(self::INVERTED_SECTION, $level), $method, $id, $filters, $this->walk($nodes, $level));
+        return sprintf(
+            $this->prepare(self::INVERTED_SECTION, $level),
+            $method,
+            $id,
+            $filters,
+            $this->walk($nodes, $level)
+        );
     }
 
     /**
@@ -406,7 +420,7 @@ class Compiler
      *
      * @param string $id Parent tag name
      * @param bool $dynamic Tag name is dynamic
-//     * @param string $indent Whitespace indent to apply to parent
+     * //     * @param string $indent Whitespace indent to apply to parent
      * @param array $children Child nodes
      * @param int $level
      *
@@ -419,7 +433,7 @@ class Compiler
         array $children,
         int $level
     ): string {
-        $realChildren = array_filter($children, array(__CLASS__, 'onlyBlockArgs'));
+        $realChildren = array_filter($children, [__CLASS__, 'onlyBlockArgs']);
         $partialName = $this->resolveDynamicName($id, $dynamic);
 
         if (empty($realChildren)) {
@@ -485,7 +499,17 @@ class Compiler
         $callable = $this->getCallable('$filter');
         $msg = var_export($name, true);
 
-        return sprintf($this->prepare(self::FILTER, $level), $method, $filter, $callable, $msg, $this->getFilters($filters, $level));
+        return sprintf(
+            $this->prepare(
+                self::FILTER,
+                $level
+            ),
+            $method,
+            $filter,
+            $callable,
+            $msg,
+            $this->getFilters($filters, $level)
+        );
     }
 
     /**
@@ -515,8 +539,12 @@ class Compiler
      *
      * @return string|array|null PHP source code snippet
      */
-    private function prepare(string $text, int $bonus = 0, bool $prependNewline = true, bool $appendNewline = false): string|array|null
-    {
+    private function prepare(
+        string $text,
+        int $bonus = 0,
+        bool $prependNewline = true,
+        bool $appendNewline = false
+    ): string|array|null {
         $text = ($prependNewline ? "\n" : '') . trim($text);
         if ($prependNewline) {
             $bonus++;
@@ -540,7 +568,12 @@ class Compiler
             return sprintf(self::CUSTOM_ESCAPE, $value);
         }
 
-        return sprintf(self::DEFAULT_ESCAPE, $value, var_export($this->entityFlags, true), var_export($this->charset, true));
+        return sprintf(
+            self::DEFAULT_ESCAPE,
+            $value,
+            var_export($this->entityFlags, true),
+            var_export($this->charset, true)
+        );
     }
 
     /**
@@ -647,7 +680,7 @@ class Compiler
     private const BLOCK_VAR_ELSE = '} else {%s';
     private const DEFAULT_ESCAPE = 'htmlspecialchars(%s, %s, %s)';
     private const CUSTOM_ESCAPE = 'call_user_func($this->mustache->getEscape(), %s)';
-//    private const LINE = '$buffer .= "\n";';
+    //    private const LINE = '$buffer .= "\n";';
     private const TEXT = '$buffer .= %s%s;';
     private const BLOCK_ARG = '%s => array($this, \'block%s\'),';
     private const BLOCK_FUNCTION = '

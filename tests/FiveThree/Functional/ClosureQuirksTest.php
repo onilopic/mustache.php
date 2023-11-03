@@ -21,8 +21,13 @@ class ClosureQuirksTest extends TestCase
     public function testClosuresDontLikeItWhenYouTouchTheirProperties()
     {
         $tpl = $this->mustache->loadTemplate('{{ foo.bar }}');
-        $this->assertEquals('', $tpl->render(array('foo' => function () {
-            return 'FOO';
-        })));
+        $this->assertEquals(
+            '',
+            $tpl->render(
+                array('foo' => function () {
+                    return 'FOO';
+                })
+            )
+        );
     }
 }

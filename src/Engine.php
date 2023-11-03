@@ -34,13 +34,13 @@ use Traversable;
  */
 class Engine
 {
-    public final const VERSION = '2.14.2';
-    //public final const SPEC_VERSION = '1.3.0';
+    final public const VERSION = '2.14.2';
+    //final public const SPEC_VERSION = '1.3.0';
 
-    const PRAGMA_FILTERS = 'FILTERS';
-    const PRAGMA_BLOCKS = 'BLOCKS';
-    const PRAGMA_ANCHORED_DOT = 'ANCHORED-DOT';
-    const PRAGMA_DYNAMIC_NAMES = 'DYNAMIC-NAMES';
+    public const PRAGMA_FILTERS = 'FILTERS';
+    public const PRAGMA_BLOCKS = 'BLOCKS';
+    public const PRAGMA_ANCHORED_DOT = 'ANCHORED-DOT';
+    public const PRAGMA_DYNAMIC_NAMES = 'DYNAMIC-NAMES';
 
     // Known pragmas
     private static array $knownPragmas = [
@@ -244,7 +244,7 @@ class Engine
      *
      * @see \Mustache\Engine::loadTemplate
      */
-    public function render(string $template, mixed $context = array()): string
+    public function render(string $template, mixed $context = []): string
     {
         return $this->loadTemplate($template)->render($context);
     }
@@ -460,13 +460,15 @@ class Engine
      * Set the Mustache Logger instance.
      *
      * @param ?Logger|PsrLoggerInterface $logger
-     * @throws InvalidArgumentException If logger is not an instance of \Mustache\Contract\Logger or Psr\Log\LoggerInterface
+     * @throws InvalidArgumentException If logger is not an instance of Logger or LoggerInterface
      *
      */
     public function setLogger(null|Logger|PsrLoggerInterface $logger = null): void
     {
         if ($logger !== null && !($logger instanceof Logger || is_a($logger, 'Psr\\Log\\LoggerInterface'))) {
-            throw new InvalidArgumentException('Expected an instance of \Mustache\Logger or Psr\\Log\\LoggerInterface.');
+            throw new InvalidArgumentException(
+                'Expected an instance of \Mustache\Logger or Psr\\Log\\LoggerInterface.'
+            );
         }
 
         if ($this->getCache()->getLogger() === null) {
@@ -697,7 +699,7 @@ class Engine
             $this->log(
                 Logger::WARNING,
                 'Partial not found: "{name}"',
-                array('name' => $e->getTemplateName())
+                ['name' => $e->getTemplateName()]
             );
         }
 
@@ -707,18 +709,18 @@ class Engine
     /**
      * Load a Mustache lambda Template by source.
      *
-     * This is a helper method used by Template instances to generate subtemplates for Lambda sections. You can most
+     * This is a helper method used by Template instances to generate sub templates for Lambda sections. You can most
      * likely ignore it completely.
      *
      * @param string $source
-     * @param string $delims (default: null)
+     * @param string $delimiters (default: null)
      *
      * @return Template
      */
-    public function loadLambda(string $source, string $delims = ''): Template
+    public function loadLambda(string $source, string $delimiters = ''): Template
     {
-        if ($delims !== '') {
-            $source = $delims . "\n" . $source;
+        if ($delimiters !== '') {
+            $source = $delimiters . "\n" . $source;
         }
 
         return $this->loadSource($source, $this->getLambdaCache());
@@ -727,7 +729,7 @@ class Engine
     /**
      * Instantiate and return a Mustache Template instance by source.
      *
-     * Optionally provide a \Mustache\Contract\Cache instance. This is used internally by \Mustache\Engine::loadLambda to respect
+     * Optionally provide a Cache instance. This is used internally by Engine::loadLambda to respect
      * the 'cache_lambda_templates' configuration option.
      *
      * @param string|Source $source
@@ -758,7 +760,7 @@ class Engine
             $this->log(
                 Logger::DEBUG,
                 'Instantiating template: "{className}"',
-                array('className' => $className)
+                ['className' => $className]
             );
 
             $this->templates[$className] = new $className($this);
@@ -814,7 +816,7 @@ class Engine
         $this->log(
             Logger::INFO,
             'Compiling template to "{className}" class',
-            array('className' => $name)
+            ['className' => $name]
         );
 
         if ($source instanceof Source) {
@@ -825,7 +827,15 @@ class Engine
         $compiler = $this->getCompiler();
         $compiler->setPragmas($this->getPragmas());
 
-        return $compiler->compile($source, $tree, $name, isset($this->escape), $this->charset, $this->strictCallables, $this->entityFlags);
+        return $compiler->compile(
+            $source,
+            $tree,
+            $name,
+            isset($this->escape),
+            $this->charset,
+            $this->strictCallables,
+            $this->entityFlags
+        );
     }
 
     /**
@@ -836,7 +846,7 @@ class Engine
      * @param array $context The log context
      */
     // @todo check actual level type
-    private function log(int|string $level, string $message, array $context = array()): void
+    private function log(int|string $level, string $message, array $context = []): void
     {
         if (isset($this->logger)) {
             $this->logger->log($level, $message, $context);

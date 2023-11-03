@@ -18,10 +18,12 @@ class ContextTest extends TestCase
         $this->assertSame('', $one->find('foo'));
         $this->assertSame('', $one->find('bar'));
 
-        $two = new Context(array(
+        $two = new Context(
+            array(
             'foo' => 'FOO',
             'bar' => '<BAR>',
-        ));
+            )
+        );
         $this->assertEquals('FOO', $two->find('foo'));
         $this->assertEquals('<BAR>', $two->find('bar'));
 
@@ -97,10 +99,12 @@ class ContextTest extends TestCase
 
     public function testArrayAccessFind()
     {
-        $access = new TestArrayAccess(array(
+        $access = new TestArrayAccess(
+            array(
             'a' => array('b' => array('c' => 'see')),
             'b' => 'bee',
-        ));
+            )
+        );
 
         $context = new Context($access);
         $this->assertEquals('bee', $context->find('b'));

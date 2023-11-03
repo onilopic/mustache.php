@@ -3,8 +3,8 @@
 namespace Mustache\Tests;
 
 use Mustache\HelperCollection;
-use PHPUnit\Framework\Attributes\WithoutErrorHandler;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 class HelperCollectionTest extends TestCase
 {
@@ -13,10 +13,12 @@ class HelperCollectionTest extends TestCase
         $foo = [$this, 'getFoo'];
         $bar = 'BAR';
 
-        $helpers = new HelperCollection([
+        $helpers = new HelperCollection(
+            [
             'foo' => $foo,
             'bar' => $bar,
-        ]);
+            ]
+        );
 
         $this->assertSame($foo, $helpers->get('foo'));
         $this->assertSame($bar, $helpers->get('bar'));
@@ -89,9 +91,15 @@ class HelperCollectionTest extends TestCase
 
     /**
      * @dataProvider getInvalidHelperArguments
+     * @param array $helpers
+     * @param array $actions
+     * @param null $exception
      */
-    public function testHelperCollectionIsntAfraidToThrowExceptions(array $helpers = [], array $actions = [], $exception = null)
-    {
+    public function testHelperCollectionIsntAfraidToThrowExceptions(
+        array $helpers = [],
+        array $actions = [],
+        $exception = null
+    ) {
         if ($exception) {
             $this->expectException($exception);
         } else {
@@ -100,14 +108,15 @@ class HelperCollectionTest extends TestCase
 
         $helpers = new HelperCollection($helpers);
         foreach ($actions as $method => $args) {
-            call_user_func_array(array($helpers, $method), $args);
+            call_user_func_array([$helpers, $method], $args);
         }
     }
 
     public function testHelperCollectionIsntAfraidToThrowError()
     {
-        $this->expectException(\TypeError::class);
-        $helpers = new HelperCollection(1);
+        $this->expectException(TypeError::class);
+        /** @noinspection PhpParamsInspection */
+        new HelperCollection(1);
     }
 
     public static function getInvalidHelperArguments(): array

@@ -11,12 +11,13 @@ use PHPUnit\Framework\TestCase;
 /**
  * @group unit
  */
+// phpcs:disable Methods.CamelCapsMethodName
 class FilesystemLoaderTest extends TestCase
 {
     public function testConstructor()
     {
         $baseDir = realpath(dirname(__FILE__) . '/../fixtures/templates');
-        $loader = new FilesystemLoader($baseDir, array('extension' => '.ms'));
+        $loader = new FilesystemLoader($baseDir, ['extension' => '.ms']);
         $this->assertEquals('alpha contents', $loader->load('alpha'));
         $this->assertEquals('beta contents', $loader->load('beta.ms'));
     }
@@ -37,7 +38,7 @@ class FilesystemLoaderTest extends TestCase
     public function testConstructorWithProtocol()
     {
         $baseDir = realpath(dirname(__FILE__) . '/../fixtures/templates');
-        $loader = new FilesystemLoader('test://' . $baseDir, array('extension' => '.ms'));
+        $loader = new FilesystemLoader('test://' . $baseDir, ['extension' => '.ms']);
         $this->assertEquals('alpha contents', $loader->load('alpha'));
         $this->assertEquals('beta contents', $loader->load('beta.ms'));
     }
@@ -54,11 +55,11 @@ class FilesystemLoaderTest extends TestCase
     {
         $baseDir = realpath(dirname(__FILE__) . '/../fixtures/templates');
 
-        $loader = new FilesystemLoader($baseDir, array('extension' => ''));
+        $loader = new FilesystemLoader($baseDir, ['extension' => '']);
         $this->assertEquals('one contents', $loader->load('one.mustache'));
         $this->assertEquals('alpha contents', $loader->load('alpha.ms'));
 
-        $loader = new FilesystemLoader($baseDir, array('extension' => null));
+        $loader = new FilesystemLoader($baseDir, ['extension' => null]);
         $this->assertEquals('two contents', $loader->load('two.mustache'));
         $this->assertEquals('beta contents', $loader->load('beta.ms'));
     }
@@ -78,3 +79,4 @@ class FilesystemLoaderTest extends TestCase
         $loader->load('fake');
     }
 }
+// phpcs:enable

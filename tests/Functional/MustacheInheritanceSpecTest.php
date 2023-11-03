@@ -12,9 +12,11 @@ class MustacheInheritanceSpecTest extends \Mustache\Tests\SpecTestCase
 {
     public static function setUpBeforeClass(): void
     {
-        self::$mustache = new \Mustache\Engine(array(
-          'pragmas' => array(\Mustache\Engine::PRAGMA_BLOCKS),
-        ));
+        self::$mustache = new \Mustache\Engine(
+            array(
+            'pragmas' => array(\Mustache\Engine::PRAGMA_BLOCKS),
+            )
+        );
     }
 
     /**
@@ -32,7 +34,7 @@ class MustacheInheritanceSpecTest extends \Mustache\Tests\SpecTestCase
     }
 
     /**
-     * @group inheritance
+     * @group        inheritance
      * @dataProvider loadInheritanceSpec
      */
     public function testInheritanceSpec($desc, $source, $partials, $data, $expected)

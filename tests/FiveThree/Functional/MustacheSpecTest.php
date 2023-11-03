@@ -26,7 +26,7 @@ class MustacheSpecTest extends SpecTestCase
     }
 
     /**
-     * @group lambdas
+     * @group        lambdas
      * @dataProvider loadLambdasSpec
      */
     public function testLambdasSpec($desc, $source, $partials, $data, $expected)

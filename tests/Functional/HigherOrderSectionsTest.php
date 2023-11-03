@@ -28,28 +28,28 @@ class HigherOrderSectionsTest extends FunctionalTestCase
 
     public static function sectionCallbackData(): array
     {
-        $foo = new Foo();
-        $foo->doublewrap = array($foo, 'wrapWithBoth');
+        $foo = new Context\Foo();
+        $foo->doublewrap = [$foo, 'wrapWithBoth'];
 
-        $bar = new Foo();
-        $bar->trimmer = array(get_class($bar), 'staticTrim');
+        $bar = new Context\Foo();
+        $bar->trimmer = [get_class($bar), 'staticTrim'];
 
-        return array(
-            array($foo, '{{#doublewrap}}{{name}}{{/doublewrap}}', sprintf('<strong><em>%s</em></strong>', $foo->name)),
-            array($bar, '{{#trimmer}}   {{name}}   {{/trimmer}}', $bar->name),
-        );
+        return [
+            [$foo, '{{#doublewrap}}{{name}}{{/doublewrap}}', sprintf('<strong><em>%s</em></strong>', $foo->name)],
+            [$bar, '{{#trimmer}}   {{name}}   {{/trimmer}}', $bar->name],
+        ];
     }
 
     public function testViewArraySectionCallback()
     {
         $tpl = $this->mustache->loadTemplate('{{#trim}}    {{name}}    {{/trim}}');
 
-        $foo = new Foo();
+        $foo = new Context\Foo();
 
-        $data = array(
+        $data = [
             'name' => 'Bob',
-            'trim' => array(get_class($foo), 'staticTrim'),
-        );
+            'trim' => [get_class($foo), 'staticTrim'],
+        ];
 
         $this->assertEquals($data['name'], $tpl->render($data));
     }
@@ -58,14 +58,14 @@ class HigherOrderSectionsTest extends FunctionalTestCase
     {
         $tpl = $this->mustache->loadTemplate('{{#title}}{{title}} {{/title}}{{name}}');
 
-        $frank = new Monster();
+        $frank = new Context\Monster();
         $frank->title = 'Dr.';
-        $frank->name  = 'Frankenstein';
+        $frank->name = 'Frankenstein';
         $this->assertEquals('Dr. Frankenstein', $tpl->render($frank));
 
-        $dracula = new Monster();
+        $dracula = new Context\Monster();
         $dracula->title = 'Count';
-        $dracula->name  = 'Dracula';
+        $dracula->name = 'Dracula';
         $this->assertEquals('Count Dracula', $tpl->render($dracula));
     }
 
@@ -79,8 +79,8 @@ class HigherOrderSectionsTest extends FunctionalTestCase
 
         $tpl = $mustache->loadTemplate('{{#wrap}}NAME{{/wrap}}');
 
-        $foo = new Foo();
-        $foo->wrap = array($foo, 'wrapWithEm');
+        $foo = new Context\Foo();
+        $foo->wrap = [$foo, 'wrapWithEm'];
 
         $this->assertEquals('<em>NAME</em>', $tpl->render($foo));
     }
@@ -96,8 +96,8 @@ class HigherOrderSectionsTest extends FunctionalTestCase
 
         $tpl = $mustache->loadTemplate('{{#wrap}}{{name}}{{/wrap}}');
 
-        $foo = new Foo();
-        $foo->wrap = array($foo, 'wrapWithEm');
+        $foo = new Context\Foo();
+        $foo->wrap = [$foo, 'wrapWithEm'];
 
         $this->assertEquals('<em>' . $foo->name . '</em>', $tpl->render($foo));
     }
@@ -108,25 +108,27 @@ class HigherOrderSectionsTest extends FunctionalTestCase
     public function testCacheLambdaTemplatesOptionWorks($dirName, $tplPrefix, $enable, $expect)
     {
         $cacheDir = $this->setUpCacheDir($dirName);
-        $mustache = new Engine([
-            'template_class_prefix'  => $tplPrefix,
-            'cache'                  => $cacheDir,
-            'cache_lambda_templates' => $enable,
-        ]);
+        $mustache = new Engine(
+            [
+                'template_class_prefix' => $tplPrefix,
+                'cache' => $cacheDir,
+                'cache_lambda_templates' => $enable,
+            ]
+        );
 
         $tpl = $mustache->loadTemplate('{{#wrap}}{{name}}{{/wrap}}');
-        $foo = new Foo();
-        $foo->wrap = array($foo, 'wrapWithEm');
+        $foo = new Context\Foo();
+        $foo->wrap = [$foo, 'wrapWithEm'];
         $this->assertEquals('<em>' . $foo->name . '</em>', $tpl->render($foo));
         $this->assertCount($expect, glob($cacheDir . '/*.php'));
     }
 
     public static function cacheLambdaTemplatesData(): array
     {
-        return array(
-            array('test_enabling_lambda_cache',  '_TestEnablingLambdaCache_',  true,  2),
-            array('test_disabling_lambda_cache', '_TestDisablingLambdaCache_', false, 1),
-        );
+        return [
+            ['test_enabling_lambda_cache', '_TestEnablingLambdaCache_', true, 2],
+            ['test_disabling_lambda_cache', '_TestDisablingLambdaCache_', false, 1],
+        ];
     }
 
     protected function setUpCacheDir($name): string
@@ -135,47 +137,8 @@ class HigherOrderSectionsTest extends FunctionalTestCase
         if (file_exists($cacheDir)) {
             self::rmdir($cacheDir);
         }
-        mkdir($cacheDir, 0777, true);
+        mkdir($cacheDir, 0o777, true);
 
         return $cacheDir;
     }
-}
-
-final class Foo
-{
-    public string $name = 'Justin';
-    public string $lorem = 'Lorem ipsum dolor sit amet,';
-    public array $wrap;
-    public array $doublewrap;
-    public array $trimmer;
-
-    public function wrapWithEm($text): string
-    {
-        return sprintf('<em>%s</em>', $text);
-    }
-
-    /**
-     * @param string $text
-     * @return string
-     */
-    public function wrapWithStrong(string $text): string
-    {
-        return sprintf('<strong>%s</strong>', $text);
-    }
-
-    public function wrapWithBoth($text): string
-    {
-        return self::wrapWithStrong(self::wrapWithEm($text));
-    }
-
-    public static function staticTrim($text): string
-    {
-        return trim($text);
-    }
-}
-
-final class Monster
-{
-    public string $title;
-    public string $name;
 }

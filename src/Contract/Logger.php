@@ -26,14 +26,14 @@ interface Logger
     /**
      * Psr\Log compatible log levels.
      */
-    const EMERGENCY = 'emergency';
-    const ALERT     = 'alert';
-    const CRITICAL  = 'critical';
-    const ERROR     = 'error';
-    const WARNING   = 'warning';
-    const NOTICE    = 'notice';
-    const INFO      = 'info';
-    const DEBUG     = 'debug';
+    public const EMERGENCY = 'emergency';
+    public const ALERT     = 'alert';
+    public const CRITICAL  = 'critical';
+    public const ERROR     = 'error';
+    public const WARNING   = 'warning';
+    public const NOTICE    = 'notice';
+    public const INFO      = 'info';
+    public const DEBUG     = 'debug';
 
     /**
      * System is unusable.
@@ -62,7 +62,7 @@ interface Logger
      * @param string $message
      * @param array  $context
      */
-    public function critical(string $message, array $context = array());
+    public function critical(string $message, array $context = []);
 
     /**
      * Runtime errors that do not require immediate action but should typically
@@ -71,7 +71,7 @@ interface Logger
      * @param string $message
      * @param array  $context
      */
-    public function error(string $message, array $context = array());
+    public function error(string $message, array $context = []);
 
     /**
      * Exceptional occurrences that are not errors.
@@ -82,7 +82,7 @@ interface Logger
      * @param string $message
      * @param array  $context
      */
-    public function warning(string $message, array $context = array());
+    public function warning(string $message, array $context = []);
 
     /**
      * Normal but significant events.
@@ -90,7 +90,7 @@ interface Logger
      * @param string $message
      * @param array  $context
      */
-    public function notice(string $message, array $context = array());
+    public function notice(string $message, array $context = []);
 
     /**
      * Interesting events.
@@ -100,7 +100,7 @@ interface Logger
      * @param string $message
      * @param array  $context
      */
-    public function info(string $message, array $context = array());
+    public function info(string $message, array $context = []);
 
     /**
      * Detailed debug information.
@@ -108,7 +108,7 @@ interface Logger
      * @param string $message
      * @param array  $context
      */
-    public function debug(string $message, array $context = array());
+    public function debug(string $message, array $context = []);
 
     /**
      * Logs with an arbitrary level.
@@ -117,5 +117,5 @@ interface Logger
      * @param string $message
      * @param array  $context
      */
-    public function log(mixed $level, string $message, array $context = array());
+    public function log(mixed $level, string $message, array $context = []);
 }

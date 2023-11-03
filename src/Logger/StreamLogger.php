@@ -2,8 +2,8 @@
 
 namespace Mustache\Logger;
 
-use InvalidArgumentException;
 use Mustache\Contract\Logger;
+use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\LogicException;
 use Mustache\Exception\RuntimeException;
 
@@ -18,7 +18,7 @@ use Mustache\Exception\RuntimeException;
  */
 class StreamLogger extends AbstractLogger
 {
-    protected static array $levels = array(
+    protected static array $levels = [
         self::DEBUG     => 100,
         self::INFO      => 200,
         self::NOTICE    => 250,
@@ -27,19 +27,17 @@ class StreamLogger extends AbstractLogger
         self::CRITICAL  => 500,
         self::ALERT     => 550,
         self::EMERGENCY => 600,
-    );
+    ];
 
-    protected $level;
-    protected $stream = null;
-    protected $url    = null;
+    protected int|string $level;
+    protected mixed $stream = null;
+    protected mixed $url    = null;
 
     /**
-     * @throws InvalidArgumentException if the logging level is unknown
-     *
      * @param resource|string $stream Resource instance or URL
-     * @param int             $level  The minimum logging level at which this handler will be triggered
+     * @param string|int $level The minimum logging level at which this handler will be triggered
      */
-    public function __construct($stream, $level = Logger::ERROR)
+    public function __construct(mixed $stream, string|int $level = Logger::ERROR)
     {
         $this->setLevel($level);
 
@@ -63,14 +61,12 @@ class StreamLogger extends AbstractLogger
     /**
      * Set the minimum logging level.
      *
-     * @throws \Mustache\Exception\InvalidArgumentException if the logging level is unknown
-     *
-     * @param int $level The minimum logging level which will be written
+     * @param string|int $level The minimum logging level which will be written
      */
-    public function setLevel($level)
+    public function setLevel(string|int $level)
     {
         if (!array_key_exists($level, self::$levels)) {
-            throw new \Mustache\Exception\InvalidArgumentException(sprintf('Unexpected logging level: %s', $level));
+            throw new InvalidArgumentException(sprintf('Unexpected logging level: %s', $level));
         }
 
         $this->level = $level;
@@ -79,9 +75,9 @@ class StreamLogger extends AbstractLogger
     /**
      * Get the current minimum logging level.
      *
-     * @return int
+     * @return int|string
      */
-    public function getLevel()
+    public function getLevel(): int|string
     {
         return $this->level;
     }
@@ -92,13 +88,13 @@ class StreamLogger extends AbstractLogger
      * @param mixed  $level
      * @param string $message
      * @param array  $context
-     *@throws \Mustache\Exception\InvalidArgumentException if the logging level is unknown
+     *@throws InvalidArgumentException if the logging level is unknown
      *
      */
-    public function log(mixed $level, string $message, array $context = array())
+    public function log(mixed $level, string $message, array $context = [])
     {
         if (!array_key_exists($level, self::$levels)) {
-            throw new \Mustache\Exception\InvalidArgumentException(sprintf('Unexpected logging level: %s', $level));
+            throw new InvalidArgumentException(sprintf('Unexpected logging level: %s', $level));
         }
 
         if (self::$levels[$level] >= self::$levels[$this->level]) {
@@ -109,18 +105,18 @@ class StreamLogger extends AbstractLogger
     /**
      * Write a record to the log.
      *
-     * @throws LogicException   If neither a stream resource nor url is present
-     * @throws RuntimeException If the stream url cannot be opened
-     *
-     * @param int    $level   The logging level
+     * @param int|string $level The logging level
      * @param string $message The log message
-     * @param array  $context The log context
+     * @param array $context The log context
      */
-    protected function writeLog($level, $message, array $context = array())
+    protected function writeLog(int|string $level, string $message, array $context = [])
     {
         if (!is_resource($this->stream)) {
             if (!isset($this->url)) {
-                throw new LogicException('Missing stream url, the stream can not be opened. This may be caused by a premature call to close().');
+                throw new LogicException(
+                    'Missing stream url, the stream can not be opened.'
+                    . ' This may be caused by a premature call to close().'
+                );
             }
 
             $this->stream = fopen($this->url, 'a');
@@ -137,27 +133,25 @@ class StreamLogger extends AbstractLogger
     /**
      * Gets the name of the logging level.
      *
-     * @throws InvalidArgumentException if the logging level is unknown
-     *
-     * @param int $level
+     * @param string|int $level
      *
      * @return string
      */
-    protected static function getLevelName($level)
+    protected static function getLevelName(string|int $level): string
     {
-        return strtoupper($level);
+        return strtoupper((string)$level);
     }
 
     /**
      * Format a log line for output.
      *
-     * @param int    $level   The logging level
+     * @param string|int $level The logging level
      * @param string $message The log message
-     * @param array  $context The log context
+     * @param array $context The log context
      *
      * @return string
      */
-    protected static function formatLine($level, $message, array $context = array())
+    protected static function formatLine(string|int $level, string $message, array $context = []): string
     {
         return sprintf(
             "%s: %s\n",
@@ -174,14 +168,14 @@ class StreamLogger extends AbstractLogger
      *
      * @return string
      */
-    protected static function interpolateMessage($message, array $context = array())
+    protected static function interpolateMessage(string $message, array $context = []): string
     {
-        if (strpos($message, '{') === false) {
+        if (!str_contains($message, '{')) {
             return $message;
         }
 
         // build a replacement array with braces around the context keys
-        $replace = array();
+        $replace = [];
         foreach ($context as $key => $val) {
             $replace['{' . $key . '}'] = $val;
         }

@@ -316,7 +316,6 @@ class ParserTest extends TestCase
 
     /**
      * @dataProvider getBadParseTrees
-     *
      */
     public function testParserThrowsExceptions($tokens)
     {

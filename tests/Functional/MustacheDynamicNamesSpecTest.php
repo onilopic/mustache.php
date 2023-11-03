@@ -12,9 +12,11 @@ class MustacheDynamicNamesSpecTest extends \Mustache\Tests\SpecTestCase
 {
     public static function setUpBeforeClass(): void
     {
-        self::$mustache = new \Mustache\Engine(array(
-          'pragmas' => array(\Mustache\Engine::PRAGMA_DYNAMIC_NAMES),
-        ));
+        self::$mustache = new \Mustache\Engine(
+            array(
+            'pragmas' => array(\Mustache\Engine::PRAGMA_DYNAMIC_NAMES),
+            )
+        );
     }
 
     /**
@@ -31,7 +33,7 @@ class MustacheDynamicNamesSpecTest extends \Mustache\Tests\SpecTestCase
     }
 
     /**
-     * @group dynamic-names
+     * @group        dynamic-names
      * @dataProvider loadDynamicNamesSpec
      */
     public function testDynamicNamesSpec($desc, $source, $partials, $data, $expected)
