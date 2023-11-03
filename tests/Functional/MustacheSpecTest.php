@@ -16,10 +16,10 @@ class MustacheSpecTest extends \Mustache\Tests\SpecTestCase
      */
     public function testSpecInitialized()
     {
-        if (!file_exists(dirname(__FILE__) . '/../../vendor/spec/specs/')) {
+        if (!file_exists(dirname(__FILE__) . '/../../spec/specs/')) {
             $this->markTestSkipped('Mustache spec submodule not initialized: run "git submodule update --init"');
         } else {
-            $this->assertEquals(true, file_exists(dirname(__FILE__) . '/../../vendor/spec/specs/'));
+            $this->assertEquals(true, file_exists(dirname(__FILE__) . '/../../spec/specs/'));
         }
     }
 
